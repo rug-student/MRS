@@ -1,11 +1,16 @@
 How to run backend:
-assuming you are in /backend
+first off, setup .env file (can copy from .env.example)
+assuming you are in /backend, run 
+    "composer update"
+or
+    "php composer.phar update"
 
-run development server: php artisan serve
 
-run docker: ./vendor/bin/sail up
+to run in development mode: "./vendor/bin/sail up mysql phpmyadmin", then: "php artisan serve"
+
+to run docker: "./vendor/bin/sail up"
 
 to enter database using phpMyAdmin:
     - go to "localhost:8001"
-    - login with username:"sail" & password:"password"
+    - login with credentials in .env file (default username=root, empty password)
     
