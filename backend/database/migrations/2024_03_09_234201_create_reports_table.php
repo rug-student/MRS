@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Maintainer;
+use App\Models\Response;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,18 +17,13 @@ class CreateReportsTable extends Migration
     {
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
-            $table->object_category_id();
-            $table->integer("inventory_number");
-            $table->string("alt_category_object_name");
-            $table->foreignId("location_id");
-            $table->string("location_desc");
-            $table->string("description");
-            $table->binary("picture"); // not sure what column type this should be...
+            $table->foreignIdFor(Response::class)->nullable();
+            $table->text("description");
             $table->integer("priority");
-            $table->dateTime("creation_time");
+            $table->timestamps();
             $table->integer("status");
-            $table->string("submitter_email");
-            $table->foreignId("assigned_maintainer_id");
+            $table->string("submitter_email")->nullable();
+            $table->foreignIdFor(Maintainer::class)->nullable();
         });
     }
 
