@@ -17,11 +17,16 @@ class Report extends Model
         return $this->hasMany(Response::class);
     }
 
+    public function maintainer(): HasMany {
+        return $this->hasMany(Maintainer::class);
+    }
+
     protected $fillable = [
             "description",
             "priority",
-            "creation_time",
             "status",
             "submitter_email"
     ];
+
+    //created_at & updated_at get automatically handled by the ORM
 }

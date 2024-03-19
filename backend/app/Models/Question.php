@@ -24,4 +24,6 @@ class Question extends Model
         "is_open",
         "is_active"
     ];
+
+    public $timestamps = false;
 }

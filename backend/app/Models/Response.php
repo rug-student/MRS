@@ -27,4 +27,6 @@ class Response extends Model
     public function answer(): HasOne {
         return $this->hasOne(Answer::class);
     }
+
+    public $timestamps = false;
 }

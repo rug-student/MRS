@@ -18,4 +18,6 @@ class Answer extends Model
     protected $fillable = [
         "answer"
     ];
+
+    public $timestamps = false;
 }
