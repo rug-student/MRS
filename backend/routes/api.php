@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\QuestionsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ReportsController;
@@ -20,3 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get("/reports", [ReportsController::class, "getAllReports"]);
+
+Route::post("/reports", [ReportsController::class, "createReport"]);
+
+Route::get("/questions", [QuestionsController::class, "getAllQuestions"]);
