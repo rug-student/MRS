@@ -33,8 +33,8 @@ class ReportsController extends Controller
         $report->priority = $request->priority;
         $report->submitter_email = $request->submitter_email;
         // TODO: Responses
-        $report->save();
 
-        response()->json("Succesfully saved report", 200);
+        $report->save();
+        return response()->json("Succesfully saved report", 200);
     } 
 }

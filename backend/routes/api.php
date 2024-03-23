@@ -20,8 +20,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+// Routes for reports endpoints.
 Route::get("/reports", [ReportsController::class, "getAllReports"]);
-
 Route::post("/reports", [ReportsController::class, "createReport"]);
 
+// Routes for questions endpoints.
 Route::get("/questions", [QuestionsController::class, "getAllQuestions"]);
+Route::post("/questions", [QuestionsController::class, "createQuestion"]);

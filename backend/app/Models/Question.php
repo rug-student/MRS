@@ -15,7 +15,7 @@ class Question extends Model
 {
     use HasFactory;
 
-    public function potential_answer(): HasMany {
+    public function answer(): HasMany {
         return $this->hasMany(Answer::class);
     }
 
