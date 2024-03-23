@@ -20,6 +20,10 @@ class Answer extends Model
         return $this->belongsTo(Question::class);
     }
 
+    public function response() {
+        return $this->belongsTo(Response::class);
+    }
+
     protected $fillable = [
         "answer"
     ];

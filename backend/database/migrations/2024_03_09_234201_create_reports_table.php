@@ -17,7 +17,6 @@ class CreateReportsTable extends Migration
     {
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Response::class)->nullable();
             $table->text("description");
             $table->integer("priority");
             $table->timestamps();

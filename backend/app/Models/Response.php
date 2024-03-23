@@ -14,6 +14,10 @@ class Response extends Model
 {
     use HasFactory;
 
+    public function report() {
+        return $this->belongsTo(Report::class);
+    }
+
     /**
      * Get the question of the response.
      */

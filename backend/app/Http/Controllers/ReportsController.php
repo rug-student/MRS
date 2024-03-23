@@ -15,16 +15,16 @@ use Illuminate\Http\Request;
 class ReportsController extends Controller
 {
     /**
-     * Gets all reports in the database without filters
+     * Gets all reports in the database without filters.
      */
     public function getAllReports() {
-        $reports = Report::all();
+        $reports = Report::with("response")->get();
 
         return response()->json($reports, 200);
     }
 
     /**
-     * Creates a new report (TODO)
+     * Creates a new report.
      */
     public function createReport(Request $request) {
         $report = new Report;
@@ -32,9 +32,20 @@ class ReportsController extends Controller
         $report->status = 0;
         $report->priority = $request->priority;
         $report->submitter_email = $request->submitter_email;
-        // TODO: Responses
+
+        // Handle responses
+        $report->save();
+        foreach($request->responses as $response_body) {
+            $response = new Response();
+            $response->question_id = $response_body["question_id"];
+            $response->answer_id = $response_body["answer_id"];
+            $response->report_id = $report->id;
+            $response->save();
+
+            $report->response()->save($response);
+        }
 
         $report->save();
-        return response()->json("Succesfully saved report", 200);
+        return response()->json(["Succesfully saved report", $report], 200);
     } 
 }
