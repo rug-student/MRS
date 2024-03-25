@@ -4,33 +4,20 @@ header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 20px; /* Add padding to the header */
+    padding: 20px; /* Add padding to the header */
   }
 
-.header-btns{
+.header-btn{
     display: flex;
     justify-content: flex-end;
     align-items: center;
     padding-right: 20px;
 }
 
-.header-btn{
-    border: 0;
-    border-radius: 15%;
-    padding: 2%;
-    text-align: center;
-    margin: 2px;
-    background-color: red;
-    color: white;
-}
-
-.header-btn:hover{
-    background-color: #741500;
-}
-
 .logoHeader {
-    height:75%;
-    width:auto;
-    margin-left:5%;
+    height: auto; 
+    max-height: 40px; 
+    width: auto; 
+    max-width: 100%; 
+    margin-left: 5%;
 }
-
