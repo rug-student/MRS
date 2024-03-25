@@ -1,0 +1,81 @@
+.App {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+input {
+  margin: 5px;
+  padding: 5px;
+}
+
+button {
+  margin-top: 10px;
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.navbar {
+  margin-top: 10px;
+  background-color: #007bff; /* Colore di sfondo azzurro */
+  color: #ffffff; /* Testo bianco */
+  font-size: 20px;
+  font-weight: bolder;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 10px;
+  width: 800px;
+  transform: translate(0px, -200px);
+  
+}
+
+.left-menu,
+.right-menu {
+  display: flex;
+}
+
+.right-menu a {
+  margin-left: 20px; /* Spazio tra le voci del menu */
+}
+
+.right-menu a:first-child {
+  margin-left: 0; /* Rimuove il margine sinistro per la prima voce del menu */
+}
+
+a {
+  text-decoration: none;
+  color: inherit; /* Eredità del colore del testo */
+  transition: font-size 0.3s ease, color 0.3s ease;
+}
+
+a:hover{
+  font-size: 26px;
+}
+#logo{
+  width: 100px;
+  height: 30px;
+}
+
+#logform{
+  transform: translate(0px, -100px);
+}
