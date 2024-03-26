@@ -28,5 +28,5 @@ class Report extends Model
             "submitter_email"
     ];
 
-    //created_at & updated_at get automatically handled by the ORM
+    // Created_at & updated_at get automatically handled by the ORM.
 }

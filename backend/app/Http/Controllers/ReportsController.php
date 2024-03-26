@@ -15,25 +15,56 @@ use Illuminate\Http\Request;
 class ReportsController extends Controller
 {
     /**
-     * Gets all reports in the database without filters.
+     * Gets all reports in the database with various filters.
      */
-    public function getAllReports() {
-        $reports = Report::with("response")->get();
+    public function getAllReports(Request $request) {
+
+        if($request->status != null) {
+            if($request->priority != null) {
+                $reports = Report::with("response")
+                ->where("status", $request->status)
+                ->where("priority", $request->priority)
+                ->get();
+            } else {
+                $reports = Report::with("response")
+                ->where("status", $request->status)
+                ->get();
+            }
+        } elseif($request->priority != null) {
+            $reports = Report::with("response")
+            ->where("priority", $request->priority)
+            ->get();
+        } else {
+            $reports = Report::with("response")->get();
+        }
 
         return response()->json($reports, 200);
+    }
+
+    /**
+     * Gets a single report based on id.
+     */
+    public function getReport(Request $request) {
+
+        $report = Report::where("id", $request->id)
+        ->with("response")
+        ->get();
+
+        return response()->json($report, 200);
     }
 
     /**
      * Creates a new report.
      */
     public function createReport(Request $request) {
+
         $report = new Report;
         $report->description = $request->description;
         $report->status = 0;
         $report->priority = $request->priority;
         $report->submitter_email = $request->submitter_email;
 
-        // Handle responses
+        // Handle responses.
         $report->save();
         foreach($request->responses as $response_body) {
             $response = new Response();
