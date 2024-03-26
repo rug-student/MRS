@@ -27,7 +27,10 @@ function App() {
       </div>
       <div className="right-menu">
         <Link to="/report">Report</Link>
+        <Link to="/questions">Questions</Link>
         <Link to="/contact">Contact Us</Link>
+        <Link to="/login">Login</Link>
+
       </div>
 
     </div>

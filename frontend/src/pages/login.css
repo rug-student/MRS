@@ -23,7 +23,7 @@ input {
 button {
   margin-top: 10px;
   padding: 8px 16px;
-  background-color: #007bff;
+  background-color: #109cdc;
   color: white;
   border: none;
   border-radius: 5px;
@@ -36,7 +36,7 @@ button:hover {
 
 .navbar {
   margin-top: 10px;
-  background-color: #007bff; /* Colore di sfondo azzurro */
+  background-color: #109cdc; /* Colore di sfondo azzurro */
   color: #ffffff; /* Testo bianco */
   font-size: 20px;
   font-weight: bolder;
@@ -78,4 +78,18 @@ a:hover{
 
 #logform{
   transform: translate(0px, -100px);
+}
+
+
+.centered-container {
+    transform: translate(550px, 80px);
+    margin: 0 auto;
+  }
+#secondbutton{
+  transform: translate(40px, 0px);
+  
+}
+
+.subtitle{
+  font-family: Helvetica, sans-serif;
 }
