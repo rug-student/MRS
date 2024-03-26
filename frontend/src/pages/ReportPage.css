@@ -1,0 +1,24 @@
+/* ReportPage.css */
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .question-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px; /* Adjust as needed */
+  }
+  
+  .answer {
+    margin-top: 5px; /* Adjust as needed */
+  }
+  
+  /* Optional: Style the input[type="range"] */
+  input[type="range"] {
+    width: 100%;
+  }
+
+  

@@ -1,0 +1,23 @@
+header {
+    height: 10%;
+    background-color: #1AA9EC;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px; /* Add padding to the header */
+  }
+
+.header-btn{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-right: 20px;
+}
+
+.logoHeader {
+    height: auto; 
+    max-height: 40px; 
+    width: auto; 
+    max-width: 100%; 
+    margin-left: 5%;
+}
