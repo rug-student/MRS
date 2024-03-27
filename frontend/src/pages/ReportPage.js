@@ -9,14 +9,16 @@ function CreateReport() {
   const [malfunctionDescription, setMalfunctionDescription] = useState('');
   const [priority, setPriority] = useState(5); // Default priority set to 5
   const [questions, setQuestions] = useState([]);
+  const [questionAnswers, setQuestionAnswers] = useState({});
 
   // loads questions into form upon page load
   useEffect(() => {
     fetchQuestions();
   }, []);
 
+  // Gets all the questions from the database
   const fetchQuestions = () => {
-    fetch('https://example.com/api/questions')
+    fetch('localhost:8000/api/questions?active=true')
       .then(response => {
         if (response.ok) {
           return response.json();
@@ -24,8 +26,8 @@ function CreateReport() {
           throw new Error('Failed to fetch questions');
         }
       })
-      .then(data => {
-        setQuestions(data.questions);
+      .then(questions => {
+        setQuestions(questions);
       })
       .catch(error => {
         console.error('Error occurred while fetching questions:', error);
@@ -33,7 +35,6 @@ function CreateReport() {
   };
   
   
-  // Event handler to update state when form fields change
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
   };
@@ -46,20 +47,50 @@ function CreateReport() {
     setPriority(parseInt(event.target.value));
   };
 
+  const handleQuestionResponseChange = (event, questionId) => {
+    const newAnswers = { ...questionAnswers };
+    newAnswers[questionId] = event.target.value;
+    setQuestionAnswers(newAnswers);
+  };
 
-  // Submit form 
+
+
+  // -------- SUBMITTING FORM --------
   const handleSubmit = (event) => {
     event.preventDefault();
+
+    // Update answers for custom questions 
+    questions.forEach(question => { 
+      const response = fetch(`http://localhost:8000/api/answers/${question.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          answer: questionResponses[question.id]
+        })
+      });
+      
+      if (!response.ok) {
+        console.error(`Failed to update answer for question ${question.id}`);
+        return;
+      }
+    })
+
     // Perform POST request with form data
-    fetch('https://example.com/api/report', {
+    fetch('localhost:8000/api/reports', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        email: email,
-        malfunctionDescription: malfunctionDescription,
-        priority: priority
+        description: malfunctionDescription, 
+        priority: priority,
+        submitter_email: email,
+        responses: Object.keys(questionAnswers).map(questionId => ({
+          question_id: questionId,
+          answer: questionAnswers[questionId] // TO FIX 
+        }))
       })
     })
     .then(response => {
@@ -99,8 +130,16 @@ function CreateReport() {
           <input type="range" min="1" max="10" value={priority} onChange={handlePriorityChange}/>
           <span className='answer'>{priority}</span>
         </div>
+
+        {/* adds the questions made my maintenance personel */}
+        {questions.map(question => (
+          <div className='question-container' key={question.id}>
+            <div className='question'>{question.question_description}</div>
+            <input type="text" className='answer' value={question.answer} onChange={e => handleQuestionResponseChange(e, question.id)}/>
+          </div>
+        ))}
         
-        <button type="submit">Submit</button>
+        <button type="submit" onClick={handleSubmit}>Submit</button>
       
       </form>
     
