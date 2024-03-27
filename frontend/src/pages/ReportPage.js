@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './ReportPage.css';
 import Header from './Header';
 
@@ -8,7 +8,31 @@ function CreateReport() {
   const [email, setEmail] = useState('');
   const [malfunctionDescription, setMalfunctionDescription] = useState('');
   const [priority, setPriority] = useState(5); // Default priority set to 5
+  const [questions, setQuestions] = useState([]);
 
+  // loads questions into form upon page load
+  useEffect(() => {
+    fetchQuestions();
+  }, []);
+
+  const fetchQuestions = () => {
+    fetch('https://example.com/api/questions')
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Failed to fetch questions');
+        }
+      })
+      .then(data => {
+        setQuestions(data.questions);
+      })
+      .catch(error => {
+        console.error('Error occurred while fetching questions:', error);
+      });
+  };
+  
+  
   // Event handler to update state when form fields change
   const handleEmailChange = (event) => {
     setEmail(event.target.value);

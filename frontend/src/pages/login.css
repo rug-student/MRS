@@ -43,8 +43,8 @@ button:hover {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   display: flex;
   justify-content: space-between;
+  width: 100%;
   padding: 10px 10px;
-  width: 800px;
   transform: translate(0px, -200px);
   
 }

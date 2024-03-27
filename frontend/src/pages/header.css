@@ -12,6 +12,8 @@ header {
     justify-content: flex-end;
     align-items: center;
     padding-right: 20px;
+    font-weight: bolder;
+    color: white;
 }
 
 .logoHeader {
