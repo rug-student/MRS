@@ -37,7 +37,7 @@ function InsertQuestion({ onNext }) {
       </div>
       <div className="centered-container">
         <div className="form-container">
-          <h1 class="subtitle">New Question</h1>
+          <h1 className="subtitle">New Question</h1>
           <style>
         {`
           .subtitle {
@@ -48,6 +48,7 @@ function InsertQuestion({ onNext }) {
           
         `}
       </style>
+          
           <div>
             <label className="littletext">Enter your question: </label>
             <style>
@@ -61,7 +62,7 @@ function InsertQuestion({ onNext }) {
           
         `}
       </style>
-            <input class="inbar"
+            <input className="inbar"
               type="text"
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
@@ -75,7 +76,7 @@ function InsertQuestion({ onNext }) {
           
         `}
       </style>
-            <button class="b" onClick={handleNext}>Next</button>
+            <button className="b" onClick={handleNext}>Next</button>
             <style>
         {`
           .b {
@@ -117,7 +118,7 @@ function SelectType({ onTypeSelected }) {
       </div>
     <div className="centered-container">
       <div className="form-container">
-        <h1 class="subtitle">  Question Type</h1>
+        <h1 className="subtitle">  Question Type</h1>
         <div>
           <button onClick={() => onTypeSelected(true)}>Open Question</button>
           <button id="secondbutton" onClick={() => onTypeSelected(false)}>Closed Question</button>
@@ -161,7 +162,7 @@ function InsertOptions({ options, onOptionsChange, onNext }) {
     </div>
     <div className="centered-container">
       <div className="form-container">
-        <h1 class="subtitle">Insert Options</h1>
+        <h1 className="subtitle">Insert Options</h1>
         <div>
           {options.map((option, index) => (
             <div key={index}>
@@ -255,9 +256,34 @@ function NewQuestionPage() {
     handleNextStep();
   };
 
-  const handleSubmit = () => {
+
+  // POST request 
+  const handleSubmit = () => { 
     console.log('New question data:', { question, isOpen, options });
+    fetch('localhost:8000/api/questions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        question_description: question, 
+        is_open: isOpen,
+        answers: options,
+      })
+    })
+    .then(response => {
+      if (response.ok) {
+        console.log('Question created successfully');
+      } else {
+        console.error('Failed to create question');
+      }
+    })
+    .catch(error => {
+      // Handle network error
+      console.error('Error occurred while creating question:', error);
+    });
   };
+
 
   return (
     <>
