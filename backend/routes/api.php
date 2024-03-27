@@ -5,6 +5,7 @@ use App\Http\Controllers\QuestionsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ReportsController;
+use App\Models\Question;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,7 +30,8 @@ Route::post("/reports", [ReportsController::class, "createReport"]);
 // Routes for questions endpoints.
 Route::get("/questions", [QuestionsController::class, "getAllQuestions"]);
 Route::get("/questions/{id}", [QuestionsController::class, "getQuestion"]);
-Route::post("/questions", [QuestionsController::class, "createQuestion"]);
+Route::post("/questions/{id}", [QuestionsController::class, "createQuestion"]);
+Route::patch("/questions/{id}", [QuestionsController::class, "updateQuestion"]);
 Route::delete("/questions/{id}", [QuestionsController::class, "deleteQuestion"]);
 
 // Routes for answers endpoints.

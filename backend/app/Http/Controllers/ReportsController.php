@@ -19,24 +19,17 @@ class ReportsController extends Controller
      */
     public function getAllReports(Request $request) {
 
-        if($request->status != null) {
-            if($request->priority != null) {
-                $reports = Report::with("response")
-                ->where("status", $request->status)
-                ->where("priority", $request->priority)
-                ->get();
-            } else {
-                $reports = Report::with("response")
-                ->where("status", $request->status)
-                ->get();
-            }
-        } elseif($request->priority != null) {
-            $reports = Report::with("response")
-            ->where("priority", $request->priority)
-            ->get();
-        } else {
-            $reports = Report::with("response")->get();
+        $query = Report::with("response");
+
+        if ($request->status != null) {
+            $query->where("status", $request->status);
         }
+
+        if ($request->priority != null) {
+            $query->where("priority", $request->priority);
+        }
+
+        $reports = $query->get();
 
         return response()->json($reports, 200);
     }

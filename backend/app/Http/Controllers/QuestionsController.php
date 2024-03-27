@@ -22,7 +22,7 @@ class QuestionsController extends Controller
             $questions = Question::with('answer')->where("is_active", false)->get();
 
         } else {
-            $questions = Question::with('answer')->where("is_active", false)->get();
+            $questions = Question::with('answer')->get();
         }
 
         return response()->json($questions, 200);
@@ -80,10 +80,18 @@ class QuestionsController extends Controller
         return response()->json("Question saved succesfully", 200);
     }
 
+    public function updateQuestion(Request $request) {
+        $question = Question::find($request->id);
+        $question->is_active = $request->is_active;
+        $question->save();
+
+        return response()->json(["Question updated succesfully.", $question], 200);
+    }
+
     public function deleteQuestion(Request $request) {
         try {
             Question::destroy($request->id);
-            return response()->json("Question deleted succesfully", 200);
+            return response()->json("Question deleted succesfully.", 200);
         } catch(Exception $e) {
             echo "error: ", $e->getMessage(), "\n";
             return response()->json("Error: "+ $e->getMessage(), 404);
