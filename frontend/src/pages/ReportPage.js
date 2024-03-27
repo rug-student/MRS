@@ -89,7 +89,7 @@ function CreateReport() {
         submitter_email: email,
         responses: Object.keys(questionAnswers).map(questionId => ({
           question_id: questionId,
-          answer: questionAnswers[questionId] // TO FIX 
+          answer_id: questionAnswers[questionId] // TO FIX 
         }))
       })
     })
@@ -135,7 +135,22 @@ function CreateReport() {
         {questions.map(question => (
           <div className='question-container' key={question.id}>
             <div className='question'>{question.question_description}</div>
-            <input type="text" className='answer' value={question.answer} onChange={e => handleQuestionResponseChange(e, question.id)}/>
+            
+            {question.is_open ? (
+              
+              // If the question is open, render a text input
+              <input type="text" className='answer' value={question.answer.id} onChange={e => handleQuestionResponseChange(e, question.id)}/>
+              ) : (
+              
+              // If the question is not open, dropdown menu with the MC answers
+              <select className='answer' value={question.answer} onChange={e => handleQuestionResponseChange(e, question.id)}>
+                <option value="">-- Select Answer --</option>
+                {/* Map through question answers to populate the dropdown */}
+                {question.answer.map(answer => (
+                  <option key={answer.id} value={answer.id}>{answer.answer}</option>
+                 ))}
+              </select>
+            )}
           </div>
         ))}
         
