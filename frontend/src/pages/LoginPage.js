@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import './login.css';
-import { Link } from 'react-router-dom';
-import Gomibologo from './imgs/gomibologo.png';
+import Header from './Header';
 
 function App() {
   const [username, setUsername] = useState('');
@@ -20,20 +19,9 @@ function App() {
   };
 
   return (
+    <div>
+    <Header />
     <div className="App">
-     <div className="navbar">
-      <div className="left-menu">
-        <Link to="/"> <img src={Gomibologo} alt="Gomibologo" id="logo" /></Link>
-      </div>
-      <div className="right-menu">
-        <Link to="/report">Report</Link>
-        <Link to="/questions">Questions</Link>
-        <Link to="/contact">Contact Us</Link>
-        <Link to="/login">Login</Link>
-
-      </div>
-
-    </div>
         <div id="logform">
       <h1>Login Page</h1>
       <form onSubmit={handleSubmit}>
@@ -56,6 +44,7 @@ function App() {
         <button type="submit">Login</button>
       </form>
       <p>{message}</p>
+    </div>
     </div>
     </div>
   );

@@ -46,7 +46,6 @@ button:hover {
   width: 100%;
   padding: 10px 10px;
   transform: translate(0px, -200px);
-  
 }
 
 .left-menu,
@@ -87,7 +86,6 @@ a:hover{
   }
 #secondbutton{
   transform: translate(40px, 0px);
-  
 }
 
 .subtitle{

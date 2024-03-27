@@ -5,8 +5,9 @@ header {
     align-items: center;
     justify-content: space-between;
     padding: 20px; /* Add padding to the header */
-  }
 
+}
+  
 .header-btn{
     display: flex;
     justify-content: flex-end;
@@ -14,6 +15,9 @@ header {
     padding-right: 20px;
     font-weight: bolder;
     color: white;
+    font-size: 20px;
+    font-weight: bolder;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 .logoHeader {
@@ -23,3 +27,6 @@ header {
     max-width: 100%; 
     margin-left: 5%;
 }
+
+
+   
