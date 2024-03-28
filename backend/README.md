@@ -1,3 +1,9 @@
+
+Prerequisites:
+php ^8.1 (sudo apt install php)
+composer   (https://getcomposer.org/download/)
+php-mysql (sudo apt install php-mysql)
+
 How to run backend:
 first off, setup .env file (can copy from .env.example)
 assuming you are in /backend, run 
@@ -6,7 +12,10 @@ or
     "php composer.phar update"
 
 
-to run in development mode: "./vendor/bin/sail up mysql phpmyadmin", then: "php artisan serve"
+to run in development mode:
+"./vendor/bin/sail up mysql phpmyadmin",
+"php artisan migrate",
+"php artisan serve"
 
 to run docker: "./vendor/bin/sail up"
 
