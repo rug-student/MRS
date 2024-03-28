@@ -8,13 +8,13 @@ docker desktop
 How to run backend:
 first off, setup .env file (can copy from .env.example)
 assuming you are in /backend, run 
-    "composer update"
+    `composer update`
 or
-    "php composer.phar update"
-
+    `php composer.phar update`,
+then: `php artisan key:generate`
 
 to run in development mode:
-"./vendor/bin/sail up mysql phpmyadmin",
+`./vendor/bin/sail up mysql phpmyadmin`,
 "php artisan migrate",
 "php artisan serve"
 
