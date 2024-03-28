@@ -54,7 +54,6 @@ class ReportsController extends Controller
         $report = new Report;
         $report->description = $request->description;
         $report->status = 0;
-        $report->priority = $request->priority;
         $report->submitter_email = $request->submitter_email;
 
         // Handle responses.
