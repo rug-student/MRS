@@ -7,7 +7,6 @@ function CreateReport() {
   // State variables to hold form data
   const [email, setEmail] = useState('');
   const [malfunctionDescription, setMalfunctionDescription] = useState('');
-  const [priority, setPriority] = useState(5); // Default priority set to 5
   const [questions, setQuestions] = useState([]);
   const [questionAnswers, setQuestionAnswers] = useState({});
 
@@ -41,10 +40,6 @@ function CreateReport() {
 
   const handleDescriptionChange = (event) => {
     setMalfunctionDescription(event.target.value);
-  };
-
-  const handlePriorityChange = (event) => {
-    setPriority(parseInt(event.target.value));
   };
 
   const handleQuestionResponseChange = (event, questionId) => {
@@ -85,7 +80,6 @@ function CreateReport() {
       },
       body: JSON.stringify({
         description: malfunctionDescription, 
-        priority: priority,
         submitter_email: email,
         responses: Object.keys(questionAnswers).map(questionId => ({
           question_id: questionId,
@@ -123,12 +117,6 @@ function CreateReport() {
         <div className='question-container'>
           <div className='question'>02. Describe the malfunction.</div>
           <textarea className='answer' value={malfunctionDescription} onChange={handleDescriptionChange}/>
-        </div>
-
-        <div className='question-container'>
-          <div className='question'>03. How much of a priority is the malfunction (1 = Low, 10 = High)?</div>
-          <input type="range" min="1" max="10" value={priority} onChange={handlePriorityChange}/>
-          <span className='answer'>{priority}</span>
         </div>
 
         {/* adds the questions made my maintenance personel */}
