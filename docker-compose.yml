@@ -1,0 +1,71 @@
+version: "3.7"
+services:
+  # Database server
+  mariadb:
+    image: mariadb:11.1
+    environment: # Configuration of the database server as specified in their README
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?}
+      MYSQL_DATABASE: ${DB_DATABASE:?}
+      MYSQL_USER: ${DB_USERNAME:?}
+      MYSQL_PASSWORD: ${DB_PASSWORD:?}
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    ports: # We expose the database on the port specified in the .env file
+      - ${DB_PORT:-3306}:3306
+    restart: unless-stopped
+    volumes:
+      - ./docker-compose/mysql:/docker-entrypoint-initdb.d
+    networks:
+      - app
+
+  # Service specification for the .NET Core-based backend
+  backend-laravel:
+    image: MRS/backend-laravel
+    build: # We specify how to build the image name given above: by building the Dockerfile in the directory specified
+      context: ./backend
+      dockerfile: Dockerfile
+    depends_on: # The backend can only run when the database is up
+      - mariadb
+    environment:
+      - ConnectionStrings__DefaultConnection=server=mariadb;port=3306;database=${DB_DATABASE:?};user=${DB_USERNAME:?};password=${DB_PASSWORD:?}
+    ports: # We expose this backend on the port specified in the .env file
+      - ${BACKEND_PORT:?}:8080
+    working_dir: /var/www/
+    volumes:
+      - ./backend:/var/www
+    networks:
+      - app
+
+  nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    tty: true
+    ports:
+      - 8080:80
+    volumes:
+      - ./:/var/www
+      - ./docker-compose/nginx:/etc/nginx/conf.d/
+    networks:
+      - app
+
+
+  frontend-react:
+    image: MRS/frontend-react
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - ${FRONTEND_PORT:?}:80
+    environment:
+      - BACKENDS
+    working_dir: /var/www/
+    volumes:
+      - ./frontend:/var/www
+    networks:
+      - app
+
+
+
+networks:
+  app:
+    driver: bridge
