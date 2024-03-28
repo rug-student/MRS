@@ -17,7 +17,7 @@ function CreateReport() {
 
   // Gets all the questions from the database
   const fetchQuestions = () => {
-    fetch('localhost:8000/api/questions?active=true')
+    fetch(`http://localhost:8000/api/questions?active=true`)
       .then(response => {
         if (response.ok) {
           return response.json();
@@ -73,7 +73,7 @@ function CreateReport() {
     })
 
     // Perform POST request with form data
-    fetch('localhost:8000/api/reports', {
+    fetch(`http://localhost:8000/api/reports`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

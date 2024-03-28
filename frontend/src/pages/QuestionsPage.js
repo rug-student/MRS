@@ -181,7 +181,7 @@ function NewQuestionPage() {
   // POST request 
   const handleSubmit = () => { 
     console.log('New question data:', { question, isOpen, options });
-    fetch('localhost:8000/api/questions', {
+    fetch(`http://localhost:8000/api/questions`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
