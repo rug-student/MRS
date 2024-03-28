@@ -55,7 +55,7 @@ class ReportsController extends Controller
         $report->description = $request->description;
         $report->status = 0;
         $report->submitter_email = $request->submitter_email;
-
+        $report->priority = -1;
         // Handle responses.
         $report->save();
         foreach($request->responses as $response_body) {
