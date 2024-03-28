@@ -30,7 +30,7 @@ Route::post("/reports", [ReportsController::class, "createReport"]);
 // Routes for questions endpoints.
 Route::get("/questions", [QuestionsController::class, "getAllQuestions"]);
 Route::get("/questions/{id}", [QuestionsController::class, "getQuestion"]);
-Route::post("/questions/{id}", [QuestionsController::class, "createQuestion"]);
+Route::post("/questions", [QuestionsController::class, "createQuestion"]);
 Route::patch("/questions/{id}", [QuestionsController::class, "updateQuestion"]);
 Route::delete("/questions/{id}", [QuestionsController::class, "deleteQuestion"]);
 
