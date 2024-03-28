@@ -13,12 +13,8 @@
   }
   
   .answer {
-    margin-top: 5px; /* Adjust as needed */
+    margin-top: 10px; /* Adjust as needed */
   }
   
-  /* Optional: Style the input[type="range"] */
-  input[type="range"] {
-    width: 100%;
-  }
 
   
