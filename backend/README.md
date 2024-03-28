@@ -3,6 +3,7 @@ Prerequisites:
 php ^8.1 (sudo apt install php)
 composer   (https://getcomposer.org/download/)
 php-mysql (sudo apt install php-mysql)
+docker desktop
 
 How to run backend:
 first off, setup .env file (can copy from .env.example)
