@@ -4,6 +4,10 @@ Malfunction report system for Gomibo
 
 
 ## First time startup
+
+Copy the `.env.example` file and rename it to `.env` for both in the main directory and the `./backend` directory.
+
+
 open the terminal in this folder and start the docker containers
 
 ```
