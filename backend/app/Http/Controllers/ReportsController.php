@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Question;
 use App\Models\Report;
+use App\Models\Answer;
 use App\Models\Response;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -56,9 +57,23 @@ class ReportsController extends Controller
         $report->status = 0;
         $report->submitter_email = $request->submitter_email;
         $report->priority = -1;
+
         // Handle responses.
         $report->save();
         foreach($request->responses as $response_body) {
+            // Error handling
+            if(!Question::where("id", $response_body["question_id"])->exists()) {
+                return response()->json("ERROR: passed non-existing question", 404);
+            }
+            if(!Answer::where("id", $response_body["answer_id"])->exists()) {
+                return response()->json("ERROR: passed non-existing answer", 404);
+            }
+            $answer = Answer::find($response_body["answer_id"]);
+            if($answer->question_id != $response_body["question_id"]) {
+                return response()
+                ->json("ERROR: passed non-related question answer pair", 404);
+            }
+
             $response = new Response();
             $response->question_id = $response_body["question_id"];
             $response->answer_id = $response_body["answer_id"];
