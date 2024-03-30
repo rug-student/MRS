@@ -1,0 +1,117 @@
+version: "3.7"
+services:
+  # Database server
+# #################################################################
+  db:
+    image: mariadb:latest
+    tty: true
+    environment: # Configuration of the database server as specified in their README
+      MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_DATABASE: '${DB_DATABASE}'
+      MYSQL_USER: '${DB_USERNAME}'
+      MYSQL_PASSWORD: '${DB_PASSWORD}'
+    ports: # We expose the database on the port specified in the .env file
+      # - ${DB_PORT:-3306}:3306
+      - 3306:3306
+    restart: unless-stopped
+    volumes:
+      - ./docker-compose/mysql:/docker-entrypoint-initdb.d
+    networks:
+      - app
+# #########################################################################
+
+  # Service specification for the .NET Core-based backend
+  backend-laravel:
+    image: MRS/backend-laravel
+    tty: true
+    build: # We specify how to build the image name given above: by building the Dockerfile in the directory specified
+      context: ./backend
+      dockerfile: Dockerfile
+    depends_on: # The backend can only run when the database is up
+      - db
+    environment:
+      - ConnectionStrings__DefaultConnection=server=db;port=3306;database=${DB_DATABASE:?};user=${DB_USERNAME:?};password=${DB_PASSWORD}
+    ports: # We expose this backend on the port specified in the .env file
+      # - ${BACKEND_PORT:?}:3000
+      - 8000:8000
+    # working_dir: /var/www/
+    # volumes:
+    #   - ./backend:/var/www
+    networks:
+      - app
+
+  nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    tty: true
+    ports:
+      - 8080:80
+    volumes:
+      - ./:/var/www
+      - ./docker-compose/nginx:/etc/nginx/conf.d/
+    networks:
+      - app
+
+  frontend-react:
+    image: MRS/frontend-react
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    tty: true
+    ports:
+      # - ${FRONTEND_PORT:?}:3001
+      - 3000:3000
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    # environment:
+    #   - BACKENDS
+    # working_dir: /var/www/
+    # volumes:
+    #   - ./frontend:/var/www
+    networks:
+      - app
+
+  phpmyadmin:
+    depends_on:
+      - db
+    image: phpmyadmin/phpmyadmin
+    environment:
+      - PMA_HOST=db
+      - PMA_PORT=3306
+    networks:
+      - app
+    ports:
+      - 8001:80
+
+  # mysql:
+  #   image: 'mysql/mysql-server:8.0'
+  #   ports:
+  #     - '${FORWARD_DB_PORT:-3306}:3306'
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+  #     MYSQL_ROOT_HOST: '%'
+  #     MYSQL_DATABASE: '${DB_DATABASE}'
+  #     MYSQL_USER: '${DB_USERNAME}'
+  #     MYSQL_PASSWORD: '${DB_PASSWORD}'
+  #     MYSQL_ALLOW_EMPTY_PASSWORD: 1
+  #   # volumes:
+  #     # - 'sail-mysql:/var/lib/mysql1'
+  #     # - './vendor/laravel/sail/database/mysql/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
+  #   networks:
+  #     - app
+  #   healthcheck:
+  #     test:
+  #       - CMD
+  #       - mysqladmin
+  #       - ping
+  #       - '-p${DB_PASSWORD}'
+  #     retries: 3
+  #     timeout: 5s
+
+
+networks:
+  app:
+    driver: bridge
+
