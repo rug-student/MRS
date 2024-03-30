@@ -36,3 +36,4 @@ Route::delete("/questions/{id}", [QuestionsController::class, "deleteQuestion"])
 
 // Routes for answers endpoints.
 Route::put("answers/{id}", [AnswersController::class, "updateAnswer"]);
+Route::post("answers/", [AnswersController::class, "createAnswer"]);
