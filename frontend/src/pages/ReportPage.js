@@ -56,7 +56,8 @@ function CreateReport() {
 
     // Update answers for custom questions 
     questions.forEach(question => { 
-      const response = fetch(`http://localhost:8000/api/answers/`, {
+      if (question.is_open) {
+        const response = fetch(`http://localhost:8000/api/answers/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -70,6 +71,7 @@ function CreateReport() {
       if (!response.ok) {
         console.error(`Failed to update answer for question ${question.id}`);
         return;
+      }
       }
     })
 
@@ -132,11 +134,11 @@ function CreateReport() {
               ) : (
               
               // If the question is not open, dropdown menu with the MC answers
-              <select className='answer' value={question.answer} onChange={e => handleQuestionResponseChange(e, question.id)}>
+              <select className='answer' value={question.answer.answer} onChange={e => handleQuestionResponseChange(e, question.id)}>
                 <option value="">-- Select Answer --</option>
                 {/* Map through question answers to populate the dropdown */}
                 {question.answer.map(answer => (
-                  <option key={answer.id} value={answer.id}>{answer.answer}</option>
+                  <option key={answer.id} value={answer.answer}>{answer.answer}</option>
                  ))}
               </select>
             )}
