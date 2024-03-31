@@ -56,12 +56,13 @@ function CreateReport() {
 
     // Update answers for custom questions 
     questions.forEach(question => { 
-      const response = fetch(`http://localhost:8000/api/answers/${question.id}`, {
-        method: 'PUT',
+      const response = fetch(`http://localhost:8000/api/answers/`, {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
+          question_id: question.id,
           answer: questionAnswers[question.id]
         })
       });
