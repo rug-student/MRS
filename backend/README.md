@@ -24,5 +24,5 @@ to run tests: i dont know yet
 
 to enter database using phpMyAdmin:
     - go to "localhost:8001"
-    - login with credentials in .env file (default username=root, password=root)
+    - login with credentials in .env file (default username=root, empty password)
     
