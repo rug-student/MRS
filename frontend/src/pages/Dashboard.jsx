@@ -1,48 +1,54 @@
 import React, { useEffect, useState } from "react";
-import data from "../data/dataFake.json";
 import classes from "./Dashboard.module.css";
 import { FiEdit } from "react-icons/fi";
-import Header from "./Header";
+import Header from "./HeaderLoggedIn";
 
 const Dashboard = () => {
-  const [reports, setReports] = useState(data);
 
+  const [reports, setReports] = useState([]);
+
+  // loads questions into form upon page load
   useEffect(() => {
-    const fetchReportsData = async () => {
-      const apiUrl = process.env.REACT_APP_API_URL; // Access the environment variable
-      try {
-
-        const response = await fetch(`${apiUrl}/reports`);
-      const data = await response.json();
-      console.log(data);
-      } catch (error) {
-        console.log(error)
-      }   
-    };
-    fetchReportsData();
+    fetchReports();
   }, []);
+
+  // Gets all the questions from the database
+  const fetchReports = () => {
+    fetch(`http://localhost:8000/api/reports?status=&priority=`)
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Failed to fetch reports');
+        }
+      })
+      .then(reports => {
+        setReports(reports);
+      })
+      .catch(error => {
+        console.error('Error occurred while fetching reports:', error);
+      });
+  };
+  
 
   return (
     <div className={`main_wrapper_container ${classes.mainWrapper}`}>
         <Header/>
       <div className={`inner_wrapper_container ${classes.tableHeader}`}>
         <div>
-          <h2>Item</h2>
+          <h2>ID</h2>
         </div>
         <div>
-          <h2>Status</h2>
+          <h2>Description</h2>
         </div>
         <div>
           <h2>DateTime</h2>
         </div>
         <div>
-          <h2>Location</h2>
+          <h2>Status</h2>
         </div>
         <div>
           <h2>Email</h2>
-        </div>
-        <div>
-          <h2>Technician</h2>
         </div>
         <div>
           <h2>Priority</h2>
@@ -52,22 +58,19 @@ const Dashboard = () => {
         {reports.map((element) => (
           <div className={classes.rowWrapper} key={element.id}>
             <div>
-              <p>{element.item}</p>
+              <p>{element.id}</p>
+            </div>
+            <div>
+              <p>{element.description}</p>
+            </div>
+            <div>
+              <p>{element.created_at}</p>
             </div>
             <div>
               <p>{element.status}</p>
             </div>
             <div>
-              <p>{element.date_time}</p>
-            </div>
-            <div>
-              <p>{element.location}</p>
-            </div>
-            <div>
-              <p>{element.email}</p>
-            </div>
-            <div>
-              <p>{element.person_assigned || "Unassigned"}</p>
+              <p>{element.submitter_email}</p>
             </div>
             <div>
               <p>{element.priority}</p>
