@@ -1,0 +1,298 @@
+openapi: '3.0.2'
+info:
+  title: Malfunction Report System API
+  version: '1.0'
+  description:  
+    Specification of Malfunction Report System API 
+    developed for Gomibo.
+
+servers:
+  - url: http:/localhost:8000/api
+    description: laravel backend
+
+components:
+  schemas:
+    Report:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        description:
+          type: string
+        priority:
+          type: integer
+          description: Priority of the Report
+        status:
+          type: integer
+          description: Status of the Report (e.g. in progress, fixed)
+        submitter_email:
+          type: string
+          description: Email of the report submitter
+        responses:
+          type: array
+          items:
+            $ref: "#/components/schemas/Response"
+    
+    Response:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        question_id:
+          type: integer
+        answer_id:
+          type: integer
+
+    Question:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        question_description:
+          type: string
+        is_open:
+          type: boolean
+        is_active:
+          type: boolean
+        answers:
+          type: array
+          items:
+            $ref: "#/components/schemas/Answer"
+
+    QuestionState:
+      type: object
+      properties:
+        is_active: 
+          type: boolean
+
+    QuestionSummary:
+      type: object
+      properties:
+        question_description:
+          type: string
+        is_open:
+          type: boolean
+        answers:
+          type: array
+          items:
+            type: string
+
+    Answer:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        answer:
+          type: string
+        question_id:
+          type: integer
+        
+
+  responses:
+    BadRequest:
+      description: Request was not well-formed, see error details
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error-message:
+                type: string
+                description: Error message detailing the problem with the request
+    NotFound:
+      description: Resource was not found.
+
+  parameters:
+    report-filter-status:
+      name: status
+      in: query
+      required: false
+      description: Filtering the results by status
+      schema:
+        type: integer
+    report-filter-priority:
+      name: priority
+      in: query
+      required: false
+      description: Filtering the results by priority
+      schema:
+        type: integer
+    question-filter-is_active:
+      name: active
+      in: query
+      required: false
+      description: Filtering the results by is_active
+      schema:
+        type: boolean
+
+paths:
+  /reports:
+    get:
+      tags:
+        - Reports
+      description: Retrieves a list of reports filtered by the requested criteria.
+      summary: Retrieve a list of reports
+      parameters:
+        - $ref: "#/components/parameters/report-filter-status"
+        - $ref: "#/components/parameters/report-filter-priority"
+      responses:
+        '200':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Report"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+    post: 
+      tags:
+        - Reports
+      description: Creates a new report.
+      summary: Create a new report
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Report"
+      responses:
+        '200':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Report"
+  
+  /reports/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: The ID of the report
+        schema:
+          type: integer
+    get:
+      tags:
+        - Reports
+      description: Retrieves a single report with specified id.
+      summary: Retrieve a single Report
+      responses:
+        '200':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Report"
+        '404':
+          $ref: "#/components/responses/NotFound"
+
+  /questions:
+    get:
+      tags:
+        - Questions
+      description: Retrieves a list of questions filterable by active status.
+      summary: Retrieve a list of questions
+      parameters:
+        - $ref: "#/components/parameters/question-filter-is_active"
+      responses:
+        '200':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Question"
+    post:
+      tags:
+        - Questions
+      description: Creates a new question with either selectabe MC answers or a single empty answer for an open question  
+      summary: Create a new question (mc or open)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/QuestionSummary"
+      responses:
+        '200':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Question"
+        '400':
+          $ref: "#/components/responses/BadRequest"
+      
+  /questions/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: The ID of the question
+        schema:
+          type: integer
+    get:
+      tags:
+        - Questions
+      description: Retrieves a single question for given ID.
+      summary: Retrieve a question.
+      responses:
+        '200':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Question"
+        '404':
+          $ref: "#/components/responses/NotFound"
+    delete:
+      tags:
+        - Questions
+      description: Deletes a question with the ID provided.
+      summary: Delete a question
+      responses:
+        '200':
+          description: "Succesfully deleted"
+        '404':
+          $ref: "#/components/responses/NotFound"
+    patch:
+      tags:
+        - Questions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/QuestionState"
+      description: Updates the state of a question with ID provided.
+      summary: Update the state of a question
+      responses:
+        '200':
+         description: "OK"
+
+  /answers:
+    post:
+      tags:
+        - Answers
+      description: Creates a new answer (used for answering an open question)
+      summary: Create a new answer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Answer"
+      responses:
+        '200':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Answer"

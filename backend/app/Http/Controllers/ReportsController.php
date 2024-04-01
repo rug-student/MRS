@@ -63,15 +63,15 @@ class ReportsController extends Controller
         foreach($request->responses as $response_body) {
             // Error handling
             if(!Question::where("id", $response_body["question_id"])->exists()) {
-                return response()->json("ERROR: passed non-existing question", 404);
+                return response()->json("ERROR: passed non-existing question", 400);
             }
             if(!Answer::where("id", $response_body["answer_id"])->exists()) {
-                return response()->json("ERROR: passed non-existing answer", 404);
+                return response()->json("ERROR: passed non-existing answer", 400);
             }
             $answer = Answer::find($response_body["answer_id"]);
             if($answer->question_id != $response_body["question_id"]) {
                 return response()
-                ->json("ERROR: passed non-related question answer pair", 404);
+                ->json("ERROR: passed non-related question answer pair", 400);
             }
 
             $response = new Response();
