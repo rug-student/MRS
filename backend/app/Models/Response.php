@@ -21,16 +21,22 @@ class Response extends Model
     /**
      * Get the question of the response.
      */
-    public function question(): HasOne {
-        return $this->hasOne(Question::class);
+    public function question() {
+        return $this->belongsTo(Question::class);
     }
 
     /**
      * Get the answer of the response.
      */
-    public function answer(): HasOne {
-        return $this->hasOne(Answer::class);
+    public function answer() {
+        return $this->belongsTo(Answer::class);
     }
+
+    protected $hidden = [
+        'question_id',
+        'answer_id',
+        'report_id'
+        ];
 
     public $timestamps = false;
 }

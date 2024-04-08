@@ -1,7 +1,7 @@
 openapi: '3.0.2'
 info:
   title: Malfunction Report System API
-  version: '1.0'
+  version: '1.1'
   description:  
     Specification of Malfunction Report System API 
     developed for Gomibo.
@@ -34,7 +34,56 @@ components:
           items:
             $ref: "#/components/schemas/Response"
     
+    ReportSummary:
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        description:
+          type: string
+        priority:
+          type: integer
+          description: Priority of the Report
+        status:
+          type: integer
+          description: Status of the Report (e.g. in progress, fixed)
+        submitter_email:
+          type: string
+          description: Email of the report submitter
+
+    ReportPOSTBody:
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        description:
+          type: string
+        priority:
+          type: integer
+          description: Priority of the Report
+        status:
+          type: integer
+          description: Status of the Report (e.g. in progress, fixed)
+        submitter_email:
+          type: string
+          description: Email of the report submitter
+        responses:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResponseSummary"
+
     Response:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        question:
+          $ref: "#/components/schemas/QuestionSummary"
+        answer:
+          $ref: "#/components/schemas/Answer"
+
+    ResponseSummary:
       type: object
       properties:
         id:
@@ -134,7 +183,7 @@ paths:
     get:
       tags:
         - Reports
-      description: Retrieves a list of reports filtered by the requested criteria.
+      description: Retrieves a list of summarized reports filtered by the requested criteria.
       summary: Retrieve a list of reports
       parameters:
         - $ref: "#/components/parameters/report-filter-status"
@@ -147,7 +196,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Report"
+                  $ref: "#/components/schemas/ReportSummary"
         '400':
           $ref: "#/components/responses/BadRequest"
     post: 
@@ -160,14 +209,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Report"
+              $ref: "#/components/schemas/ReportPOSTBody"
       responses:
         '200':
           description: "OK"
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Report"
+                $ref: "#/components/schemas/ReportPOSTBody"
   
   /reports/{id}:
     parameters:
@@ -180,7 +229,7 @@ paths:
     get:
       tags:
         - Reports
-      description: Retrieves a single report with specified id.
+      description: Retrieves a detailed single report with specified id.
       summary: Retrieve a single Report
       responses:
         '200':

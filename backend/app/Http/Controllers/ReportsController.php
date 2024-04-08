@@ -8,6 +8,8 @@ use App\Models\Answer;
 use App\Models\Response;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redis;
 
 /**
  * Controller class that handles the api calls for reports
@@ -20,7 +22,7 @@ class ReportsController extends Controller
      */
     public function getAllReports(Request $request) {
 
-        $query = Report::with("response");
+        $query = DB::table('reports');
 
         if ($request->status != null) {
             $query->where("status", $request->status);
@@ -41,8 +43,12 @@ class ReportsController extends Controller
     public function getReport(Request $request) {
 
         $report = Report::where("id", $request->id)
-        ->with("response")
+        ->with(["response.question", "response.answer"])
         ->get();
+
+        if($report == null) {
+            return response()->json("ERROR: Resource not found.", 404);
+        }
 
         return response()->json($report, 200);
     }

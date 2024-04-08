@@ -21,7 +21,7 @@ class Answer extends Model
     }
 
     public function response() {
-        return $this->belongsTo(Response::class);
+        return $this->hasMany(Response::class);
     }
 
     protected $fillable = [

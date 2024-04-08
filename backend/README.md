@@ -1,11 +1,13 @@
+# MRS Backend
 
-Prerequisites:
-php ^8.1 (sudo apt install php)
-composer   (https://getcomposer.org/download/)
-php-mysql (sudo apt install php-mysql)
-docker desktop
 
-How to run backend:
+## Prerequisites
+- php ^8.1 (sudo apt install php)
+- composer   (https://getcomposer.org/download/)
+- php-mysql (sudo apt install php-mysql)
+- docker desktop
+
+## How to run
 first off, setup .env file (can copy from .env.example)
 assuming you are in /backend, run 
     `composer update`
@@ -13,16 +15,24 @@ or
     `php composer.phar update`,
 then: `php artisan key:generate`
 
-to run in development mode:
-`./vendor/bin/sail up mysql phpmyadmin`,
-"php artisan migrate",
-"php artisan serve"
+### development mode:
 
-to run docker: "./vendor/bin/sail up"
+#### First time:
+1. `./vendor/bin/sail up mysql phpmyadmin`
+2. `php artisan migrate`
+3. `php artisan serve`
 
-to run tests: i dont know yet
+#### Normally:
+1. `./vendor/bin/sail up mysql phpmyadmin`
+2. `php artisan serve`
 
-to enter database using phpMyAdmin:
-    - go to "localhost:8001"
-    - login with credentials in .env file (default username=root, empty password)
+### full docker:
+1. `./vendor/bin/sail up`
+
+### tests: 
+1. Dont know yet
+
+## How to view database using phpMyAdmin:
+1. go to `localhost:8001`
+2. login with credentials in `.env` file (default username=`root`, empty password)
     
