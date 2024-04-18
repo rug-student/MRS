@@ -26,11 +26,11 @@ then: `php artisan key:generate`
 1. `./vendor/bin/sail up mysql phpmyadmin`
 2. `php artisan serve`
 
-### full docker:
-1. `./vendor/bin/sail up`
+#### Tests (assuming you are already running database):
+1. `./vendor/bin/phpunit`
 
-### tests: 
-1. Dont know yet
+### Full docker deployment:
+1. `./vendor/bin/sail up`
 
 ## How to view database using phpMyAdmin:
 1. go to `localhost:8001`
