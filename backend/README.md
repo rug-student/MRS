@@ -15,19 +15,17 @@ or
     `php composer.phar update`,
 then: `php artisan key:generate`
 
-### development mode:
+Lastly you will need to migrate both the production and testing databases:
+1. `php artisan migrate`
+2. `php artisan migrate --database=testing`
 
-#### First time:
-1. `./vendor/bin/sail up mysql phpmyadmin`
-2. `php artisan migrate`
-3. `php artisan serve`
-
-#### Normally:
+### Development mode:
 1. `./vendor/bin/sail up mysql phpmyadmin`
 2. `php artisan serve`
 
-#### Tests (assuming you are already running database):
-1. `./vendor/bin/phpunit`
+### Tests:
+1. `./vendor/bin/sail up mysql phpmyadmin`
+2. `./vendor/bin/phpunit`
 
 ### Full docker deployment:
 1. `./vendor/bin/sail up`
