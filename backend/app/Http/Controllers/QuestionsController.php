@@ -36,8 +36,11 @@ class QuestionsController extends Controller
         $question = Question::with("answer")
         ->where("id", $request->id)
         ->get();
-
-        return response()->json($question, 200);
+        if(!$question->isEmpty()) {
+            return response()->json($question, 200);
+        } else {
+            return response()->json("Question not found", 404);
+        }
     }
 
     /**

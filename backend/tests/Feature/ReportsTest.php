@@ -2,14 +2,11 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
+//use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class ReportsTest extends TestCase
 {
-    protected function setup(): void {
-        
-    }
 
     /**
      * A basic test example.

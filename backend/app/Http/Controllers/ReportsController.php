@@ -46,7 +46,7 @@ class ReportsController extends Controller
         ->with(["response.question", "response.answer"])
         ->get();
 
-        if($report == null) {
+        if($report->isEmpty()) {
             return response()->json("ERROR: Resource not found.", 404);
         }
 
