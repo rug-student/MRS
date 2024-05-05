@@ -23,7 +23,7 @@ input {
 button {
   margin-top: 10px;
   padding: 8px 16px;
-  background-color: #109cdc;
+  background-color: #1aa9ec;
   color: white;
   border: none;
   border-radius: 5px;
@@ -32,6 +32,7 @@ button {
 
 button:hover {
   background-color: #0056b3;
+  font-weight: bolder;
 }
 
 .navbar {
@@ -81,13 +82,43 @@ a:hover{
 
 
 .centered-container {
-    transform: translate(550px, 80px);
-    margin: 0 auto;
+    margin-top: 30px;
+    margin-left: 450px;
   }
 #secondbutton{
-  transform: translate(40px, 0px);
+  transform: translate(70px, 0px);
+  width: 100px;
 }
 
+#firstbutton{
+  transform: translate(30px, 0px);
+  width: 100px;
+}
+#thirdbutton{
+  transform: translate(115px, 0px);
+
+}
 .subtitle{
-  font-family: Helvetica, sans-serif;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-weight: bolder;
+  color: white;
+  background-color: #1aa9ec;
+  width: 300px;
+  text-align: center;
+  padding: 20px;
+  font-size: 30px;
+  border-radius: 10px;
+
+}
+
+#inoption{
+  width: 290px;
+}
+
+.inbar{
+  width: 230px;
+  margin-left: -0px;
+
+
+
 }

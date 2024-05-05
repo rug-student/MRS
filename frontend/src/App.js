@@ -6,6 +6,7 @@ import LoginPage from './pages/LoginPage';
 import ReportPage from './pages/ReportPage';
 import QuestionsPage from './pages/QuestionsPage';
 import Dashboard from './pages/Dashboard';
+import Home from './pages/Home';
 
 
 function App() {
@@ -16,7 +17,8 @@ function App() {
         <Route path="/questions" element={<QuestionsPage />} />
         <Route path="/" element={<ReportPage />} /> {/* Use 'element' prop instead of 'component' */}
         <Route path="/dashboard" element={<Dashboard />} />
-        {/* Add more routes as needed */}
+        <Route path="/home" element={<Home />} />
+
       </Routes>
     </Router>
   );
