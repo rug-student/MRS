@@ -58,12 +58,6 @@ components:
           readOnly: true
         description:
           type: string
-        priority:
-          type: integer
-          description: Priority of the Report
-        status:
-          type: integer
-          description: Status of the Report (e.g. in progress, fixed)
         submitter_email:
           type: string
           description: Email of the report submitter
@@ -217,6 +211,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ReportPOSTBody"
+        '422':
+          description: "Unprocessable Content"
   
   /reports/{id}:
     parameters:

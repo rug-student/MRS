@@ -10,7 +10,7 @@ use Tests\TestCase;
 class QuestionsTest extends TestCase
 {
 
-    use RefreshDatabase;  // Refresh the testing database after each test. (makes it slow)
+    use RefreshDatabase;  // Refresh the testing database after each test.
 
 
     /**

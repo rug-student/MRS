@@ -58,6 +58,11 @@ class ReportsController extends Controller
      */
     public function createReport(Request $request) {
 
+        $validated = $request->validate([
+            'description' => 'required',
+            'submitter_email'=> 'required',
+        ]);
+
         $report = new Report;
         $report->description = $request->description;
         $report->status = 0;
