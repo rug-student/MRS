@@ -30,9 +30,10 @@ class AnswersController extends Controller
     public function createAnswer(Request $request) {
         $answer = new Answer;
 
-        if($request->answer == null || $request->question_id == null) {
-            return response()->json("No answer or question_id given.", 401);
-        }
+        $request->validate([
+            "answer" => "required",
+            "question_id" => "required"
+        ]);
 
         $answer->answer = $request->answer;
         $answer->question_id = $request->question_id;
