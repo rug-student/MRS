@@ -8,14 +8,15 @@
 - docker desktop
 
 ## How to run
-first off, setup .env file (can copy from .env.example)
-assuming you are in /backend, run 
-    `composer update`
-or
-    `php composer.phar update`,
-then: `php artisan key:generate`
+first off, setup .env file, composer and php key by:
+```
+cd backend/
+cp .env.example .env
+composer update
+php artisan key:generate
+```
 
-Lastly you will need to migrate both the production and testing databases:
+You will need to migrate both the production and testing databases:
 1. `php artisan migrate`
 2. `php artisan migrate --database=testing`
 
