@@ -3,19 +3,36 @@ import './login.css';
 import Header from './Header';
 
 function App() {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
 
+  const csrf =  () => fetch('http://localhost:8000/sanctum/csrf-cookie', {
+    method: 'GET'
+  });
+
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Perform simple validation (replace this with your actual validation logic)
-    if (username === 'admin' && password === 'password') {
-      setMessage('Login successful!');
-    } else {
-      setMessage('Invalid username or password');
-    }
+    csrf();
+    fetch(`http://localhost:8000/api/reports`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        email: email, 
+        password: password,
+      })
+    })
+    .then(response => {
+      if (response.ok) {
+        // Handle successful response
+        console.log('Report submitted successfully');
+      } else {
+        // Handle error response
+        console.error('Failed to submit report');
+      }
+    })
   };
 
   return (
@@ -26,11 +43,11 @@ function App() {
       <h1>Login Page</h1>
       <form onSubmit={handleSubmit}>
         <div>
-          <label>Username:</label>
+          <label>Email:</label>
           <input
             type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </div>
         <div>
@@ -41,6 +58,11 @@ function App() {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
+        <input
+            type="hidden"
+            name="_token"
+            value="{{csrf_token()}}"
+          />
         <button type="submit">Login</button>
       </form>
       <p>{message}</p>

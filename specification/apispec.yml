@@ -7,11 +7,31 @@ info:
     developed for Gomibo.
 
 servers:
-  - url: http:/localhost:8000/api
+  - url: http:/localhost:8000
     description: laravel backend
 
 components:
   schemas:
+    AuthLogin:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      
+    AuthRegister:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        password_confirmation:
+          type: string
+
     Report:
       type: object
       properties:
@@ -65,6 +85,12 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/ResponseSummary"
+    ReportPATCHBody:
+      properties:
+        status:
+          type: integer
+        priority:
+          type: integer
 
     Response:
       type: object
@@ -173,7 +199,42 @@ components:
         type: boolean
 
 paths:
-  /reports:
+  /login:
+    post: 
+      tags:
+        - Authentication
+      description: Tries to login with given user credentials.
+      summary: login to a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AuthLogin"
+      responses:
+          '200':
+            description: "OK"
+          '422':
+            description: "Unprocessable Content"
+  /register:
+    post: 
+      tags:
+        - Authentication
+      description: Tries to register a new user (maintainer) from given credentials. (name is optional)
+      summary: register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AuthRegister"
+      responses:
+        '200':
+          description: "OK"
+        '422':
+          description: "Unprocessable Content"
+
+  /api/reports:
     get:
       tags:
         - Reports
@@ -214,7 +275,7 @@ paths:
         '422':
           description: "Unprocessable Content"
   
-  /reports/{id}:
+  /api/reports/{id}:
     parameters:
       - name: id
         in: path
@@ -236,8 +297,28 @@ paths:
                 $ref: "#/components/schemas/Report"
         '404':
           $ref: "#/components/responses/NotFound"
+    patch:
+      tags:
+        - Reports
+      description: Update a reports status and/or priority.
+      summary: Update report status and/or priority
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReportPATCHBody"
+      responses:
+        '200':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReportPATCHBody"
+        '422':
+          description: "Unprocessable Content"
 
-  /questions:
+  /api/questions:
     get:
       tags:
         - Questions
@@ -275,7 +356,7 @@ paths:
         '400':
           $ref: "#/components/responses/BadRequest"
       
-  /questions/{id}:
+  /api/questions/{id}:
     parameters:
       - name: id
         in: path
@@ -322,7 +403,7 @@ paths:
         '200':
          description: "OK"
 
-  /answers:
+  /api/answers:
     post:
       tags:
         - Answers

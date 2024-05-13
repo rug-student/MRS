@@ -60,7 +60,7 @@ class ReportsController extends Controller
 
         $validated = $request->validate([
             'description' => 'required',
-            'submitter_email'=> 'required',
+            'submitter_email'=> 'required|email',
         ]);
 
         $report = new Report;

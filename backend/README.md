@@ -33,4 +33,3 @@ Lastly you will need to migrate both the production and testing databases:
 ## How to view database using phpMyAdmin:
 1. go to `localhost:8001`
 2. login with credentials in `.env` file (default username=`root`, empty password)
-    
