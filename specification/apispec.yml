@@ -12,14 +12,51 @@ servers:
 
 components:
   schemas:
+    File: 
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        file_path:
+          type: string
+        created_at: 
+          type: string
+          format: date-time
+        updated_at: 
+          type: string
+          format: date-time
+
     AuthLogin:
       type: object
       properties:
+        id:
+          type: integer
+          readOnly: true
         email:
           type: string
         password:
           type: string
-      
+    
+    User:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        remember_token:
+          type: string
+        created_at: 
+          type: string
+          format: date-time
+        updated_at: 
+          type: string
+          format: date-time
+        
+
     AuthRegister:
       type: object
       properties:
@@ -49,10 +86,24 @@ components:
         submitter_email:
           type: string
           description: Email of the report submitter
+        created_at: 
+          type: string
+          format: date-time
+        updated_at: 
+          type: string
+          format: date-time
         responses:
           type: array
           items:
             $ref: "#/components/schemas/Response"
+        maintainers:
+          type: array
+          items: 
+            $ref: "#/components/schemas/User"
+        files:
+          type: array
+          items:
+            $ref: "#/components/schemas/File"
     
     ReportSummary:
       properties:
@@ -70,6 +121,9 @@ components:
         submitter_email:
           type: string
           description: Email of the report submitter
+        has_submitted_files:
+          type: boolean
+
 
     ReportPOSTBody:
       properties:
@@ -130,6 +184,12 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Answer"
+        created_at: 
+          type: string
+          format: date-time
+        updated_at: 
+          type: string
+          format: date-time
 
     QuestionState:
       type: object
@@ -376,16 +436,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Question"
-        '404':
-          $ref: "#/components/responses/NotFound"
-    delete:
-      tags:
-        - Questions
-      description: Deletes a question with the ID provided.
-      summary: Delete a question
-      responses:
-        '200':
-          description: "Succesfully deleted"
         '404':
           $ref: "#/components/responses/NotFound"
     patch:
