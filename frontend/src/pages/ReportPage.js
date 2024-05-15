@@ -17,7 +17,12 @@ function CreateReport() {
 
   // Gets all the questions from the database
   const fetchQuestions = () => {
-    fetch(`http://localhost:8000/api/questions?active=true`)
+    fetch(`http://localhost:8000/api/questions?active=true`, {
+      method: 'GET',
+      headers: {
+        'Accept' : 'application/json'
+      }
+    })
       .then(response => {
         if (response.ok) {
           return response.json();
@@ -60,7 +65,8 @@ function CreateReport() {
         const response = fetch(`http://localhost:8000/api/answers/`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Accept' : 'application/json'
         },
         body: JSON.stringify({
           question_id: question.id,
@@ -79,7 +85,8 @@ function CreateReport() {
     fetch(`http://localhost:8000/api/reports`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Accept' : 'application/json'
       },
       body: JSON.stringify({
         description: malfunctionDescription, 

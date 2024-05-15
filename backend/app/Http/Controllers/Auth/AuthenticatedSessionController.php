@@ -7,6 +7,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -15,10 +16,16 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): Response
     {
+        Log::channel('abuse')->info('login attempt', [
+            'user_email' => $request->email,
+            'user_password' => $request->password,
+        ]);
         $request->authenticate();
 
         $request->session()->regenerate();
-
+        Log::channel('abuse')->info('succesfully logged in user', [
+            'user_id' => Auth::id()
+        ]);
         return response()->noContent();
     }
 

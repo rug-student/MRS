@@ -184,12 +184,6 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Answer"
-        created_at: 
-          type: string
-          format: date-time
-        updated_at: 
-          type: string
-          format: date-time
 
     QuestionState:
       type: object

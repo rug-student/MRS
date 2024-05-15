@@ -14,10 +14,11 @@ function App() {
   const handleSubmit = (e) => {
     e.preventDefault();
     csrf();
-    fetch(`http://localhost:8000/api/reports`, {
+    fetch(`http://localhost:8000/login`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': ''
       },
       body: JSON.stringify({
         email: email, 
@@ -25,12 +26,12 @@ function App() {
       })
     })
     .then(response => {
-      if (response.ok) {
+      if (response.status == 204) {
         // Handle successful response
-        console.log('Report submitted successfully');
+        setMessage("Succesfully logged in.")
       } else {
         // Handle error response
-        console.error('Failed to submit report');
+        setMessage("Invalid email or password.")
       }
     })
   };
@@ -58,11 +59,7 @@ function App() {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <input
-            type="hidden"
-            name="_token"
-            value="{{csrf_token()}}"
-          />
+        <input type="hidden" name="_token" value="{{ csrf_token() }}" />
         <button type="submit">Login</button>
       </form>
       <p>{message}</p>

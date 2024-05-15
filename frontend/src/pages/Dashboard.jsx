@@ -12,9 +12,14 @@ const Dashboard = () => {
     fetchReports();
   }, []);
 
-  // Gets all the questions from the database
+  // Gets all the reports from the database
   const fetchReports = () => {
-    fetch(`http://localhost:8000/api/reports?status=&priority=`)
+    fetch(`http://localhost:8000/api/reports?status=&priority=`, {
+      method: 'GET',
+      headers: {
+        'Accept' : 'application/json'
+      }
+    })
       .then(response => {
         if (response.ok) {
           return response.json();
