@@ -1,0 +1,37 @@
+/* InsertOptions.css */
+
+.subtitle {
+    font-size: 24px;
+    margin-top:30px;
+
+  }
+  
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  li {
+    margin-bottom: 10px;
+  }
+  
+  .add-option-button {
+    background-color:  #1aa9ec;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 30px;
+  }
+  
+  .next-button {
+    background-color: #1aa9ec;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 100px;
+  }
+  

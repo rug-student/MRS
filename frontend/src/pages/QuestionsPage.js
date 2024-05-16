@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import './login.css';
-import Header from './HeaderLoggedIn.js'
+import Header from './HeaderLoggedIn.js';
+import InsertOptions from './InsertOptions';
+import { OpenQuestionSummary, ClosedQuestionSummary } from './Summary';
 
-function InsertQuestion({ onNext }) {
+
+function InsertQuestion({ onNext, onAddQuestion }) {
   const [question, setQuestion] = useState('');
   const [placeholder, setPlaceholder] = useState('Enter your question');
 
@@ -18,6 +21,11 @@ function InsertQuestion({ onNext }) {
     if (question === '') {
       setPlaceholder('Enter your question');
     }
+  };
+
+  const handleAddQuestion = () => {
+    onAddQuestion(question);
+    setQuestion('');
   };
 
   return (
@@ -42,6 +50,33 @@ function InsertQuestion({ onNext }) {
   );
 }
 
+function DeleteQuestion({ questions, onDeleteQuestion }) {
+  const [selectedQuestion, setSelectedQuestion] = useState('');
+
+  const handleDelete = () => {
+    onDeleteQuestion(selectedQuestion);
+    setSelectedQuestion('');
+  };
+
+  return (
+    <div>
+      <Header />
+      <div className="centered-container">
+        <div className="form-container" id="uno">
+          <h1 className="subtitle">Delete Question</h1>
+          <select value={selectedQuestion} onChange={(e) => setSelectedQuestion(e.target.value)}>
+            <option value="">Select a question to delete</option>
+            {questions.map((question, index) => (
+              <option key={index} value={question}>{question}</option>
+            ))}
+          </select>
+          <button className="b" id="delete" onClick={handleDelete}>Delete</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function SelectType({ onTypeSelected }) {
   return (
     <div>
@@ -57,106 +92,97 @@ function SelectType({ onTypeSelected }) {
   );
 }
 
-function InsertOptions({ options, onOptionsChange, onNext }) {
-  const handleAddOption = () => {
-    if (options.length < 10) {
-      onOptionsChange([...options, '']);
-    } else {
-      alert('You cannot add more than 10 options.');
-    }
-  };
-
-  return (
-    <div> 
-      <Header/>
-      <div className="centered-container">
-        <div className="form-container">
-          <h1 className="subtitle">Insert Options</h1>
-          {options.map((option, index) => (
-            <div key={index}>
-              <input id = "inoption"
-                type="text"
-                placeholder={"Add a new option"}
-                value={option || ''}
-                onChange={(e) => {
-                  const newOptions = [...options];
-                  newOptions[index] = e.target.value;
-                  onOptionsChange(newOptions);
-                }}
-              />
-            </div>
-          ))}
-          <button onClick={handleAddOption}>Add Option</button>
-          <button id="secondbutton" onClick={onNext}>Next</button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function Summary({ question, options, onSubmit }) {
-  return (
-    <div>
-      <Header/>
-      <div className="centered-container">
-        <div className="form-container">
-          <h1 className="subtitle">Summary</h1>
-          <p>Question: {question}</p>
-          {options.length > 0 && (
-            <div>
-              <p>Options:</p>
-              <ul>
-                {options.map((option, index) => (
-                  <li key={index}>{option}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-          <button id="thirdutton" onClick={onSubmit}>Submit</button>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 function NewQuestionPage() {
-  const [step, setStep] = useState(1);
-  const [question, setQuestion] = useState('');
+  const [step, setStep] = useState(0); // 0: initial, 1: add question, 2: delete question, 3: select question type
+  const [questions, setQuestions] = useState([]);
+  const [currentQuestion, setCurrentQuestion] = useState('');
   const [isOpen, setIsOpen] = useState(null);
   const [options, setOptions] = useState([]);
 
+  const handleAddQuestion = (question) => {
+    setQuestions([...questions, question]);
+    setOptions([]); 
+    setStep(3); 
+  };
+  
+  const handleDeleteQuestion = (question) => {
+    const updatedQuestions = questions.filter(q => q !== question);
+    setQuestions(updatedQuestions);
+    setStep(0);
+  };
 
   const handleQuestionNext = (questionData) => {
-    setQuestion(questionData);
-    setStep(2); // Torna alla prima schermata
+    setCurrentQuestion(questionData);
+    setStep(3); 
   };
 
   const handleTypeSelected = (open) => {
     setIsOpen(open);
-    setStep(3); // Torna alla prima schermata
+    setStep(4); 
   };
 
   const handleOptionsNext = () => {
-    setStep(3); // Torna alla prima schermata
+    setStep(5); 
   };
+  
+  /*
+  const handleSubmit = (event) => {
+    event.preventDefault();
 
-  const handleSubmit = () => {
-    console.log('New question data:', { question, isOpen, options });
-    // Esegui la logica per la gestione del submit...
-    setStep(1); // Torna alla prima schermata
+    // Update answers for custom questions 
+    questions.forEach(question => { 
+        const response = fetch(`http://localhost:8000/api/questions/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept' : 'application/json'
+        },
+        body: JSON.stringify({
+          question_id: question.id,
+          question_description: 
+          is_open: 
+          is_active: 1
+        })
+      });
+      
+      if (!response.ok) {
+        console.error(`Failed to update answer for question ${question.id}`);
+        return;
+      }
+      
+    })
   };
+  */
 
   return (
     <>
-      {step === 1 && <InsertQuestion onNext={handleQuestionNext} />}
-      {step === 2 && <SelectType onTypeSelected={handleTypeSelected} />}
-      {step === 3 && isOpen === true && (
-        <Summary question={question} options={options} onSubmit={handleSubmit}/>
+      {step === 0 && (
+        <div>
+          <Header />
+          <div className="centered-container">
+            <div className="form-container" id="uno">
+              <h1 className="subtitle">Select Action</h1>
+              <button className="b" onClick={() => setStep(1)}>Add Question</button>
+              <button className="b" id="delete" onClick={() => setStep(2)}>Delete Question</button>
+            </div>
+          </div>
+        </div>
       )}
-      {step === 3 && isOpen === false && (
+      {step === 1 && <InsertQuestion onNext={handleQuestionNext} onAddQuestion={handleAddQuestion} />}
+      {step === 2 && <DeleteQuestion questions={questions} onDeleteQuestion={handleDeleteQuestion} />}
+      {step === 3 && (
+        <SelectType onTypeSelected={handleTypeSelected} />
+      )}
+      {step === 4 && isOpen === true && (
+       <OpenQuestionSummary question={currentQuestion} onSubmit={() => setStep(0)} />
+      )}
+      {step === 4 && isOpen === false && (
         <InsertOptions options={options} onOptionsChange={setOptions} onNext={handleOptionsNext} />
       )}
-      {step === 4 && isOpen === false &&(  <Summary question={question} options={options} onSubmit={handleSubmit}/>)}
+      {step === 5 && (
+            <ClosedQuestionSummary question={currentQuestion} options={options} onSubmit={() => setStep(0)} />
+      )}
     </>
   );
 }
