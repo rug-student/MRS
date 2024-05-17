@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './login.css';
 import Header from './HeaderLoggedIn.js';
 import InsertOptions from './InsertOptions';
@@ -51,6 +51,34 @@ function InsertQuestion({ onNext, onAddQuestion }) {
 }
 
 function DeleteQuestion({ questions, onDeleteQuestion }) {
+
+  // loads questions into form upon page load
+  useEffect(() => {
+    fetchQuestions();
+  }, []);
+
+  // Gets all the questions from the database
+  const fetchQuestions = () => {
+    fetch(`http://localhost:8000/api/questions?active=true`, {
+      method: 'GET',
+      headers: {
+        'Accept' : 'application/json'
+      }
+    })
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Failed to fetch questions');
+        }
+      })
+      .then(questions => {
+        setSelectedQuestion(questions);
+      })
+      .catch(error => {
+        console.error('Error occurred while fetching questions:', error);
+      });
+  };
   const [selectedQuestion, setSelectedQuestion] = useState('');
 
   const handleDelete = () => {
@@ -98,6 +126,7 @@ function NewQuestionPage() {
   const [questions, setQuestions] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState('');
   const [isOpen, setIsOpen] = useState(null);
+  const [isActive, setIsActive] = useState(null);
   const [options, setOptions] = useState([]);
 
   const handleAddQuestion = (question) => {
@@ -109,7 +138,8 @@ function NewQuestionPage() {
   const handleDeleteQuestion = (question) => {
     const updatedQuestions = questions.filter(q => q !== question);
     setQuestions(updatedQuestions);
-    setStep(0);
+    setIsActive(0); // Imposta isActive a 0
+    setStep(0); // Reimposta lo step a 0
   };
 
   const handleQuestionNext = (questionData) => {
@@ -126,34 +156,33 @@ function NewQuestionPage() {
     setStep(5); 
   };
   
-  /*
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
-    // Update answers for custom questions 
-    questions.forEach(question => { 
-        const response = fetch(`http://localhost:8000/api/questions/`, {
+  const handleSubmit = () => {
+      setStep(0)
+      console.log('New question data:', { currentQuestion, isOpen, options,isActive });
+      fetch('localhost:8000/api/questions', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Accept' : 'application/json'
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          question_id: question.id,
-          question_description: 
-          is_open: 
-          is_active: 1
+          question_description: currentQuestion, 
+          is_open: isOpen,
+          answers: options,
+          is_active: isActive,
         })
+      })
+      .then(response => {
+        if (response.ok) {
+          console.log('Question created successfully');
+        } else {
+          console.error('Failed to create question');
+        }
+      })
+      .catch(error => {
+        // Handle network error
+        console.error('Error occurred while creating question:', error);
       });
-      
-      if (!response.ok) {
-        console.error(`Failed to update answer for question ${question.id}`);
-        return;
-      }
-      
-    })
-  };
-  */
+    };
 
   return (
     <>
@@ -175,13 +204,13 @@ function NewQuestionPage() {
         <SelectType onTypeSelected={handleTypeSelected} />
       )}
       {step === 4 && isOpen === true && (
-       <OpenQuestionSummary question={currentQuestion} onSubmit={() => setStep(0)} />
+       <OpenQuestionSummary question={currentQuestion} is_active={1} onSubmit={handleSubmit} />
       )}
       {step === 4 && isOpen === false && (
         <InsertOptions options={options} onOptionsChange={setOptions} onNext={handleOptionsNext} />
       )}
       {step === 5 && (
-            <ClosedQuestionSummary question={currentQuestion} options={options} onSubmit={() => setStep(0)} />
+            <ClosedQuestionSummary question={currentQuestion} options={options} is_active={1} onSubmit={handleSubmit} />
       )}
     </>
   );
