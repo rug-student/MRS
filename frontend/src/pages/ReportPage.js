@@ -15,7 +15,7 @@ function CreateReport() {
     fetchQuestions();
   }, []);
 
-  // Gets all the questions from the database
+  // Gets all the active questions from the database
   const fetchQuestions = () => {
     fetch(`http://localhost:8000/api/questions?active=true`, {
       method: 'GET',
@@ -59,25 +59,36 @@ function CreateReport() {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    // Update answers for custom questions 
+    const questionAnswerIDs = {};
+
+    // Create new answers for open questions
     questions.forEach(question => { 
       if (question.is_open) {
         const response = fetch(`http://localhost:8000/api/answers/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept' : 'application/json'
-        },
-        body: JSON.stringify({
-          question_id: question.id,
-          answer: questionAnswers[question.id]
-        })
-      });
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept' : 'application/json'
+          },
+          body: JSON.stringify({
+            question_id: question.id,
+            answer: questionAnswers[question.id]
+          })
+        });
       
-      if (!response.ok) {
-        console.error(`Failed to update answer for question ${question.id}`);
-        return;
-      }
+        if (!response.ok) {
+          console.error(`Failed to update answer for question ${question.id}`);
+          return;
+        }
+        questionAnswerIDs[question.id] = response.body.id;
+      } else {
+        let id;
+      question.answer.forEach(answer=> {
+        if(answer.answer == questionAnswers[question.id]) {
+          id = answer.id;
+        }
+      })
+      questionAnswerIDs[question.id] = id;
       }
     })
 
@@ -91,9 +102,9 @@ function CreateReport() {
       body: JSON.stringify({
         description: malfunctionDescription, 
         submitter_email: email,
-        responses: Object.keys(questionAnswers).map(questionId => ({
+        responses: Object.keys(questionAnswerIDs).map(questionId => ({
           question_id: questionId,
-          answer_id: questionAnswers[questionId] // TO FIX 
+          answer_id: questionAnswerIDs[questionId]
         }))
       })
     })

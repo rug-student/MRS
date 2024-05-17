@@ -23,6 +23,31 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 // Routes for reports endpoints.
+Route::get("/reports", [ReportsController::class, "getAllReports"]);
+Route::get("/reports/{id}", [ReportsController::class, "getReport"]);
+Route::post("/reports", [ReportsController::class, "createReport"]);
+
+// Routes for questions endpoints.
+Route::get("/questions", [QuestionsController::class, "getAllQuestions"]);
+Route::get("/questions/{id}", [QuestionsController::class, "getQuestion"]);
+Route::post("/questions", [QuestionsController::class, "createQuestion"]);
+Route::patch("/questions/{id}", [QuestionsController::class, "updateQuestion"]);
+Route::delete("/questions/{id}", [QuestionsController::class, "deleteQuestion"])
+->middleware('auth');
+
+// Routes for answers endpoints.
+Route::put("/answers/{id}", [AnswersController::class, "updateAnswer"]);
+Route::post("/answers", [AnswersController::class, "createAnswer"]);
+
+// Routes for reports endpoints.
+Route::get("/reports", [ReportsController::class, "getAllReports"]);
+Route::get("/reports/{id}", [ReportsController::class, "getReport"]);
+Route::post("/reports", [ReportsController::class, "createReport"]);
+
+/*
+//Enable authentication
+
+// Routes for reports endpoints.
 Route::get("/reports", [ReportsController::class, "getAllReports"])
 ->middleware('auth');
 Route::get("/reports/{id}", [ReportsController::class, "getReport"])
@@ -42,3 +67,4 @@ Route::delete("/questions/{id}", [QuestionsController::class, "deleteQuestion"])
 // Routes for answers endpoints.
 Route::put("/answers/{id}", [AnswersController::class, "updateAnswer"]);
 Route::post("/answers", [AnswersController::class, "createAnswer"]);
+*/
