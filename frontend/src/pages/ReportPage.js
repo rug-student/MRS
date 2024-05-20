@@ -9,6 +9,7 @@ function CreateReport() {
   const [malfunctionDescription, setMalfunctionDescription] = useState('');
   const [questions, setQuestions] = useState([]);
   const [questionAnswers, setQuestionAnswers] = useState({});
+  let questionNumber = 1; // Initialize the question number
 
   // loads questions into form upon page load
   useEffect(() => {
@@ -131,19 +132,19 @@ function CreateReport() {
       <form onSubmit={handleSubmit}>
 
         <div className='question-container'>
-          <div className='question'>01. What is your email?</div>
+          <div className='question'>{questionNumber++}. What is your email?</div>
           <input type="email" className='answer' value={email} onChange={handleEmailChange}/>
         </div>
 
         <div className='question-container'>
-          <div className='question'>02. Describe the malfunction.</div>
+          <div className='question'>{questionNumber++}. Describe the malfunction.</div>
           <textarea className='answer' value={malfunctionDescription} onChange={handleDescriptionChange}/>
         </div>
 
         {/* adds the questions made my maintenance personel */}
         {questions.map(question => (
           <div className='question-container' key={question.id}>
-            <div className='question'>{question.question_description}</div>
+            <div className='question'>{questionNumber++}. {question.question_description}</div>
             
             {question.is_open ? (
               
