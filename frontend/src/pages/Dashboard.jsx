@@ -3,13 +3,13 @@ import moment from 'moment';
 import { Container } from 'react-bootstrap';
 
 const Dashboard = () => {
-
+ 
   const [reportsData, setReportsData] = useState([{ id: 1, description: "Description", priority: -1, created_at: "2024-05-15T19:30:06.000000Z", updated_at: "2024-05-15T19:30:06.000000Z", status: 0, submitter_email: "test@test.com", maintainer_id: null, response: [] }])
 
   useEffect(() => {
     const getData = async () => {
       try {
-        const response = await fetch(`http://localhost/api/reports`);
+        const response = await fetch(` ${process.env.REACT_APP_API_BASE_URL}/reports`);
         const data = await response.json();
         // setReportsData(data)
       } catch (error) {

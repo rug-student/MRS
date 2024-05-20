@@ -159,7 +159,7 @@ function NewQuestionPage() {
   const handleSubmit = () => {
       setStep(0)
       console.log('New question data:', { currentQuestion, isOpen, options,isActive });
-      fetch('localhost:8000/api/questions', {
+      fetch(`${process.env.REACT_APP_API_BASE_URL}/questions`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
