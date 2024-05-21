@@ -3,7 +3,7 @@ import './login.css';
 import Header from './HeaderLoggedIn.js';
 import InsertOptions from './InsertOptions';
 import { OpenQuestionSummary, ClosedQuestionSummary } from './Summary';
-
+import { submitQuestion } from '../api/questions.api.js';
 
 function InsertQuestion({ onNext, onAddQuestion }) {
   const [question, setQuestion] = useState('');
@@ -30,7 +30,7 @@ function InsertQuestion({ onNext, onAddQuestion }) {
 
   return (
     <div>
-      <Header/>
+      <Header />
       <div className="centered-container">
         <div className="form-container" id="uno">
           <h1 className="subtitle">New Question</h1>
@@ -51,40 +51,14 @@ function InsertQuestion({ onNext, onAddQuestion }) {
 }
 
 function DeleteQuestion({ questions, onDeleteQuestion }) {
-
-  // loads questions into form upon page load
-  useEffect(() => {
-    fetchQuestions();
-  }, []);
-
-  // Gets all the questions from the database
-  const fetchQuestions = () => {
-    fetch(`http://localhost:8000/api/questions?active=true`, {
-      method: 'GET',
-      headers: {
-        'Accept' : 'application/json'
-      }
-    })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error('Failed to fetch questions');
-        }
-      })
-      .then(questions => {
-        setSelectedQuestion(questions);
-      })
-      .catch(error => {
-        console.error('Error occurred while fetching questions:', error);
-      });
-  };
-  const [selectedQuestion, setSelectedQuestion] = useState('');
+  const [selectedQuestionId, setSelectedQuestionId] = useState('');
 
   const handleDelete = () => {
-    onDeleteQuestion(selectedQuestion);
-    setSelectedQuestion('');
+    onDeleteQuestion(selectedQuestionId);
+    setSelectedQuestionId('');
   };
+
+  const activeQuestions = questions.filter(question => question.is_active);
 
   return (
     <div>
@@ -92,10 +66,10 @@ function DeleteQuestion({ questions, onDeleteQuestion }) {
       <div className="centered-container">
         <div className="form-container" id="uno">
           <h1 className="subtitle">Delete Question</h1>
-          <select value={selectedQuestion} onChange={(e) => setSelectedQuestion(e.target.value)}>
+          <select value={selectedQuestionId} onChange={(e) => setSelectedQuestionId(e.target.value)}>
             <option value="">Select a question to delete</option>
-            {questions.map((question, index) => (
-              <option key={index} value={question}>{question}</option>
+            {activeQuestions.map((question) => (
+              <option key={question.id} value={question.id}>{question.question_description}</option>
             ))}
           </select>
           <button className="b" id="delete" onClick={handleDelete}>Delete</button>
@@ -104,6 +78,8 @@ function DeleteQuestion({ questions, onDeleteQuestion }) {
     </div>
   );
 }
+
+
 
 function SelectType({ onTypeSelected }) {
   return (
@@ -120,7 +96,6 @@ function SelectType({ onTypeSelected }) {
   );
 }
 
-
 function NewQuestionPage() {
   const [step, setStep] = useState(0); // 0: initial, 1: add question, 2: delete question, 3: select question type
   const [questions, setQuestions] = useState([]);
@@ -129,60 +104,92 @@ function NewQuestionPage() {
   const [isActive, setIsActive] = useState(null);
   const [options, setOptions] = useState([]);
 
+  useEffect(() => {
+    fetchQuestions();
+  }, []);
+
+  const fetchQuestions = () => {
+    fetch(`${process.env.REACT_APP_API_BASE_URL}/questions?active=true`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json'
+      }
+    })
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Failed to fetch questions');
+        }
+      })
+      .then(questions => {
+        setQuestions(questions);
+      })
+      .catch(error => {
+        console.error('Error occurred while fetching questions:', error);
+      });
+  };
+
   const handleAddQuestion = (question) => {
     setQuestions([...questions, question]);
-    setOptions([]); 
-    setStep(3); 
+    setOptions([]);
+    setStep(3);
+  };
+
+  const handleDeleteQuestion = (questionId) => {
+    const updatedQuestions = questions.map(q =>
+      q.id === questionId ? { ...q, is_active: 0 } : q
+    );
+    setQuestions(updatedQuestions);
+  
+    fetch(`${process.env.REACT_APP_API_BASE_URL}/questions/${questionId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ is_active: 0 })
+    })
+      .then(response => {
+        if (response.ok) {
+          console.log('Question deactivated successfully');
+        } else {
+          throw new Error('Failed to deactivate question');
+        }
+      })
+      .catch(error => {
+        console.error('Error occurred while deactivating question:', error);
+      });
+  
+    setIsActive(0);
+    setStep(0);
   };
   
-  const handleDeleteQuestion = (question) => {
-    const updatedQuestions = questions.filter(q => q !== question);
-    setQuestions(updatedQuestions);
-    setIsActive(0); // Imposta isActive a 0
-    setStep(0); // Reimposta lo step a 0
-  };
+  
 
   const handleQuestionNext = (questionData) => {
     setCurrentQuestion(questionData);
-    setStep(3); 
+    setStep(3);
   };
 
   const handleTypeSelected = (open) => {
     setIsOpen(open);
-    setStep(4); 
+    setStep(4);
   };
 
   const handleOptionsNext = () => {
-    setStep(5); 
+    setStep(5);
   };
-  
+
   const handleSubmit = () => {
-      setStep(0)
-      console.log('New question data:', { currentQuestion, isOpen, options,isActive });
-      fetch('localhost:8000/api/questions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          question_description: currentQuestion, 
-          is_open: isOpen,
-          answers: options,
-          is_active: isActive,
-        })
-      })
-      .then(response => {
-        if (response.ok) {
-          console.log('Question created successfully');
-        } else {
-          console.error('Failed to create question');
-        }
-      })
-      .catch(error => {
-        // Handle network error
-        console.error('Error occurred while creating question:', error);
-      });
-    };
+    setStep(0)
+    console.log('New question data:', { currentQuestion, isOpen, options});
+    try {
+      const response = submitQuestion(currentQuestion, isOpen, options);
+      console.log(response);
+    } catch(error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
@@ -200,18 +207,10 @@ function NewQuestionPage() {
       )}
       {step === 1 && <InsertQuestion onNext={handleQuestionNext} onAddQuestion={handleAddQuestion} />}
       {step === 2 && <DeleteQuestion questions={questions} onDeleteQuestion={handleDeleteQuestion} />}
-      {step === 3 && (
-        <SelectType onTypeSelected={handleTypeSelected} />
-      )}
-      {step === 4 && isOpen === true && (
-       <OpenQuestionSummary question={currentQuestion} is_active={1} onSubmit={handleSubmit} />
-      )}
-      {step === 4 && isOpen === false && (
-        <InsertOptions options={options} onOptionsChange={setOptions} onNext={handleOptionsNext} />
-      )}
-      {step === 5 && (
-            <ClosedQuestionSummary question={currentQuestion} options={options} is_active={1} onSubmit={handleSubmit} />
-      )}
+      {step === 3 && <SelectType onTypeSelected={handleTypeSelected} />}
+      {step === 4 && isOpen && <OpenQuestionSummary question={currentQuestion} is_active={1} onSubmit={handleSubmit} />}
+      {step === 4 && !isOpen && <InsertOptions options={options} onOptionsChange={setOptions} onNext={handleOptionsNext} />}
+      {step === 5 && <ClosedQuestionSummary question={currentQuestion} options={options} is_active={1} onSubmit={handleSubmit} />}
     </>
   );
 }

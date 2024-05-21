@@ -9,6 +9,8 @@ function CreateReport() {
   const [malfunctionDescription, setMalfunctionDescription] = useState('');
   const [questions, setQuestions] = useState([]);
   const [questionAnswers, setQuestionAnswers] = useState({});
+  let questionNumber = 1; // Initialize the question number
+  
 
   // loads questions into form upon page load
   useEffect(() => {
@@ -17,7 +19,7 @@ function CreateReport() {
 
   // Gets all the active questions from the database
   const fetchQuestions = () => {
-    fetch(`http://localhost:8000/api/questions?active=true`, {
+    fetch(`${process.env.REACT_APP_API_BASE_URL}/questions?active=true`, {
       method: 'GET',
       headers: {
         'Accept' : 'application/json'
@@ -64,7 +66,7 @@ function CreateReport() {
     // Create new answers for open questions
     questions.forEach(question => { 
       if (question.is_open) {
-        const response = fetch(`http://localhost:8000/api/answers/`, {
+        const response = fetch(`${process.env.REACT_APP_API_BASE_URL}/answers/`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -93,7 +95,7 @@ function CreateReport() {
     })
 
     // Perform POST request with form data
-    fetch(`http://localhost:8000/api/reports`, {
+    fetch(`${process.env.REACT_APP_API_BASE_URL}/reports`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -131,19 +133,19 @@ function CreateReport() {
       <form onSubmit={handleSubmit}>
 
         <div className='question-container'>
-          <div className='question'>01. What is your email?</div>
+          <div className='question'>{questionNumber++}. What is your email?</div>
           <input type="email" className='answer' value={email} onChange={handleEmailChange}/>
         </div>
 
         <div className='question-container'>
-          <div className='question'>02. Describe the malfunction.</div>
+          <div className='question'>{questionNumber++}. Describe the malfunction.</div>
           <textarea className='answer' value={malfunctionDescription} onChange={handleDescriptionChange}/>
         </div>
 
         {/* adds the questions made my maintenance personel */}
         {questions.map(question => (
           <div className='question-container' key={question.id}>
-            <div className='question'>{question.question_description}</div>
+            <div className='question'>{questionNumber++}. {question.question_description}</div>
             
             {question.is_open ? (
               
