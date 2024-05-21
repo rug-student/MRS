@@ -10,6 +10,7 @@ function CreateReport() {
   const [questions, setQuestions] = useState([]);
   const [questionAnswers, setQuestionAnswers] = useState({});
   let questionNumber = 1; // Initialize the question number
+  
 
   // loads questions into form upon page load
   useEffect(() => {
