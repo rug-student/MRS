@@ -47,8 +47,13 @@ class QuestionsController extends Controller
      * Creates a new question and stores it to the database.
      */
     public function createQuestion(Request $request) {
-        $question = new Question;
 
+        $validated = $request->validate([
+            'question_description' => 'required',
+            'is_open' => 'required',
+        ]);
+
+        $question = new Question;
         $question->question_description = $request->question_description;
 
         // When creating a new question it defaults to being active.
@@ -74,13 +79,13 @@ class QuestionsController extends Controller
                 $answer->answer = $answer_str;
                 $answer->question_id = $question->id;
                 $answer->save();
-    
+
                 $question->answer()->save($answer);
             }
         }
-        
+
         $question->save();
-        return response()->json("Question saved succesfully", 200);
+        return response()->json(["Question saved succesfully.", $question], 200);
     }
 
     public function updateQuestion(Request $request) {

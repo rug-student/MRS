@@ -119,4 +119,20 @@ class ReportsController extends Controller
         }
         $report->save();
     }
+
+
+    public function updateReport(Request $request) {
+        $validated = $request->validate([
+            'status' => 'required',
+            'priority'=> 'required',
+            // 'maintainer'=> 'required',
+        ]);
+        $report = Report::find($request->id);
+        $report->status = $request->status;
+        $report->priority = $request->priority;
+        $report->save();
+
+        return response()->json(["Report updated succesfully.", $report], 200);
+    }
+
 }
