@@ -59,7 +59,7 @@ function DeleteQuestion({ questions, onDeleteQuestion }) {
 
   // Gets all the questions from the database
   const fetchQuestions = () => {
-    fetch(`http://localhost:8000/api/questions?active=true`, {
+    fetch(`${process.env.REACT_APP_API_BASE_URL}/questions?active=true`, {
       method: 'GET',
       headers: {
         'Accept' : 'application/json'
