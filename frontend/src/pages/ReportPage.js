@@ -84,7 +84,7 @@ function CreateReport() {
             return;
           } else {
             const responseData = await response.json();
-            questionAnswerIDs[question.id] = responseData[1].id;
+            questionAnswerIDs[question.id] = parseInt(responseData[1].id, 10);
           }
         } catch (error) {
           console.error('Error occurred while updating answer:', error);
@@ -103,12 +103,13 @@ function CreateReport() {
     // Perform POST request with form data
     try {
       console.log("question answers: ", questionAnswerIDs); // testing
-       // Construct the request body
+       
+      // Construct the request body -- TO DELETE (just debugging)
       const requestBody = {
         description: malfunctionDescription,
         submitter_email: email,
         responses: Object.keys(questionAnswerIDs).map(questionId => ({
-          question_id: parseInt(questionId, 10), // Ensure question_id is an integer
+          question_id: questionId, 
           answer_id: questionAnswerIDs[questionId]
         })),
         files: [] // Include an empty files array
@@ -127,7 +128,7 @@ function CreateReport() {
           description: malfunctionDescription,
           submitter_email: email,
           responses: Object.keys(questionAnswerIDs).map(questionId => ({
-            question_id: parseInt(questionId, 10),
+            question_id: questionId,
             answer_id: questionAnswerIDs[questionId]
           })),
           files: []
