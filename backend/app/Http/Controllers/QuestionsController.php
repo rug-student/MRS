@@ -95,15 +95,4 @@ class QuestionsController extends Controller
 
         return response()->json(["Question updated succesfully.", $question], 200);
     }
-
-    public function deleteQuestion(Request $request) {
-        try {
-            Question::destroy($request->id);
-            return response()->json("Question deleted succesfully.", 200);
-        } catch(Exception $e) {
-            echo "error: ", $e->getMessage(), "\n";
-            return response()->json("Error: "+ $e->getMessage(), 404);
-        }
-    }
-
 }

@@ -32,7 +32,7 @@ Route::patch("/reports/{id}", [ReportsController::class, "updateReport"]);
 Route::get("/questions", [QuestionsController::class, "getAllQuestions"]);
 Route::get("/questions/{id}", [QuestionsController::class, "getQuestion"]);
 Route::post("/questions", [QuestionsController::class, "createQuestion"]);
-// Route::patch("/questions/{id}", [QuestionsController::class, "updateQuestion"]);
+Route::patch("/questions/{id}", [QuestionsController::class, "updateQuestion"]);
 
 // Routes for answers endpoints.
 Route::post("/answers", [AnswersController::class, "createAnswer"]);
