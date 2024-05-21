@@ -42,7 +42,7 @@ class ReportsController extends Controller
     public function getReport(Request $request) {
 
         $report = Report::where("id", $request->id)
-        ->with(["response.question", "response.answer"])
+        ->with(["response.question", "response.answer", "file"])
         ->get();
 
         if($report->isEmpty()) {
@@ -57,6 +57,8 @@ class ReportsController extends Controller
      */
     public function createReport(Request $request) {
 
+        // return response()->json(["TEST::not", $request->files], 400);
+
         $validated = $request->validate([
             'description' => 'required',
             'submitter_email'=> 'required|email',
@@ -69,31 +71,6 @@ class ReportsController extends Controller
         $report->priority = -1;
         $report->save();
 
-        $this->createResponses($report, $request);
-        // $this->createFiles($report, $request);
-
-        return response()->json(["Succesfully saved report", $report], 200);
-    }
-
-    public function createFiles(Report $report , Request $request) {
-        // Handle responses.
-        foreach($request->files as $file_body) {
-
-            $validated = $file_body->validate([
-                'file_path' => 'required'
-            ]);
-
-            $file = new File();
-            $file->file_path = $file_body["file_path"];
-            $file->report_id = $report->id;
-            $file->save();
-
-            $report->file()->save($file);
-        }
-        $report->save();
-    }
-
-    public function createResponses(Report $report , Request $request) {
         // Handle responses.
         foreach($request->responses as $response_body) {
             // Error handling
@@ -117,7 +94,22 @@ class ReportsController extends Controller
 
             $report->response()->save($response);
         }
+
+        // Handle files.
+        foreach(json_decode($request->getContent())->files as $file_body) {
+            if($file_body->file_path == "") {
+                return response()->json("ERROR: file_path is missing", 400);
+            }
+
+            $file = new File();
+            $file->file_path = $file_body->file_path;
+            $file->report_id = $report->id;
+            $file->save();
+
+            $report->file()->save($file);
+        }
         $report->save();
+        return response()->json(["Succesfully saved report", $report], 200);
     }
 
 

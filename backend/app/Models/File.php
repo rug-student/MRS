@@ -17,10 +17,14 @@ class File extends Model
         return $this->belongsTo(Report::class);
     }
 
-    protected $fillable = [
+    protected $fillable= [
         "file_path",
+    ];
+    protected $hidden= [
         "report_id"
     ];
+
+    
 
     //created_at & updated_at are automatically updated by the ORM
 }
