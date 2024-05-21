@@ -35,7 +35,6 @@ Route::post("/questions", [QuestionsController::class, "createQuestion"]);
 // Route::patch("/questions/{id}", [QuestionsController::class, "updateQuestion"]);
 
 // Routes for answers endpoints.
-Route::put("/answers/{id}", [AnswersController::class, "updateAnswer"]);
 Route::post("/answers", [AnswersController::class, "createAnswer"]);
 
 /*
