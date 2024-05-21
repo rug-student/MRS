@@ -5,11 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Question;
 use App\Models\Report;
 use App\Models\Answer;
+use App\Models\File;
 use App\Models\Response;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Redis;
 
 /**
  * Controller class that handles the api calls for reports
@@ -68,9 +67,34 @@ class ReportsController extends Controller
         $report->status = 0;
         $report->submitter_email = $request->submitter_email;
         $report->priority = -1;
-
-        // Handle responses.
         $report->save();
+
+        $this->createResponses($report, $request);
+        // $this->createFiles($report, $request);
+
+        return response()->json(["Succesfully saved report", $report], 200);
+    }
+
+    public function createFiles(Report $report , Request $request) {
+        // Handle responses.
+        foreach($request->files as $file_body) {
+
+            $validated = $file_body->validate([
+                'file_path' => 'required'
+            ]);
+
+            $file = new File();
+            $file->file_path = $file_body["file_path"];
+            $file->report_id = $report->id;
+            $file->save();
+
+            $report->file()->save($file);
+        }
+        $report->save();
+    }
+
+    public function createResponses(Report $report , Request $request) {
+        // Handle responses.
         foreach($request->responses as $response_body) {
             // Error handling
             if(!Question::where("id", $response_body["question_id"])->exists()) {
@@ -93,8 +117,6 @@ class ReportsController extends Controller
 
             $report->response()->save($response);
         }
-
         $report->save();
-        return response()->json(["Succesfully saved report", $report], 200);
-    } 
+    }
 }

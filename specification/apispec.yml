@@ -23,9 +23,11 @@ components:
         created_at: 
           type: string
           format: date-time
+          readOnly: true
         updated_at: 
           type: string
           format: date-time
+          readOnly: true
 
     AuthLogin:
       type: object
@@ -139,6 +141,10 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/ResponseSummary"
+        files:
+          type: array
+          items:
+            $ref: "#/components/schemas/File"
     ReportPATCHBody:
       properties:
         status:

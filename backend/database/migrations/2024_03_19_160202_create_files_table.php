@@ -1,5 +1,5 @@
 <?php
-
+use App\Models\Report;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('maintainers', function (Blueprint $table) {
+        Schema::create('files', function (Blueprint $table) {
             $table->id();
-            $table->string("email");
-            $table->string("credentials")->nullable();
+            $table->timestamps();
+            $table->string("file_path");
+            $table->foreignIdFor(Report::class)->constrained();
         });
     }
 
@@ -23,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('maintainers');
+        Schema::dropIfExists('files');
     }
 };
