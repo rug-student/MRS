@@ -8,5 +8,6 @@ cd ..
 
 # frontend setup
 cd frontend/
+cp .env.example .env
 npm install react-scripts
 cd ..
