@@ -8,6 +8,7 @@
 - docker desktop
 
 ## How to run
+### The setup
 first off, setup .env file, composer and php key by:
 ```
 cd backend/
@@ -15,14 +16,21 @@ cp .env.example .env
 composer update
 php artisan key:generate
 ```
+To migrate both the production and testing databases the database needs to be up and running.
+```
+./vendor/bin/sail up mysql phpmyadmin
+```
+Migrating the database:
+```
+php artisan migrate
+php artisan migrate --database=testing
+```
 
-You will need to migrate both the production and testing databases:
-1. `php artisan migrate`
-2. `php artisan migrate --database=testing`
+### start php
+```
+php artisan serve
+```
 
-### Development mode:
-1. `./vendor/bin/sail up mysql phpmyadmin`
-2. `php artisan serve`
 
 ### Tests:
 1. `./vendor/bin/sail up mysql phpmyadmin`

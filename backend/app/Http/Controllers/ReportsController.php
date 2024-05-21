@@ -5,11 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Question;
 use App\Models\Report;
 use App\Models\Answer;
+use App\Models\File;
 use App\Models\Response;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Redis;
 
 /**
  * Controller class that handles the api calls for reports
@@ -43,7 +42,7 @@ class ReportsController extends Controller
     public function getReport(Request $request) {
 
         $report = Report::where("id", $request->id)
-        ->with(["response.question", "response.answer"])
+        ->with(["response.question", "response.answer", "file"])
         ->get();
 
         if($report->isEmpty()) {
@@ -58,9 +57,11 @@ class ReportsController extends Controller
      */
     public function createReport(Request $request) {
 
+        // return response()->json(["TEST::not", $request->files], 400);
+
         $validated = $request->validate([
             'description' => 'required',
-            'submitter_email'=> 'required|email',
+            'submitter_email'=> 'email',
         ]);
 
         $report = new Report;
@@ -68,9 +69,9 @@ class ReportsController extends Controller
         $report->status = 0;
         $report->submitter_email = $request->submitter_email;
         $report->priority = -1;
+        $report->save();
 
         // Handle responses.
-        $report->save();
         foreach($request->responses as $response_body) {
             // Error handling
             if(!Question::where("id", $response_body["question_id"])->exists()) {
@@ -94,7 +95,36 @@ class ReportsController extends Controller
             $report->response()->save($response);
         }
 
+        // Handle files.
+        foreach(json_decode($request->getContent())->files as $file_body) {
+            if($file_body->file_path == "") {
+                return response()->json("ERROR: file_path is missing", 400);
+            }
+
+            $file = new File();
+            $file->file_path = $file_body->file_path;
+            $file->report_id = $report->id;
+            $file->save();
+
+            $report->file()->save($file);
+        }
         $report->save();
         return response()->json(["Succesfully saved report", $report], 200);
-    } 
+    }
+
+
+    public function updateReport(Request $request) {
+        $validated = $request->validate([
+            'status' => 'required',
+            'priority'=> 'required',
+            // 'maintainer'=> 'required',
+        ]);
+        $report = Report::find($request->id);
+        $report->status = $request->status;
+        $report->priority = $request->priority;
+        $report->save();
+
+        return response()->json(["Report updated succesfully.", $report], 200);
+    }
+
 }

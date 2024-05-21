@@ -16,9 +16,9 @@ return new class extends Migration
     {
         Schema::create('responses', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Report::class);
-            $table->foreignIdFor(Question::class);
-            $table->foreignIdFor(Answer::class);
+            $table->foreignIdFor(Report::class)->constrained();
+            $table->foreignIdFor(Question::class)->constrained();
+            $table->foreignIdFor(Answer::class)->constrained();
         });
     }
 

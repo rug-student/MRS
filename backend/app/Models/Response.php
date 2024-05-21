@@ -4,10 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 /**
  * Model representing a Response.
- * 
+ *
  * Many responses belong to 1 Report.
 */
 class Response extends Model

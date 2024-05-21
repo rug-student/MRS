@@ -3,27 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Answer;
+use App\Models\Question;
 use Illuminate\Http\Request;
 
 class AnswersController extends Controller
 {
-    /**
-     * Update an Answer.
-     */
-    public function updateAnswer(Request $request) {
-        $answer = Answer::find($request->id);
-
-        if($answer) {
-            $answer->answer = $request->answer;
-            $answer->save();
-            return response()->json(["succesfully saved answer", $answer], 200);
-        } else {
-            return response()->json("Answer not found.", 404);
-        }
-
-    }
-
-
     /**
      * Create a new Answer.
      */
@@ -31,13 +15,20 @@ class AnswersController extends Controller
         $answer = new Answer;
 
         $request->validate([
-            "answer" => "required",
-            "question_id" => "required"
+            "answer" => "required"
         ]);
 
-        $answer->answer = $request->answer;
-        $answer->question_id = $request->question_id;
-        $answer->save();
+        if ($request->question_id == null) {
+            $answer->answer = $request->answer;
+            $answer->save();
+        } else {
+            if(!Question::where("id", $request->question_id)->exists()) {
+                return response()->json("ERROR: passed non-existing question", 400);
+            }
+            $answer->answer = $request->answer;
+            $answer->question_id = $request->question_id;
+            $answer->save();
+        }
         return response()->json(["succesfully created answer", $answer], 200);
     }
 }

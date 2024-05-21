@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Model;
 /**
  * Model representing a Report.
- * 
+ *
 */
 class Report extends Model
 {
@@ -17,8 +17,12 @@ class Report extends Model
         return $this->hasMany(Response::class);
     }
 
-    public function maintainer(): HasMany {
-        return $this->hasMany(Maintainer::class);
+    public function file(): HasMany {
+        return $this->hasMany(File::class);
+    }
+
+    public function user(): HasMany {
+        return $this->hasMany(User::class);
     }
 
     protected $fillable = [

@@ -13,11 +13,11 @@ function App() {
   return (
     <Router>
       <Routes> {/* Wrap all your routes in a <Routes> component */}
+        <Route path="/" element={<Home />} />
         <Route path="/login" element={<LoginPage />} /> {/* Use 'element' prop instead of 'component' */}
         <Route path="/questions" element={<QuestionsPage />} />
-        <Route path="/" element={<ReportPage />} /> {/* Use 'element' prop instead of 'component' */}
+        <Route path="/report" element={<ReportPage />} /> {/* Use 'element' prop instead of 'component' */}
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/home" element={<Home />} />
 
       </Routes>
     </Router>
