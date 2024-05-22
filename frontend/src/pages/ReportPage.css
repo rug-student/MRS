@@ -21,11 +21,15 @@ form{
   justify-content: center;
   align-items: center;
 }
-  
-.answer {
-  margin-top: 10px; 
+
+.question{
+  margin-bottom: 10px;
+}
+
+.answer { 
   width: 70%; 
 }
-  
+
+
 
   

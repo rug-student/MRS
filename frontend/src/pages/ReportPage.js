@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './ReportPage.css';
 import Header from './Header';
+import { styled } from '@mui/material/styles';
+import Button from '@mui/material/Button';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 function CreateReport() {
   
@@ -11,6 +14,18 @@ function CreateReport() {
   const [questionAnswers, setQuestionAnswers] = useState({});
   const [showOtherTextInput, setShowOtherTextInput] = useState({});
   let questionNumber = 1; // Initialize the question number
+
+  const VisuallyHiddenInput = styled('input')({
+    clip: 'rect(0 0 0 0)',
+    clipPath: 'inset(50%)',
+    height: 1,
+    overflow: 'hidden',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    whiteSpace: 'nowrap',
+    width: 1,
+  });
   
 
   // loads questions into form upon page load
@@ -188,6 +203,23 @@ function CreateReport() {
             )}
           </div>
         ))}
+
+        <div className='question-container'>
+          <div className='question'>{questionNumber++}. Upload a photo of the malfunction.</div>
+          <Button className='upload-btn'
+            component="label"
+            role={undefined}
+            variant="contained"
+            tabIndex={-1}
+            startIcon={<CloudUploadIcon />}
+            sx={{
+              backgroundColor: '#1AA9EC' // Custom background color
+            }}
+          >
+            Upload file
+            <VisuallyHiddenInput type="file" />
+          </Button>
+        </div>
         
         <button type="submit" onClick={handleSubmit}>Submit</button>
       
