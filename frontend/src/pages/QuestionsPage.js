@@ -3,6 +3,7 @@ import './login.css';
 import Header from './HeaderLoggedIn.js';
 import InsertOptions from './InsertOptions';
 import { OpenQuestionSummary, ClosedQuestionSummary } from './Summary';
+import { submitQuestion, getQuestions } from '../api/questions.api.js';
 
 function InsertQuestion({ onNext, onAddQuestion }) {
   const [question, setQuestion] = useState('');
@@ -32,7 +33,7 @@ function InsertQuestion({ onNext, onAddQuestion }) {
       <Header />
       <div className="centered-container">
         <div className="form-container" id="uno">
-          <h1 className="subtitle">New Question</h1>
+          <h1 className="subtitle" id="tre">New Question</h1>
           <input
             className="inbar"
             type="text"
@@ -42,7 +43,7 @@ function InsertQuestion({ onNext, onAddQuestion }) {
             onFocus={handleInputFocus}
             onBlur={handleInputBlur}
           />
-          <button className="b" onClick={handleNext}>Next</button>
+          <button id="b" onClick={handleNext}>Next</button>
         </div>
       </div>
     </div>
@@ -50,11 +51,8 @@ function InsertQuestion({ onNext, onAddQuestion }) {
 }
 
 function DeleteQuestion({ questions, onDeleteQuestion }) {
-  const [selectedQuestionId, setSelectedQuestionId] = useState('');
-
-  const handleDelete = () => {
-    onDeleteQuestion(selectedQuestionId);
-    setSelectedQuestionId('');
+  const handleDelete = (questionId) => {
+    onDeleteQuestion(questionId);
   };
 
   const activeQuestions = questions.filter(question => question.is_active);
@@ -63,21 +61,35 @@ function DeleteQuestion({ questions, onDeleteQuestion }) {
     <div>
       <Header />
       <div className="centered-container">
-        <div className="form-container" id="uno">
+        <div className="form-container" id="quattro">
           <h1 className="subtitle">Delete Question</h1>
-          <select value={selectedQuestionId} onChange={(e) => setSelectedQuestionId(e.target.value)}>
-            <option value="">Select a question to delete</option>
-            {activeQuestions.map((question) => (
-              <option key={question.id} value={question.id}>{question.question_description}</option>
-            ))}
-          </select>
-          <button className="b" id="delete" onClick={handleDelete}>Delete</button>
+          <div className="table-container">
+            <table className="question-table">
+              <thead>
+                <tr>
+                  <th>Question</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {activeQuestions.map((question) => (
+                  <tr key={question.id}>
+                    <td>{question.question_description}</td>
+                    <td>
+                      <button className="delete-button" onClick={() => handleDelete(question.id)}>
+                        <span role="img" aria-label="delete">➖</span>
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
   );
 }
-
 
 
 function SelectType({ onTypeSelected }) {
@@ -86,7 +98,7 @@ function SelectType({ onTypeSelected }) {
       <Header />
       <div className="centered-container">
         <div className="form-container">
-          <h1 className="subtitle">Question Type</h1>
+          <h1 className="subtitle" id="select">Question Type</h1>
           <button id="firstbutton" onClick={() => onTypeSelected(true)}>Open Question</button>
           <button id="secondbutton" onClick={() => onTypeSelected(false)}>Closed Question</button>
         </div>
@@ -162,8 +174,7 @@ function NewQuestionPage() {
     setIsActive(0);
     setStep(0);
   };
-  
-  
+
 
   const handleQuestionNext = (questionData) => {
     setCurrentQuestion(questionData);

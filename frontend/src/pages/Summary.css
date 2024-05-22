@@ -1,16 +1,17 @@
 
-.subtitle1 {
+.subtitle2 {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     font-weight: bolder;
     color: white;
     background-color: #1aa9ec;
-    width: 300px;
+    width: 340px;
     text-align: center;
     padding: 20px;
     font-size: 30px;
     border-radius: 10px;
-    margin-top: 30px;
-
+    margin-top: -15px;
+    margin-left: -120px;
+    position: absolute;
   }
   
   ul {
@@ -24,28 +25,32 @@
 
   #head1{
     margin-left: 500px;
+    margin-top: 50px;
+ 
   }
   
-  .add-option-button {
-    background-color:#008CBA;
+  .submit-button {
+    background-color:#1aa9ec;
     color: white;
     padding: 10px 20px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    margin-right: 10px;
-    margin-top: 100px;
+    margin-left: -25px;
+    margin-top: 400px;
+    position: static;
+   
 
 
   }
-  
-  .next-button {
-    background-color: #008CBA;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-top: 100px;
-    margin-left: 400px;
+#q{
+    margin-left: -120px;
+    margin-top: 70px;
+    position: absolute;
   }
+
+#op{
+  margin-left: -120px;
+  margin-top: 100px;
+  position: absolute;
+}

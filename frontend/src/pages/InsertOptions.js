@@ -17,7 +17,7 @@ function InsertOptions({ options, onOptionsChange, onNext }) {
         <Header/>
         <div className="centered-container">
           <div className="form-container">
-            <h1 className="subtitle">Insert Options</h1>
+            <h1 className="subtitle4">Insert Options</h1>
             {options.map((option, index) => (
               <div key={index}>
                 <input id = "inoption"
@@ -32,8 +32,8 @@ function InsertOptions({ options, onOptionsChange, onNext }) {
                 />
               </div>
             ))}
-            <button onClick={handleAddOption}>Add Option</button>
-            <button id="secondbutton" onClick={onNext}>Next</button>
+            <button id="quinto"onClick={handleAddOption}>Add Option</button>
+            <button id="sesto" onClick={onNext}>Next</button>
           </div>
         </div>
       </div>

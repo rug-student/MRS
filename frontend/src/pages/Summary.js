@@ -8,8 +8,8 @@ function OpenQuestionSummary({ question, onSubmit }) {
     <div>
       <Header/>
       <div id="head1">      
-        <h1 className="subtitle1">Summary</h1>
-        <p>Question: {question}</p>
+        <h1 className="subtitle2">Summary</h1>
+        <p id="q">Question: {question}</p>
         <button className="submit-button" onClick={onSubmit}>Submit</button>
       </div>
     </div>
@@ -22,14 +22,16 @@ function ClosedQuestionSummary({ question, options, onSubmit }) {
     <div>
       <Header/>
       <div id="head1">      
-        <h1 className="subtitle1">Summary</h1>
-        <p>Question: {question}</p>
+        <h1 className="subtitle2">Summary</h1>
+        <p id="q">Question: {question}</p>
+        <div id="op">
         <p>Options:</p>
         <ul>
           {options.map((option, index) => (
             <li key={index}>{option}</li>
           ))}
         </ul>
+        </div>
         <button className="submit-button" onClick={onSubmit}>Submit</button>
       </div>
     </div>

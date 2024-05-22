@@ -1,8 +1,19 @@
 /* InsertOptions.css */
 
-.subtitle {
-    font-size: 24px;
-    margin-top:30px;
+.subtitle4 {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-weight: bolder;
+    color: white;
+    background-color: #1aa9ec;
+    width: 340px;
+    text-align: center;
+    padding: 20px;
+    font-size: 30px;
+    border-radius: 10px;
+    position: absolute;
+    margin-top: -137px;
+    margin-left: -43px;
+
 
   }
   
@@ -22,7 +33,11 @@
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    margin-right: 30px;
+    margin-left: -0px;
+    position: absolute;
+    margin-top: -40px;
+    margin-left: -195px;
+   
   }
   
   .next-button {
@@ -32,6 +47,18 @@
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    margin-left: 100px;
+    margin-top: -40px;
+    margin-left: -15px;
+    position: absolute;
+  }
+  
+  #quinto{
+    margin-top: -50px;
+    margin-left: -44px;
+  }
+  
+  #sesto{
+    margin-top: -40px;
+    margin-left: 20px;
   }
   
