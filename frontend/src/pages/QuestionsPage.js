@@ -3,6 +3,7 @@ import './login.css';
 import Header from './HeaderLoggedIn.js';
 import InsertOptions from './InsertOptions';
 import { OpenQuestionSummary, ClosedQuestionSummary } from './Summary';
+import { submitQuestion } from '../api/questions.api.js';
 import { submitQuestion, getQuestions } from '../api/questions.api.js';
 
 function InsertQuestion({ onNext, onAddQuestion }) {
@@ -191,30 +192,14 @@ function NewQuestionPage() {
   };
 
   const handleSubmit = () => {
-    setStep(0);
-    console.log('New question data:', { currentQuestion, isOpen, options, isActive });
-    fetch(`${process.env.REACT_APP_API_BASE_URL}/questions`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        question_description: currentQuestion,
-        is_open: isOpen,
-        answers: options,
-        is_active: isActive,
-      })
-    })
-      .then(response => {
-        if (response.ok) {
-          console.log('Question created successfully');
-        } else {
-          console.error('Failed to create question');
-        }
-      })
-      .catch(error => {
-        console.error('Error occurred while creating question:', error);
-      });
+    setStep(0)
+    console.log('New question data:', { currentQuestion, isOpen, options});
+    try {
+      const response = submitQuestion(currentQuestion, isOpen, options);
+      console.log(response);
+    } catch(error) {
+      console.log(error);
+    }
   };
 
   return (

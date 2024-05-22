@@ -58,59 +58,83 @@ function CreateReport() {
 
 
   // -------- SUBMITTING FORM --------
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-
+  
     const questionAnswerIDs = {};
-
+  
     // Create new answers for open questions
-    questions.forEach(question => { 
+    for (const question of questions) {
       if (question.is_open) {
-        const response = fetch(`${process.env.REACT_APP_API_BASE_URL}/answers/`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept' : 'application/json'
-          },
-          body: JSON.stringify({
-            question_id: question.id,
-            answer: questionAnswers[question.id]
-          })
-        });
-      
-        if (!response.ok) {
-          console.error(`Failed to update answer for question ${question.id}`);
-          return;
+        try {
+          const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/answers/`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+              answer: questionAnswers[question.id],
+              question_id: null
+            })
+          });
+  
+          if (!response.ok) {
+            console.error(`Failed to update answer for question ${question.id}`);
+            return;
+          } else {
+            const responseData = await response.json();
+            questionAnswerIDs[question.id] = parseInt(responseData[1].id, 10);
+          }
+        } catch (error) {
+          console.error('Error occurred while updating answer:', error);
         }
-        questionAnswerIDs[question.id] = response.body.id;
       } else {
         let id;
-      question.answer.forEach(answer=> {
-        if(answer.answer == questionAnswers[question.id]) {
-          id = answer.id;
-        }
-      })
-      questionAnswerIDs[question.id] = id;
+        question.answer.forEach(answer => {
+          if (answer.answer === questionAnswers[question.id]) {
+            id = answer.id;
+          }
+        });
+        questionAnswerIDs[question.id] = id;
       }
-    })
-
+    }
+  
     // Perform POST request with form data
-    fetch(`${process.env.REACT_APP_API_BASE_URL}/reports`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept' : 'application/json'
-      },
-      body: JSON.stringify({
-        description: malfunctionDescription, 
+    try {
+      console.log("question answers: ", questionAnswerIDs); // testing
+       
+      // Construct the request body -- TO DELETE (just debugging)
+      const requestBody = {
+        description: malfunctionDescription,
         submitter_email: email,
         responses: Object.keys(questionAnswerIDs).map(questionId => ({
-          question_id: questionId,
+          question_id: questionId, 
           answer_id: questionAnswerIDs[questionId]
-        }))
-      })
-    })
-    .then(response => {
+        })),
+        files: [] // Include an empty files array
+      };
+
+  // Log the request body for debugging
+  console.log("Request Body:", JSON.stringify(requestBody, null, 2));
+      
+      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/reports`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          description: malfunctionDescription,
+          submitter_email: email,
+          responses: Object.keys(questionAnswerIDs).map(questionId => ({
+            question_id: questionId,
+            answer_id: questionAnswerIDs[questionId]
+          })),
+          files: []
+        })
+      });
+  
       if (response.ok) {
         // Handle successful response
         console.log('Report submitted successfully');
@@ -118,13 +142,11 @@ function CreateReport() {
         // Handle error response
         console.error('Failed to submit report');
       }
-    })
-    .catch(error => {
+    } catch (error) {
       // Handle network error
       console.error('Error occurred while submitting report:', error);
-    });
+    }
   };
-
 
   return (
     /* ------ REPORT PAGE ------ */
@@ -148,7 +170,6 @@ function CreateReport() {
             <div className='question'>{questionNumber++}. {question.question_description}</div>
             
             {question.is_open ? (
-              
               // If the question is open, render a text input
               <input type="text" className='answer' value={question.answer.id} onChange={e => handleQuestionResponseChange(e, question.id)}/>
               ) : (

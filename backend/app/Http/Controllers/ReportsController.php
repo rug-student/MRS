@@ -81,7 +81,7 @@ class ReportsController extends Controller
                 return response()->json("ERROR: passed non-existing answer", 400);
             }
             $answer = Answer::find($response_body["answer_id"]);
-            if($answer->question_id != $response_body["question_id"]) {
+            if($answer->question_id != null && $answer->question_id != $response_body["question_id"]) {
                 return response()
                 ->json("ERROR: passed non-related question answer pair", 400);
             }
