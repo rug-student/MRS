@@ -3,7 +3,6 @@ import './login.css';
 import Header from './HeaderLoggedIn.js';
 import InsertOptions from './InsertOptions';
 import { OpenQuestionSummary, ClosedQuestionSummary } from './Summary';
-import { submitQuestion } from '../api/questions.api.js';
 import { submitQuestion, getQuestions } from '../api/questions.api.js';
 
 function InsertQuestion({ onNext, onAddQuestion }) {
