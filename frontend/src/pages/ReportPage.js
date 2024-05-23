@@ -13,7 +13,11 @@ function CreateReport() {
   const [questions, setQuestions] = useState([]);
   const [questionAnswers, setQuestionAnswers] = useState({});
   const [showOtherTextInput, setShowOtherTextInput] = useState({});
+  const [uploadedFile, setUploadedFile] = useState([]);
+  const [uploadedFileInfo, setUploadedFileInfo] = useState();
   let questionNumber = 1; // Initialize the question number
+
+
 
   const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -63,6 +67,11 @@ function CreateReport() {
 
   const handleDescriptionChange = (event) => {
     setMalfunctionDescription(event.target.value);
+  };
+
+  const handleFilePathChange = (event) => {
+    setUploadedFileInfo(uploadedFile);
+    setUploadedFile(event.target.files[0]);
   };
 
   const handleQuestionResponseChange = (event, questionId) => {
@@ -126,6 +135,7 @@ function CreateReport() {
         questionAnswerIDs[question.id] = id;
       }
     }
+
   
     // Perform POST request with form data
     try {
@@ -144,7 +154,9 @@ function CreateReport() {
             question_id: questionId,
             answer_id: questionAnswerIDs[questionId]
           })),
-          files: []
+          files: {
+            file_path: uploadedFile
+          }
         })
       });
   
@@ -217,8 +229,18 @@ function CreateReport() {
             }}
           >
             Upload file
-            <VisuallyHiddenInput type="file" />
+            <VisuallyHiddenInput type="file" onChange={handleFilePathChange}/>
           </Button>
+          {uploadedFileInfo && (
+          <section>
+            File details:
+            <ul>
+              <li>Name: {uploadedFile.name}</li>
+              <li>Type: {uploadedFile.type}</li>
+              <li>Size: {uploadedFile.size} bytes</li>
+            </ul>
+          </section>
+      )}
         </div>
         
         <button type="submit" onClick={handleSubmit}>Submit</button>
