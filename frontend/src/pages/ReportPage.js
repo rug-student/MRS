@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './ReportPage.css';
 import Header from './Header';
+import { styled } from '@mui/material/styles';
+import Button from '@mui/material/Button';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 function CreateReport() {
   
@@ -9,7 +12,20 @@ function CreateReport() {
   const [malfunctionDescription, setMalfunctionDescription] = useState('');
   const [questions, setQuestions] = useState([]);
   const [questionAnswers, setQuestionAnswers] = useState({});
+  const [showOtherTextInput, setShowOtherTextInput] = useState({});
   let questionNumber = 1; // Initialize the question number
+
+  const VisuallyHiddenInput = styled('input')({
+    clip: 'rect(0 0 0 0)',
+    clipPath: 'inset(50%)',
+    height: 1,
+    overflow: 'hidden',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    whiteSpace: 'nowrap',
+    width: 1,
+  });
   
 
   // loads questions into form upon page load
@@ -55,6 +71,17 @@ function CreateReport() {
     setQuestionAnswers(newAnswers);
   };
 
+  const handleSelectChange = (event, questionId) => {
+    const value = event.target.value;
+    const newAnswers = { ...questionAnswers };
+    newAnswers[questionId] = value;
+    setQuestionAnswers(newAnswers);
+    
+    const newShowOtherTextInput = { ...showOtherTextInput };
+    newShowOtherTextInput[questionId] = value === 'Other';
+    setShowOtherTextInput(newShowOtherTextInput);
+  };
+
 
 
   // -------- SUBMITTING FORM --------
@@ -65,7 +92,7 @@ function CreateReport() {
   
     // Create new answers for open questions
     for (const question of questions) {
-      if (question.is_open) {
+      if (question.is_open || showOtherTextInput[question.id]) {
         try {
           const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/answers/`, {
             method: 'POST',
@@ -103,20 +130,6 @@ function CreateReport() {
     // Perform POST request with form data
     try {
       console.log("question answers: ", questionAnswerIDs); // testing
-       
-      // Construct the request body -- TO DELETE (just debugging)
-      const requestBody = {
-        description: malfunctionDescription,
-        submitter_email: email,
-        responses: Object.keys(questionAnswerIDs).map(questionId => ({
-          question_id: questionId, 
-          answer_id: questionAnswerIDs[questionId]
-        })),
-        files: [] // Include an empty files array
-      };
-
-  // Log the request body for debugging
-  console.log("Request Body:", JSON.stringify(requestBody, null, 2));
       
       const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/reports`, {
         method: 'POST',
@@ -164,27 +177,49 @@ function CreateReport() {
           <textarea className='answer' value={malfunctionDescription} onChange={handleDescriptionChange}/>
         </div>
 
-        {/* adds the questions made my maintenance personel */}
+        {/* displaying questions created by maintenance personel */}
         {questions.map(question => (
           <div className='question-container' key={question.id}>
             <div className='question'>{questionNumber++}. {question.question_description}</div>
-            
+          
             {question.is_open ? (
-              // If the question is open, render a text input
+              /* If the question is open, render a text input*/
               <input type="text" className='answer' value={question.answer.id} onChange={e => handleQuestionResponseChange(e, question.id)}/>
               ) : (
-              
-              // If the question is not open, dropdown menu with the MC answers
-              <select className='answer' value={question.answer.answer} onChange={e => handleQuestionResponseChange(e, question.id)}>
+              <>
+              {/* If the question is not open, dropdown menu with the MC answers */}
+              <select className='answer' value={question.answer.answer} onChange={e => handleSelectChange(e, question.id)}>
                 <option value="">-- Select Answer --</option>
                 {/* Map through question answers to populate the dropdown */}
                 {question.answer.map(answer => (
                   <option key={answer.id} value={answer.answer}>{answer.answer}</option>
                  ))}
+                <option value="Other">Other</option>
               </select>
+              {showOtherTextInput[question.id] && (
+                <input type="text" className='answer' value={question.answer.id} onChange={e => handleQuestionResponseChange(e, question.id)}/>
+              )}
+              </>
             )}
           </div>
         ))}
+
+        <div className='question-container'>
+          <div className='question'>{questionNumber++}. Upload a photo of the malfunction.</div>
+          <Button className='upload-btn'
+            component="label"
+            role={undefined}
+            variant="contained"
+            tabIndex={-1}
+            startIcon={<CloudUploadIcon />}
+            sx={{
+              backgroundColor: '#1AA9EC' // Custom background color
+            }}
+          >
+            Upload file
+            <VisuallyHiddenInput type="file" />
+          </Button>
+        </div>
         
         <button type="submit" onClick={handleSubmit}>Submit</button>
       
