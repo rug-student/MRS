@@ -5,6 +5,8 @@ import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
+import { submitReport, getQuestions } from '../api/reports.api.js';
+
 function CreateReport() {
   
   // State variables to hold form data
@@ -14,10 +16,9 @@ function CreateReport() {
   const [questionAnswers, setQuestionAnswers] = useState({});
   const [showOtherTextInput, setShowOtherTextInput] = useState({});
   const [uploadedFile, setUploadedFile] = useState([]);
+  const [uploadedFilePath, setUploadedFilePath] = useState('');
   const [uploadedFileInfo, setUploadedFileInfo] = useState();
   let questionNumber = 1; // Initialize the question number
-
-
 
   const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -32,34 +33,19 @@ function CreateReport() {
   });
   
 
-  // loads questions into form upon page load
+  // populates report with questions upon page load
   useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        const fetchedQuestions = await getQuestions();
+        setQuestions(fetchedQuestions);
+      } catch (error) {
+        console.error('Error occurred while fetching questions:', error);
+      }
+    };
+
     fetchQuestions();
   }, []);
-
-  // Gets all the active questions from the database
-  const fetchQuestions = () => {
-    fetch(`${process.env.REACT_APP_API_BASE_URL}/questions?active=true`, {
-      method: 'GET',
-      headers: {
-        'Accept' : 'application/json'
-      }
-    })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error('Failed to fetch questions');
-        }
-      })
-      .then(questions => {
-        setQuestions(questions);
-      })
-      .catch(error => {
-        console.error('Error occurred while fetching questions:', error);
-      });
-  };
-  
   
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
@@ -71,7 +57,11 @@ function CreateReport() {
 
   const handleFilePathChange = (event) => {
     setUploadedFileInfo(uploadedFile);
-    setUploadedFile(event.target.files[0]);
+    const file = event.target.files[0];
+    if (file) {
+      setUploadedFile(file);
+      setUploadedFilePath(URL.createObjectURL(file)); // Create a local URL for the file
+    }
   };
 
   const handleQuestionResponseChange = (event, questionId) => {
@@ -154,9 +144,7 @@ function CreateReport() {
             question_id: questionId,
             answer_id: questionAnswerIDs[questionId]
           })),
-          files: {
-            file_path: uploadedFile
-          }
+          files: uploadedFilePath ? [{ file_path: uploadedFilePath }] : []
         })
       });
   
@@ -229,7 +217,7 @@ function CreateReport() {
             }}
           >
             Upload file
-            <VisuallyHiddenInput type="file" onChange={handleFilePathChange}/>
+            <VisuallyHiddenInput className='answer' type="file" onChange={handleFilePathChange}/>
           </Button>
           {uploadedFileInfo && (
           <section>
