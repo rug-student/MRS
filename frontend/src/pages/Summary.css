@@ -9,9 +9,9 @@
     padding: 20px;
     font-size: 30px;
     border-radius: 10px;
-    margin-top: -15px;
-    margin-left: -120px;
-    position: absolute;
+    
+    position: relative;
+    z-index: 9;
   }
   
   ul {
@@ -24,11 +24,48 @@
   }
 
   #head1{
-    margin-left: 500px;
+    margin-left: 623px;
     margin-top: 50px;
+    
  
   }
-  
+    
+  .form-container2{
+    text-align: center;
+    width: 380px;
+    height: 170px;
+    background: #f7f7f7;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    z-index: 1;
+    margin-top: -0px;
+    margin-left: -50px;
+    position: relative;
+    margin-top: -32px;
+    margin-left: -139px;
+    position: relative;
+
+   
+  }
+  .form-container3{
+    text-align: center;
+    width: 380px;
+    height: 500px;
+    background: #f7f7f7;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    z-index: 1;
+    margin-top: -0px;
+    margin-left: -50px;
+    position: relative;
+    margin-top: -32px;
+    margin-left: -139px;
+    position: relative;
+
+   
+  }
   .submit-button {
     background-color:#1aa9ec;
     color: white;
@@ -36,21 +73,31 @@
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    margin-left: -25px;
-    margin-top: 400px;
+    margin-left: px;
+    margin-top: 170px;
     position: static;
+    
    
-
-
   }
 #q{
-    margin-left: -120px;
-    margin-top: 70px;
-    position: absolute;
+    margin-left: -260px;
+    margin-top: 0px;
+    position: relative;
   }
 
 #op{
-  margin-left: -120px;
-  margin-top: 100px;
-  position: absolute;
+  margin-left: -275px;
+
+  position: relative;
+}
+
+ul {
+  list-style-type: disc; /* Garantisce che la lista sia puntata */
+  padding-left: 20px; /* Aggiunge un'indentazione a sinistra per i punti */
+  list-style-position: inside; /* Punti all'interno dell'elemento della lista */
+}
+
+li {
+  margin-bottom: 10px; /* Spazio tra gli elementi della lista */
+  padding-left: 5px; /* Riduce lo spazio tra il punto e l'elemento della lista */
 }

@@ -7,11 +7,13 @@ function OpenQuestionSummary({ question, onSubmit }) {
   return (
     <div>
       <Header/>
-      <div id="head1">      
+      <div id="head1">   
+      <div className="form-container2"> 
         <h1 className="subtitle2">Summary</h1>
         <p id="q">Question: {question}</p>
         <button className="submit-button" onClick={onSubmit}>Submit</button>
       </div>
+      </div>  
     </div>
   );
 }
@@ -21,7 +23,8 @@ function ClosedQuestionSummary({ question, options, onSubmit }) {
   return (
     <div>
       <Header/>
-      <div id="head1">      
+      <div id="head1">    
+      <div className="form-container3">   
         <h1 className="subtitle2">Summary</h1>
         <p id="q">Question: {question}</p>
         <div id="op">
@@ -33,6 +36,7 @@ function ClosedQuestionSummary({ question, options, onSubmit }) {
         </ul>
         </div>
         <button className="submit-button" onClick={onSubmit}>Submit</button>
+      </div>
       </div>
     </div>
   );

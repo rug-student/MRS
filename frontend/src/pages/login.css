@@ -86,14 +86,16 @@ a:hover{
   
   }
 #secondbutton{
-  transform: translate(-15px, 0px);
+  transform: translate(10px, 0px);
   width: 160px;
+  z-index: 9999;
 
 }
 
 #firstbutton{
-  transform: translate(-35px, 0px);
+  transform: translate(-10px, 0px);
   width: 160px;
+  z-index: 9999;
 }
 #thirdbutton{
   transform: translate(115px, 0px);
@@ -125,7 +127,23 @@ a:hover{
 .form-container {
   text-align: center;
   position: relative;
+  height: 170px;
 }
+
+.form-container1 {
+  text-align: center;
+  max-width: 380px;
+  height: 170px;
+  background: #f7f7f7;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  z-index: 1;
+  margin-top: -170px;
+  margin-left: -50px;
+  position: relative;
+}
+
 
 .table-container {
   max-height: 400px; /* Fixed height for the container */
@@ -176,9 +194,7 @@ a:hover{
   border-radius: 10px;
 }
 
-#tre{
-  margin-top: 4px;
-}
+
 
 
 #uno{
@@ -187,8 +203,9 @@ a:hover{
 }
 
 #select{
-  margin-top: -152px;
-  margin-left: -35px;
+  margin-top: 0px;
+  margin-left: -0px;
+  position: relative;
 }
 
 #b{
@@ -196,6 +213,9 @@ a:hover{
 }
 
 #quattro{
-  margin-top: -220px;
+  margin-top: 167px;
   margin-left: -50px;
+  position: relative;
+  height: 550px;
+  
 }

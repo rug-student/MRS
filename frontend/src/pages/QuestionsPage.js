@@ -97,7 +97,7 @@ function SelectType({ onTypeSelected }) {
     <div>
       <Header />
       <div className="centered-container">
-        <div className="form-container">
+        <div className="form-container1">
           <h1 className="subtitle" id="select">Question Type</h1>
           <button id="firstbutton" onClick={() => onTypeSelected(true)}>Open Question</button>
           <button id="secondbutton" onClick={() => onTypeSelected(false)}>Closed Question</button>
