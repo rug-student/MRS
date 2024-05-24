@@ -33,33 +33,6 @@ export function submitReport(description, email, questionAnswerIDs) {
 }
 
 /**
- * GETs all active questions to populate the report.
- * @returns array of active questions
- *
- */
-export const getQuestions = async () => {
-  try {
-    const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/questions?active=true`, {
-      method: 'GET',
-      headers: {
-        'Accept' : 'application/json'
-      }
-    });
-
-    if (response.ok) {
-      const questions = await response.json();
-      return questions;
-    } else {
-      throw new Error('Failed to fetch questions');
-    }
-  } catch (error) {
-    console.error('Error occurred while fetching questions:', error);
-    throw error;
-  }
-};
-
-
-/**
  * GETs a detailed single report with specified id.
  * @param reportID The ID of the report.
  * @returns all information on the report with the given ID. 
@@ -67,7 +40,7 @@ export const getQuestions = async () => {
  */
 export async function getReport(reportID) {
   try {
-    const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/reports/${reportID}`, {
+    const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/reports/${reportID}`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json'
