@@ -1,39 +1,19 @@
 import React, { useState } from 'react';
 import './login.css';
-import Header from './Header';
+import Header from '../components/Header';
+import useAuthContext from '../context/AuthContext';
 
 function App() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
+  const { login, errors } = useAuthContext();
 
-  const csrf =  () => fetch('http://localhost:8000/sanctum/csrf-cookie', {
-    method: 'GET'
-  });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    csrf();
-    fetch(`http://localhost:8000/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-TOKEN': ''
-      },
-      body: JSON.stringify({
-        email: email, 
-        password: password,
-      })
-    })
-    .then(response => {
-      if (response.status == 204) {
-        // Handle successful response
-        setMessage("Succesfully logged in.")
-      } else {
-        // Handle error response
-        setMessage("Invalid email or password.")
-      }
-    })
+    login({email, password});
+    setMessage(errors);
   };
 
   return (

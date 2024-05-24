@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './ReportPage.css';
-import Header from './Header';
+import Header from '../components/Header';
 
 function CreateReport() {
   
@@ -19,7 +19,7 @@ function CreateReport() {
 
   // Gets all the active questions from the database
   const fetchQuestions = () => {
-    fetch(`${process.env.REACT_APP_API_BASE_URL}/questions?active=true`, {
+    fetch(`${process.env.REACT_APP_API_BASE_URL}/api/questions?active=true`, {
       method: 'GET',
       headers: {
         'Accept' : 'application/json'
@@ -66,7 +66,7 @@ function CreateReport() {
     // Create new answers for open questions
     questions.forEach(question => { 
       if (question.is_open) {
-        const response = fetch(`${process.env.REACT_APP_API_BASE_URL}/answers/`, {
+        const response = fetch(`${process.env.REACT_APP_API_BASE_URL}/api/answers/`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -95,7 +95,7 @@ function CreateReport() {
     })
 
     // Perform POST request with form data
-    fetch(`${process.env.REACT_APP_API_BASE_URL}/reports`, {
+    fetch(`${process.env.REACT_APP_API_BASE_URL}/api/reports`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

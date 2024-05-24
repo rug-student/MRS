@@ -4,7 +4,7 @@
  * @returns response.
  */
 export function getQuestions() {
-    fetch(`${process.env.REACT_APP_API_BASE_URL}/questions?active=true`, {
+    fetch(`${process.env.REACT_APP_API_BASE_URL}/api/questions?active=true`, {
         method: 'GET',
         headers: {
             'Accept' : 'application/json'
@@ -28,7 +28,7 @@ export function getQuestions() {
  * @param options Array containing the multiple choice options.
  */
 export function submitQuestion(description, isOpen, options) {
-    fetch(`${process.env.REACT_APP_API_BASE_URL}/questions`, {
+    fetch(`${process.env.REACT_APP_API_BASE_URL}/api/questions`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -48,7 +48,6 @@ export function submitQuestion(description, isOpen, options) {
         }
       })
       .catch(error => {
-        // Handle network error
         console.error('Error occurred while creating question:', error);
       });
 }
