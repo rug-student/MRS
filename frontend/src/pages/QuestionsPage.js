@@ -3,7 +3,7 @@ import './login.css';
 import Header from '../components/Header';
 import InsertOptions from './InsertOptions';
 import { OpenQuestionSummary, ClosedQuestionSummary } from './Summary';
-import { submitQuestion, DeleteQue} from '../api/questions.api.js';
+import {getQuestions, submitQuestion, DeleteQue} from '../api/questions.api.js';
 import useAuthContext from '../context/AuthContext';
 import { useNavigate } from "react-router-dom";
 
@@ -37,7 +37,7 @@ function InsertQuestion({ onNext, onAddQuestion, onBack }) {
   };
 
   const handleAddQuestion = () => {
-    onAddQuestion(question);
+    // onAddQuestion(question);
     setQuestion('');
   };
 
