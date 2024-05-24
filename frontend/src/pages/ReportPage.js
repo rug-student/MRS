@@ -94,7 +94,7 @@ function CreateReport() {
     for (const question of questions) {
       if (question.is_open || showOtherTextInput[question.id]) {
         try {
-          const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/answers/`, {
+          const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/answers/`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -132,7 +132,7 @@ function CreateReport() {
     try {
       console.log("question answers: ", questionAnswerIDs); // testing
       
-      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/reports`, {
+      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/reports`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
