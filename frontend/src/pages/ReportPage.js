@@ -5,7 +5,8 @@ import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
-import { submitReport, getQuestions } from '../api/reports.api.js';
+import { submitReport } from '../api/reports.api.js';
+import { getQuestions } from '../api/questions.api.js';
 
 function CreateReport() {
   

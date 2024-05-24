@@ -5,7 +5,7 @@
  */
 export const getQuestions = async () => {
   try {
-    const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/questions?active=true`, {
+    const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/questions?active=true`, {
       method: 'GET',
       headers: {
         'Accept' : 'application/json'
@@ -23,6 +23,7 @@ export const getQuestions = async () => {
     throw error;
   }
 };
+
 
 
 /**
@@ -64,7 +65,7 @@ export function submitQuestion(description, isOpen, options) {
  * @param questionID ID of the selected question.
  */
 export function DeleteQue(questionId) {
-  fetch(`${process.env.REACT_APP_API_BASE_URL}/api/questions/${questionId}`, {
+  fetch(`${process.env.REACT_APP_API_BASE_URL}/questions/${questionId}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json'
