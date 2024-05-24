@@ -12,7 +12,7 @@ const Dashboard = () => {
   const [reports, setReports] = useState([]);
   const [open, setOpen] = useState(false);
   const [modalContent, setModalContent] = useState(-1);
-  const { user } = useAuthContext();
+  const { user, checkLoggedIn } = useAuthContext();
   const navigate = useNavigate();
 
 
@@ -28,9 +28,7 @@ const Dashboard = () => {
 
   // loads questions into form upon page load
   useEffect(() => {
-    if(!user) {
-      navigate('/login')
-    }
+    checkLoggedIn();
     fetchReports();
   }, []);
 

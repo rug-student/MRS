@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }) => {
         } catch(e) {
             console.log(e);
         }
-    }
+    };
 
     const login  = async ({ ...data }) => {
         csrf();
@@ -33,15 +33,21 @@ export const AuthProvider = ({ children }) => {
                 setErrors(e.response.data.errors)
             }
         }
-    }
+    };
+
+    const checkLoggedIn = () => {
+        if(!user) {
+            navigate('/')
+        }
+    };
 
     const logout = () => {
         api.post('/logout', [], {withCredentials: true, withXSRFToken: true}).then(() => {
             setUser(null);
         });
-    } 
+    };
 
-    return <AuthContext.Provider value={{user, errors, getUser, login, logout}}>
+    return <AuthContext.Provider value={{user, errors, getUser, login, logout, checkLoggedIn}}>
         {children}
     </AuthContext.Provider>
 }

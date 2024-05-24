@@ -131,11 +131,14 @@ function NewQuestionPage() {
   const [isOpen, setIsOpen] = useState(null);
   const [isActive, setIsActive] = useState(null);
   const [options, setOptions] = useState([]);
-  const { user } = useAuthContext();
+  const { user, checkLoggedIn } = useAuthContext();
 
   const navigate = useNavigate();
 
   useEffect(() => {
+
+    checkLoggedIn();
+
     const fetchQuestions = async () => {
       try {
         const fetchedQuestions = await getQuestions();
