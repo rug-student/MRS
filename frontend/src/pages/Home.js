@@ -32,8 +32,8 @@ function HomePage() {
               {user ? 
               <>
                 <div className="box">
-                <h1>You are Logged in</h1>
-                <img src="/imgs/logged_in_placeholder.png" className='logoHeader' alt="logo" /> 
+                  <h1>View Dashboard</h1>
+                  <Link to="/dashboard">Dashboard</Link>
                 </div>
               </> :
                <>
