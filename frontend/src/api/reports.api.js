@@ -58,3 +58,30 @@ export const getQuestions = async () => {
   }
 };
 
+
+/**
+ * GETs a detailed single report with specified id.
+ * @param reportID The ID of the report.
+ * @returns all information on the report with the given ID. 
+ *
+ */
+export async function getReport(reportID) {
+  try {
+    const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/reports/${reportID}`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json'
+      }
+    });
+
+    if (response.ok) {
+      const reportSummary = await response.json();
+      return reportSummary;
+    } else {
+      throw new Error('Failed to fetch report');
+    }
+  } catch (error) {
+    console.error('Error occurred while fetching report:', error);
+    throw error;
+  }
+}
