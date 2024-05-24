@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import classes from "./Dashboard.module.css";
 import { FiEdit } from "react-icons/fi";
-import BasicModal from '../components/modal.js';
+import BasicModal from '../components/SingleReport.js';
 import Header from '../components/Header';
 import { useNavigate } from "react-router-dom";
 import useAuthContext from "../context/AuthContext";

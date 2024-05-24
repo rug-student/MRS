@@ -20,7 +20,7 @@ const style = {
   p: 4,
 };
 
-export default function BasicModal({ open, handleClose, reportID }) {
+export default function SingleReport({ open, handleClose, reportID }) {
     const [reportData, setReportData] = useState([]);
     const [loading, setLoading] = useState(true);
   
@@ -77,16 +77,12 @@ export default function BasicModal({ open, handleClose, reportID }) {
                 </Typography>
                 {reportData.response.map((r, index) => (
                   <Typography key={index} id="modal-modal-description" sx={{ mt: 1 }}>
-                    {r.question.question_description}: {r.answer.answer}
+                    <strong>{index+1}. {r.question.question_description}</strong> 
+                    <br></br>Answer: {r.answer.answer}
                   </Typography>
                 ))}
               </div>
             )}
-            {/* TO DO: ADD RESPONSES */}
-
-                
-            
-           
         </Box>
       </Modal>
     </div>
