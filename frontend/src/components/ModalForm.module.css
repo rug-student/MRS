@@ -1,0 +1,19 @@
+.fieldWrapper{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+}
+
+.fieldWrapper > label{
+  font-weight: 500;
+  font-size: 18px; 
+  width: 40%;
+}
+
+.fieldWrapper >input{
+  width: 60%;
+  border: none;
+  border-bottom: 1px solid #999
+}
