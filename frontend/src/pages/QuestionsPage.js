@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import './login.css';
-import Header from './HeaderLoggedIn.js';
+import Header from '../components/Header';
 import InsertOptions from './InsertOptions';
 import { OpenQuestionSummary, ClosedQuestionSummary } from './Summary';
-import { submitQuestion, getQuestions } from '../api/questions.api.js';
+import { submitQuestion } from '../api/questions.api.js';
+import useAuthContext from '../context/AuthContext';
+import { useNavigate } from "react-router-dom";
 
 function InsertQuestion({ onNext, onAddQuestion }) {
   const [question, setQuestion] = useState('');
@@ -114,13 +116,20 @@ function NewQuestionPage() {
   const [isOpen, setIsOpen] = useState(null);
   const [isActive, setIsActive] = useState(null);
   const [options, setOptions] = useState([]);
+  const { user } = useAuthContext();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
+    if(!user) {
+      navigate('/login');
+    }
     fetchQuestions();
   }, []);
 
+
   const fetchQuestions = () => {
-    fetch(`${process.env.REACT_APP_API_BASE_URL}/questions?active=true`, {
+    fetch(`${process.env.REACT_APP_API_BASE_URL}/api/questions?active=true`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json'
@@ -153,7 +162,7 @@ function NewQuestionPage() {
     );
     setQuestions(updatedQuestions);
   
-    fetch(`${process.env.REACT_APP_API_BASE_URL}/questions/${questionId}`, {
+    fetch(`${process.env.REACT_APP_API_BASE_URL}/api/questions/${questionId}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json'

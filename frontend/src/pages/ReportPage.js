@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './ReportPage.css';
-import Header from './Header';
+import Header from '../components/Header';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';

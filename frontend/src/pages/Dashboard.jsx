@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from "react";
 import classes from "./Dashboard.module.css";
 import { FiEdit } from "react-icons/fi";
-import Header from "./HeaderLoggedIn";
 import BasicModal from '../components/modal.js';
+import Header from '../components/Header';
+import { useNavigate } from "react-router-dom";
+import useAuthContext from "../context/AuthContext";
+
 
 const Dashboard = () => {
 
   const [reports, setReports] = useState([]);
   const [open, setOpen] = useState(false);
   const [modalContent, setModalContent] = useState(-1);
+  const { user } = useAuthContext();
+  const navigate = useNavigate();
 
 
   const handleClose = () => {
@@ -23,6 +28,9 @@ const Dashboard = () => {
 
   // loads questions into form upon page load
   useEffect(() => {
+    if(!user) {
+      navigate('/login')
+    }
     fetchReports();
   }, []);
 
