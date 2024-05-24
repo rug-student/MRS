@@ -28,11 +28,11 @@ button {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  width: 160px;
 }
 
 button:hover {
   background-color: #0056b3;
-  font-weight: bolder;
 }
 
 .navbar {
@@ -46,7 +46,6 @@ button:hover {
   justify-content: space-between;
   width: 100%;
   padding: 10px 10px;
-  transform: translate(0px, -200px);
 }
 
 .left-menu,
@@ -55,11 +54,11 @@ button:hover {
 }
 
 .right-menu a {
-  margin-left: 20px; /* Spazio tra le voci del menu */
+  margin-left: 20px; 
 }
 
 .right-menu a:first-child {
-  margin-left: 0; /* Rimuove il margine sinistro per la prima voce del menu */
+  margin-left: 0; 
 }
 
 a {
@@ -82,34 +81,27 @@ a:hover{
 
 
 .centered-container {
-    margin-top: 30px;
-    margin-left: 500px;
+  margin-top: -150px;
+  margin-left: 100px;
+  
   }
 #secondbutton{
-  transform: translate(70px, 0px);
-  width: 100px;
+  transform: translate(10px, 0px);
+  width: 160px;
+  z-index: 9999;
+
 }
 
 #firstbutton{
-  transform: translate(30px, 0px);
-  width: 100px;
+  transform: translate(-10px, 0px);
+  width: 160px;
+  z-index: 9999;
 }
 #thirdbutton{
   transform: translate(115px, 0px);
 
 }
-.subtitle{
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
-  font-weight: bolder;
-  color: white;
-  background-color: #1aa9ec;
-  width: 300px;
-  text-align: center;
-  padding: 20px;
-  font-size: 30px;
-  border-radius: 10px;
 
-}
 
 #inoption{
   width: 290px;
@@ -118,11 +110,112 @@ a:hover{
 .inbar{
   width: 230px;
   margin-left: -0px;
-
-
-
 }
 
 #delete{
   margin-left: 20px;
+}
+
+.centered-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+.form-container {
+  text-align: center;
+  position: relative;
+  height: 170px;
+}
+
+.form-container1 {
+  text-align: center;
+  max-width: 380px;
+  height: 170px;
+  background: #f7f7f7;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  z-index: 1;
+  margin-top: -170px;
+  margin-left: -50px;
+  position: relative;
+}
+
+
+.table-container {
+  max-height: 400px; /* Fixed height for the container */
+  overflow-y: auto; /* Enable vertical scrolling */
+  width:340px; /* Adjust width as needed */
+  margin-top: 0px; /* Space between subtitle and table */
+  position: fixed;
+}
+
+.question-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.question-table th,
+.question-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.question-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.delete-button {
+  background: none;
+  border: none;
+  color: red;
+  font-size: 1.2em;
+  cursor: pointer;
+}
+
+.delete-button span {
+  font-size: 1.2em;
+}
+
+.subtitle {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-weight: bolder;
+  color: white;
+  background-color: #1aa9ec;
+  width: 340px;
+  text-align: center;
+  padding: 20px;
+  font-size: 30px;
+  border-radius: 10px;
+}
+
+
+
+
+#uno{
+  margin-top: -170px;
+  margin-left: -50px;
+}
+
+#select{
+  margin-top: 0px;
+  margin-left: -0px;
+  position: relative;
+}
+
+#b{
+  width: 105px;
+}
+
+#quattro{
+  margin-top: 167px;
+  margin-left: -50px;
+  position: relative;
+  height: 550px;
+  
 }
