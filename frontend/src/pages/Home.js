@@ -1,10 +1,20 @@
 import './login.css';
 import './Home.css';
-import Header from './Header';
+import Header from '../components/Header';
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
+import useAuthContext from '../context/AuthContext';
 
 function HomePage() {
  
+  const {user, getUser} = useAuthContext();
+
+  useEffect(() => {
+    if(!user) {
+      getUser();
+    }
+  }, [])
+
   return (
       <div className='page'>
         <Header />

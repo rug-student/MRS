@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import './login.css';
-import Header from './HeaderLoggedIn.js';
+import Header from '../components/Header';
 import InsertOptions from './InsertOptions';
 import { OpenQuestionSummary, ClosedQuestionSummary } from './Summary';
-import { submitQuestion, getQuestions, DeleteQue} from '../api/questions.api.js';
+import { submitQuestion, DeleteQue} from '../api/questions.api.js';
+import useAuthContext from '../context/AuthContext';
+import { useNavigate } from "react-router-dom";
 
 function BackButton({ onClick }) {
   return (
@@ -129,6 +131,9 @@ function NewQuestionPage() {
   const [isOpen, setIsOpen] = useState(null);
   const [isActive, setIsActive] = useState(null);
   const [options, setOptions] = useState([]);
+  const { user } = useAuthContext();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchQuestions = async () => {

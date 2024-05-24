@@ -16,14 +16,14 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): Response
     {
-        Log::channel('abuse')->info('login attempt', [
+        Log::channel('abuse')->info('authentication request.', [
             'user_email' => $request->email,
             'user_password' => $request->password,
         ]);
         $request->authenticate();
 
         $request->session()->regenerate();
-        Log::channel('abuse')->info('succesfully logged in user', [
+        Log::channel('abuse')->info('authentication successful.', [
             'user_id' => Auth::id()
         ]);
         return response()->noContent();

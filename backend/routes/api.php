@@ -5,6 +5,7 @@ use App\Http\Controllers\QuestionsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ReportsController;
+use App\Http\Controllers\UserController;
 use App\Models\Question;
 
 /*
@@ -37,27 +38,3 @@ Route::patch("/questions/{id}", [QuestionsController::class, "updateQuestion"]);
 // Routes for answers endpoints.
 Route::post("/answers", [AnswersController::class, "createAnswer"]);
 
-/*
-//Enable authentication
-
-// Routes for reports endpoints.
-Route::get("/reports", [ReportsController::class, "getAllReports"])
-->middleware('auth');
-Route::get("/reports/{id}", [ReportsController::class, "getReport"])
-->middleware('auth');
-Route::post("/reports", [ReportsController::class, "createReport"]);
-
-// Routes for questions endpoints.
-Route::get("/questions", [QuestionsController::class, "getAllQuestions"]);
-Route::get("/questions/{id}", [QuestionsController::class, "getQuestion"]);
-Route::post("/questions", [QuestionsController::class, "createQuestion"])
-->middleware('auth');
-Route::patch("/questions/{id}", [QuestionsController::class, "updateQuestion"])
-->middleware('auth');
-Route::delete("/questions/{id}", [QuestionsController::class, "deleteQuestion"])
-->middleware('auth');
-
-// Routes for answers endpoints.
-Route::put("/answers/{id}", [AnswersController::class, "updateAnswer"]);
-Route::post("/answers", [AnswersController::class, "createAnswer"]);
-*/
