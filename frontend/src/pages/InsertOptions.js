@@ -2,7 +2,13 @@ import React from 'react';
 import './InsertOptions.css';
 import Header from './HeaderLoggedIn.js';
 
-function InsertOptions({ options, onOptionsChange, onNext }) {
+function BackButton({ onClick }) {
+  return (
+    <button className="back-button" onClick={onClick}>Back</button>
+  );
+}
+
+function InsertOptions({ options, onOptionsChange, onNext, onBack }) {
   const handleAddOption = () => {
     if (options.length < 10) {
       onOptionsChange([...options, '']);
@@ -39,6 +45,7 @@ function InsertOptions({ options, onOptionsChange, onNext }) {
               </div>
             ))}
           </div>
+          <BackButton onClick={onBack} />
         </div>
       </div>
     </div>

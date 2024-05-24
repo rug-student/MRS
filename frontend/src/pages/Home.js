@@ -29,11 +29,21 @@ function HomePage() {
                 <h1>Create a New Report</h1>
                 <Link to="/report">Report</Link>
               </div>
-              
-              <div className="box">
+              {user ? 
+              <>
+                <div className="box">
+                  <h1>View Dashboard</h1>
+                  <Link to="/dashboard">Dashboard</Link>
+                </div>
+              </> :
+               <>
+                <div className="box">
                 <h1>Maintenance Personnel Login</h1>
                 <Link to="/login">Login</Link>
-              </div>
+                </div>
+              </>
+              }
+              
             
           </div>
         </div>

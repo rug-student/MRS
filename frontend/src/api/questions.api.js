@@ -1,24 +1,30 @@
 /**
- * Gets all active questions.
- * 
- * @returns response.
+ * GETs all active questions to populate the report.
+ * @returns array of active questions
+ *
  */
-export function getQuestions() {
-    fetch(`${process.env.REACT_APP_API_BASE_URL}/api/questions?active=true`, {
-        method: 'GET',
-        headers: {
-            'Accept' : 'application/json'
-        }
-    })
-    .then(response => {
-        if (response.ok) {
-            return response.json();
-        }
-    })
-    .catch(error => {
-        throw error;
+export const getQuestions = async () => {
+  try {
+    const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/questions?active=true`, {
+      method: 'GET',
+      headers: {
+        'Accept' : 'application/json'
+      }
     });
-}
+
+    if (response.ok) {
+      const questions = await response.json();
+      return questions;
+    } else {
+      throw new Error('Failed to fetch questions');
+    }
+  } catch (error) {
+    console.error('Error occurred while fetching questions:', error);
+    throw error;
+  }
+};
+
+
 
 /**
  * POSTs a new question from given params.
@@ -51,3 +57,29 @@ export function submitQuestion(description, isOpen, options) {
         console.error('Error occurred while creating question:', error);
       });
 }
+
+
+/**
+ * POSTs a new report with given data.
+ * 
+ * @param questionID ID of the selected question.
+ */
+export function DeleteQue(questionId) {
+  fetch(`${process.env.REACT_APP_API_BASE_URL}/api/questions/${questionId}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ is_active: 0 })
+  })
+    .then(response => {
+      if (response.ok) {
+        console.log('Question deactivated successfully');
+      } else {
+        throw new Error('Failed to deactivate question');
+      }
+    })
+    .catch(error => {
+      console.error('Error occurred while deactivating question:', error);
+    });
+  }

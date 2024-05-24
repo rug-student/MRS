@@ -3,11 +3,22 @@ import './login.css';
 import Header from '../components/Header';
 import InsertOptions from './InsertOptions';
 import { OpenQuestionSummary, ClosedQuestionSummary } from './Summary';
-import { submitQuestion } from '../api/questions.api.js';
+import {getQuestions, submitQuestion, DeleteQue} from '../api/questions.api.js';
 import useAuthContext from '../context/AuthContext';
 import { useNavigate } from "react-router-dom";
 
-function InsertQuestion({ onNext, onAddQuestion }) {
+function BackButton({ onClick }) {
+  return (
+    <button className="back-button" onClick={onClick}>Back</button>
+  );
+}
+
+function BackButton2({ onClick }) {
+  return (
+    <button className="back-button2" onClick={onClick}>Back</button>
+  );
+}
+function InsertQuestion({ onNext, onAddQuestion, onBack }) {
   const [question, setQuestion] = useState('');
   const [placeholder, setPlaceholder] = useState('Enter your question');
 
@@ -26,7 +37,7 @@ function InsertQuestion({ onNext, onAddQuestion }) {
   };
 
   const handleAddQuestion = () => {
-    onAddQuestion(question);
+    // onAddQuestion(question);
     setQuestion('');
   };
 
@@ -46,13 +57,14 @@ function InsertQuestion({ onNext, onAddQuestion }) {
             onBlur={handleInputBlur}
           />
           <button id="b" onClick={handleNext}>Next</button>
+          <BackButton onClick={onBack} />
         </div>
       </div>
     </div>
   );
 }
 
-function DeleteQuestion({ questions, onDeleteQuestion }) {
+function DeleteQuestion({ questions, onDeleteQuestion, onBack }) {
   const handleDelete = (questionId) => {
     onDeleteQuestion(questionId);
   };
@@ -63,6 +75,7 @@ function DeleteQuestion({ questions, onDeleteQuestion }) {
     <div>
       <Header />
       <div className="centered-container">
+   
         <div className="form-container" id="quattro">
           <h1 className="subtitle">Delete Question</h1>
           <div className="table-container">
@@ -86,15 +99,16 @@ function DeleteQuestion({ questions, onDeleteQuestion }) {
                 ))}
               </tbody>
             </table>
-          </div>
+          </div>   
         </div>
+        <BackButton2 onClick={onBack} />
       </div>
+      
     </div>
   );
 }
 
-
-function SelectType({ onTypeSelected }) {
+function SelectType({ onTypeSelected, onBack }) {
   return (
     <div>
       <Header />
@@ -103,6 +117,7 @@ function SelectType({ onTypeSelected }) {
           <h1 className="subtitle" id="select">Question Type</h1>
           <button id="firstbutton" onClick={() => onTypeSelected(true)}>Open Question</button>
           <button id="secondbutton" onClick={() => onTypeSelected(false)}>Closed Question</button>
+          <BackButton onClick={onBack} />
         </div>
       </div>
     </div>
@@ -116,39 +131,25 @@ function NewQuestionPage() {
   const [isOpen, setIsOpen] = useState(null);
   const [isActive, setIsActive] = useState(null);
   const [options, setOptions] = useState([]);
-  const { user } = useAuthContext();
+  const { user, checkLoggedIn } = useAuthContext();
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    if(!user) {
-      navigate('/login');
-    }
+
+    checkLoggedIn();
+
+    const fetchQuestions = async () => {
+      try {
+        const fetchedQuestions = await getQuestions();
+        setQuestions(fetchedQuestions);
+      } catch (error) {
+        console.error('Error occurred while fetching questions:', error);
+      }
+    };
+
     fetchQuestions();
   }, []);
-
-
-  const fetchQuestions = () => {
-    fetch(`${process.env.REACT_APP_API_BASE_URL}/api/questions?active=true`, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json'
-      }
-    })
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error('Failed to fetch questions');
-        }
-      })
-      .then(questions => {
-        setQuestions(questions);
-      })
-      .catch(error => {
-        console.error('Error occurred while fetching questions:', error);
-      });
-  };
 
   const handleAddQuestion = (question) => {
     setQuestions([...questions, question]);
@@ -162,28 +163,11 @@ function NewQuestionPage() {
     );
     setQuestions(updatedQuestions);
   
-    fetch(`${process.env.REACT_APP_API_BASE_URL}/api/questions/${questionId}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ is_active: 0 })
-    })
-      .then(response => {
-        if (response.ok) {
-          console.log('Question deactivated successfully');
-        } else {
-          throw new Error('Failed to deactivate question');
-        }
-      })
-      .catch(error => {
-        console.error('Error occurred while deactivating question:', error);
-      });
+    DeleteQue(questionId);
   
     setIsActive(0);
     setStep(0);
   };
-
 
   const handleQuestionNext = (questionData) => {
     setCurrentQuestion(questionData);
@@ -200,13 +184,25 @@ function NewQuestionPage() {
   };
 
   const handleSubmit = () => {
-    setStep(0)
-    console.log('New question data:', { currentQuestion, isOpen, options});
+    setStep(0);
+    console.log('New question data:', { currentQuestion, isOpen, options });
     try {
       const response = submitQuestion(currentQuestion, isOpen, options);
       console.log(response);
-    } catch(error) {
+    } catch (error) {
       console.log(error);
+    }
+  };
+
+  const handleBack = () => {
+    if (step === 1 || step === 2) {
+      setStep(0);
+    } else if (step === 3) {
+      setStep(1);
+    } else if (step === 4) {
+      setStep(3);
+    } else if (step === 5) {
+      setStep(4);
     }
   };
 
@@ -224,12 +220,12 @@ function NewQuestionPage() {
           </div>
         </div>
       )}
-      {step === 1 && <InsertQuestion onNext={handleQuestionNext} onAddQuestion={handleAddQuestion} />}
-      {step === 2 && <DeleteQuestion questions={questions} onDeleteQuestion={handleDeleteQuestion} />}
-      {step === 3 && <SelectType onTypeSelected={handleTypeSelected} />}
-      {step === 4 && isOpen && <OpenQuestionSummary question={currentQuestion} is_active={1} onSubmit={handleSubmit} />}
-      {step === 4 && !isOpen && <InsertOptions options={options} onOptionsChange={setOptions} onNext={handleOptionsNext} />}
-      {step === 5 && <ClosedQuestionSummary question={currentQuestion} options={options} is_active={1} onSubmit={handleSubmit} />}
+      {step === 1 && <InsertQuestion onNext={handleQuestionNext} onAddQuestion={handleAddQuestion} onBack={handleBack} />}
+      {step === 2 && <DeleteQuestion questions={questions} onDeleteQuestion={handleDeleteQuestion} onBack={handleBack} />}
+      {step === 3 && <SelectType onTypeSelected={handleTypeSelected} onBack={handleBack} />}
+      {step === 4 && isOpen && <OpenQuestionSummary question={currentQuestion} is_active={1} onSubmit={handleSubmit} onBack={handleBack} />}
+      {step === 4 && !isOpen && <InsertOptions options={options} onOptionsChange={setOptions} onNext={handleOptionsNext} onBack={handleBack} />}
+      {step === 5 && <ClosedQuestionSummary question={currentQuestion} options={options} is_active={1} onSubmit={handleSubmit} onBack={handleBack} />}
     </>
   );
 }

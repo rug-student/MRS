@@ -4,8 +4,13 @@ import Header from '../components/Header';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import Popup from '../components/Popup.js';
+import { useNavigate } from "react-router-dom";
 
-import { submitReport, getQuestions } from '../api/reports.api.js';
+
+import { submitReport } from '../api/reports.api.js';
+import { getQuestions } from '../api/questions.api.js';
+
 
 function CreateReport() {
   
@@ -18,6 +23,9 @@ function CreateReport() {
   const [uploadedFile, setUploadedFile] = useState([]);
   const [uploadedFilePath, setUploadedFilePath] = useState('');
   const [uploadedFileInfo, setUploadedFileInfo] = useState();
+  const [openPopup, setOpenPopup] = useState(false);
+  const navigate = useNavigate();
+ 
   let questionNumber = 1; // Initialize the question number
 
   const VisuallyHiddenInput = styled('input')({
@@ -81,7 +89,15 @@ function CreateReport() {
     setShowOtherTextInput(newShowOtherTextInput);
   };
 
-
+  const resetForm = () => {
+    setEmail('');
+    setMalfunctionDescription('');
+    setQuestionAnswers({});
+    setShowOtherTextInput({});
+    setUploadedFile(null);
+    setUploadedFilePath('');
+    setOpenPopup(true);
+  };
 
   // -------- SUBMITTING FORM --------
   const handleSubmit = async (event) => {
@@ -93,7 +109,7 @@ function CreateReport() {
     for (const question of questions) {
       if (question.is_open || showOtherTextInput[question.id]) {
         try {
-          const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/answers/`, {
+          const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/answers/`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -129,9 +145,8 @@ function CreateReport() {
   
     // Perform POST request with form data
     try {
-      console.log("question answers: ", questionAnswerIDs); // testing
-      
-      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/reports`, {
+
+      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/reports`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -150,6 +165,7 @@ function CreateReport() {
   
       if (response.ok) {
         // Handle successful response
+        resetForm();
         console.log('Report submitted successfully');
       } else {
         // Handle error response
@@ -189,7 +205,7 @@ function CreateReport() {
               <>
               {/* If the question is not open, dropdown menu with the MC answers */}
               <select className='answer' value={question.answer.answer} onChange={e => handleSelectChange(e, question.id)}>
-                <option value="">-- Select Answer --</option>
+                <option disabled selected value="">-- Select Answer --</option>
                 {/* Map through question answers to populate the dropdown */}
                 {question.answer.map(answer => (
                   <option key={answer.id} value={answer.answer}>{answer.answer}</option>
@@ -204,6 +220,7 @@ function CreateReport() {
           </div>
         ))}
 
+        {/* File upload question */}
         <div className='question-container'>
           <div className='question'>{questionNumber++}. Upload a photo of the malfunction.</div>
           <Button className='upload-btn'
@@ -213,7 +230,7 @@ function CreateReport() {
             tabIndex={-1}
             startIcon={<CloudUploadIcon />}
             sx={{
-              backgroundColor: '#1AA9EC' // Custom background color
+              backgroundColor: '#1AA9EC' 
             }}
           >
             Upload file
@@ -232,7 +249,8 @@ function CreateReport() {
         </div>
         
         <button type="submit" onClick={handleSubmit}>Submit</button>
-      
+        
+        <Popup content={"Report successfully submitted!"} open={openPopup} onClose={() => setOpenPopup(false)} />
       </form>
     
     </div>
