@@ -26,9 +26,10 @@ button {
   background-color: #1aa9ec;
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 10px;
   cursor: pointer;
-  width: 160px;
+  width: 170px;
+  letter-spacing: 1px; 
 }
 
 button:hover {
@@ -87,14 +88,14 @@ a:hover{
   }
 #secondbutton{
   transform: translate(10px, 0px);
-  width: 160px;
+  width: 170px;
   z-index: 9999;
 
 }
 
 #firstbutton{
   transform: translate(-10px, 0px);
-  width: 160px;
+  width: 170px;
   z-index: 9999;
 }
 #thirdbutton{
@@ -108,7 +109,7 @@ a:hover{
 }
 
 .inbar{
-  width: 230px;
+  width: 250px;
   margin-left: -0px;
 }
 
@@ -132,7 +133,7 @@ a:hover{
 
 .form-container1 {
   text-align: center;
-  max-width: 380px;
+  max-width: 400px;
   height: 170px;
   background: #f7f7f7;
   padding: 20px;
@@ -148,9 +149,9 @@ a:hover{
 .table-container {
   max-height: 400px; /* Fixed height for the container */
   overflow-y: auto; /* Enable vertical scrolling */
-  width:340px; /* Adjust width as needed */
+  width:360px; /* Adjust width as needed */
   margin-top: 0px; /* Space between subtitle and table */
-  position: fixed;
+  position: relative;
 }
 
 .question-table {
@@ -187,7 +188,7 @@ a:hover{
   font-weight: bolder;
   color: white;
   background-color: #1aa9ec;
-  width: 340px;
+  width: 360px;
   text-align: center;
   padding: 20px;
   font-size: 30px;
@@ -218,4 +219,44 @@ a:hover{
   position: relative;
   height: 550px;
   
+}
+.back-button {
+  margin-top: 50px;
+ margin-left: 0px;
+  padding: 8px 16px;
+  background-color: #1aa9ec;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  width: 170px;
+  letter-spacing: 1px; 
+  height: 44.5px;
+  position: relative;
+
+}
+
+.back-button:hover {
+  background-color: #0056b3;
+}
+
+
+.back-button2 {
+  margin-top: 750px;
+ margin-left:-30px;
+  padding: 8px 16px;
+  background-color: #1aa9ec;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  width: 170px;
+  letter-spacing: 1px; 
+  height: 44.5px;
+  position: absolute;
+
+}
+
+.back-button2:hover {
+  background-color: #0056b3;
 }

@@ -19,7 +19,7 @@
 }
 
 .form-container {
-  width: 380px;
+  width: 400px;
   background: #f7f7f7;
   padding: 20px;
   border-radius: 10px;
@@ -50,9 +50,9 @@
   background-color: #1aa9ec;
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 10px;
   cursor: pointer;
-  width: 160px;
+  width: 170px;
   transform: translate(-5px,-22px);
 }
 
@@ -66,9 +66,9 @@
   background-color: #1aa9ec;
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 10px;
   cursor: pointer;
-  width: 160px;
+  width: 170px;
   transform: translate(5px,-22px);
 }
 
