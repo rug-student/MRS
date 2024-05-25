@@ -17,35 +17,35 @@ function App() {
   };
 
   return (
-    <div>
+    <div class="p">
     <Header />
-    <div className="App">
-        <div id="logform">
-      <h1>Login Page</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Email:</label>
-          <input
-            type="text"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
+      <div id="logform1">
+        <h1>Login</h1>
+          <form onSubmit={handleSubmit}>
+            <div>
+              <label class="labuno">Email:</label>
+                <input
+                  type="text"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  id ="inuno"
+                />
+          </div>
+          <div>
+            <label class="labuno">Password:</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              id="indue"
+            />
+          </div>
         <input type="hidden" name="_token" value="{{ csrf_token() }}" />
-        <button type="submit">Login</button>
-      </form>
-      <p>{message}</p>
-    </div>
-    </div>
-    </div>
+      <button id="subutton" type="submit">Login</button>
+    </form>
+    <p>{message}</p>
+  </div>
+</div>
   );
 }
 

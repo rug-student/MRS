@@ -1,6 +1,6 @@
 import React from 'react';
 import './InsertOptions.css';
-import Header from './HeaderLoggedIn.js';
+import Header from '../components/Header';
 
 function BackButton({ onClick }) {
   return (
