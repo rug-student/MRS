@@ -7,6 +7,7 @@ import useAuthContext from "../context/AuthContext";
 import { FaRegEdit } from "react-icons/fa";
 import styles from "./Dashboard.module.css";
 import ModalForm from "../components/ModalForm";
+import { getPriorityText, getStatusText } from "../helpers/mapReports";
 
 const Dashboard = () => {
   const [reportsData, setReportsData] = useState([
@@ -22,18 +23,18 @@ const Dashboard = () => {
       response: [],
     },
   ]);
-  const [singleEdit, setSingleEdit] = useState({})
+  const [singleEdit, setSingleEdit] = useState({});
   const { user } = useAuthContext();
   const navigate = useNavigate();
   const [modalShow, setModalShow] = useState(false);
-  const [update, setUpdate] = useState(false)
-  
-  const handleEdit= (id, submitter_email, priority, status) =>{
+  const [update, setUpdate] = useState(false);
 
-    setSingleEdit({id, submitter_email, priority, status})
-    setModalShow(true)
 
-  }
+
+  const handleEdit = (id, submitter_email, priority, status) => {
+    setSingleEdit({ id, submitter_email, priority, status });
+    setModalShow(true);
+  };
 
   useEffect(() => {
     // if(!user) {
@@ -60,9 +61,10 @@ const Dashboard = () => {
   return (
     <>
       <Header />
-      <Container>
-        <h1>Reports</h1>
-        <table className="table table-primary">
+      <Container className={styles.dashboardContainer}>
+        <h1 className="mb-3">Reports</h1>
+        <table className="table table-lg table-striped table-bordered">
+          <thead>
           <tr>
             <th>ID</th>
             <th>EMAIL</th>
@@ -72,25 +74,41 @@ const Dashboard = () => {
             <th>CREATED AT</th>
             <th>EDIT</th>
           </tr>
-          {reportsData.map((element) => (
-            <tr key={element.id}>
-              <td>{element.id}</td>
-              <td>{element.submitter_email}</td>
-              <td>{element.description}</td>
-              <td>{element.priority} </td>
-              <td>{element.status}</td>
-              <td>{moment(element.created_at).fromNow()}</td>
-              <td>
-                <FaRegEdit
-                  className={styles.editIcon}
-                  onClick={() => handleEdit(element.id, element.submitter_email, element.priority, element.status)}
-
-                />
-              </td>
-            </tr>
-          ))}
+          </thead>
+          <tbody>
+          {reportsData
+            .sort((a, b) => b.priority - a.priority)
+            .map((element) => (
+              <tr key={element.id}>
+                <td>{element.id}</td>
+                <td>{element.submitter_email}</td>
+                <td>{element.description}</td>
+                <td>{getPriorityText(element.priority)} </td>
+                <td>{getStatusText(element.status)}</td>
+                <td>{moment(element.created_at).fromNow()}</td>
+                <td>
+                  <FaRegEdit
+                    className={styles.editIcon}
+                    onClick={() =>
+                      handleEdit(
+                        element.id,
+                        element.submitter_email,
+                        element.priority,
+                        element.status
+                      )
+                    }
+                  />
+                </td>
+              </tr>
+            ))}
+             </tbody>
         </table>
-        <ModalForm data={singleEdit} show={modalShow} onHide={() => setModalShow(false)} onUpdate = {() => setUpdate(!update)} />
+        <ModalForm
+          data={singleEdit}
+          show={modalShow}
+          onHide={() => setModalShow(false)}
+          onUpdate={() => setUpdate(!update)}
+        />
       </Container>
     </>
   );

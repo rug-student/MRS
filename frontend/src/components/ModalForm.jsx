@@ -1,11 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Col, Form, Modal, Row } from "react-bootstrap";
 import Styles from "./ModalForm.module.css";
 
 const ModalForm = ({ show, onHide, data, onUpdate }) => {
   const { id, submitter_email, priority, status } = data;
-  const [formPriority, setFormPriority] = useState(priority);
-  const [formStatus, setFormStatus] = useState(status);
+
+  const [formPriority, setFormPriority] = useState("");
+  const [formStatus, setFormStatus] = useState("");
+
+  useEffect(() => {
+    setFormPriority(priority);
+    setFormStatus(status);
+  }, [show]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -44,8 +50,8 @@ const ModalForm = ({ show, onHide, data, onUpdate }) => {
       <Modal.Header closeButton>
         <Modal.Title>Modal heading</Modal.Title>
       </Modal.Header>
-      <form onSubmit={handleSubmit}>
-        <Modal.Body>
+      <form onSubmit={handleSubmit} className={Styles.modalForm}>
+        <Modal.Body className={Styles.modalBody}>
           <div className={Styles.fieldWrapper}>
             <label htmlFor="idField">Id</label>
             <input type="text" value={id} id="idField" readOnly />
@@ -61,23 +67,29 @@ const ModalForm = ({ show, onHide, data, onUpdate }) => {
           </div>
           <div className={Styles.fieldWrapper}>
             <label htmlFor="priorityField">Priority</label>
-            <input
-              type="text"
-              placeholder={priority}
+            <select
               value={formPriority}
               id="priorityField"
-              onChange={(e) => setFormPriority(e.target.value)}
-            />
+              onChange={(e) => setFormPriority(parseInt(e.target.value))}
+            >
+              <option value={-1}>Unset</option>
+              <option value={1}>Low</option>
+              <option value={2}>Mid</option>
+              <option value={3}>High</option>
+            </select>
           </div>
           <div className={Styles.fieldWrapper}>
             <label htmlFor="statusField">Status</label>
-            <input
-              type="text"
-              placeholder={status}
+            <select
               value={formStatus}
               id="statusField"
-              onChange={(e) => setFormStatus(e.target.value)}
-            />
+              onChange={(e) => setFormStatus(parseInt(e.target.value))}
+            >
+              <option value={0}>Unresolved</option>
+              <option value={1}>Resolved</option>
+              <option value={2}>In Progress</option>
+              <option value={3}>Dropped</option>
+            </select>
           </div>
         </Modal.Body>
         <Modal.Footer>

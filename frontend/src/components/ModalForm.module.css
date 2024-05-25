@@ -12,8 +12,18 @@
   width: 40%;
 }
 
-.fieldWrapper >input{
+.fieldWrapper >input, .fieldWrapper >select{
   width: 60%;
   border: none;
   border-bottom: 1px solid #999
+}
+
+.modalBody{
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.modalForm{
+  min-height: unset;
 }
