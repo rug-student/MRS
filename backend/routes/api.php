@@ -31,7 +31,6 @@ Route::patch("/reports/{id}", [ReportsController::class, "updateReport"]);
 
 // Routes for questions endpoints.
 Route::get("/questions", [QuestionsController::class, "getAllQuestions"]);
-Route::get("/questions/{id}", [QuestionsController::class, "getQuestion"]);
 Route::post("/questions", [QuestionsController::class, "createQuestion"]);
 Route::patch("/questions/{id}", [QuestionsController::class, "updateQuestion"]);
 

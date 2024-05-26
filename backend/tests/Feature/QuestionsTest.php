@@ -238,37 +238,6 @@ class QuestionsTest extends TestCase
 
     /**
      * FT-QE9
-     * Test retrieving on nonexisting question id.
-     */
-    public function test_get_question_invalid_question_id(): void {
-        $response = $this->get('/api/questions/1');
-        $response->assertStatus(404);
-    }
-
-    /**
-     * FT-QE10
-     * Test to check if retrieving a single question retreives all data.
-     */
-    public function test_get_question_valid_question_id(): void {
-
-        $question = Question::create([
-            'question_description'=>"This is a test question",
-            'is_open'=>true,
-            'is_active'=>true,
-        ]);
-
-        $response = $this->get("/api/questions/".(string)$question->id);
-        $response->assertStatus(200);
-
-        // Assert question properties
-        $response->assertSee((string)$question->id);
-        $response->assertSee($question->question_description);
-        $response->assertSee($question->is_open);
-        $response->assertSee($question->is_active);
-    }
-
-    /**
-     * FT-QE11
      * Test if updating a questions with invalid request give error.
      */
     public function test_patch_question_invalid_request(): void {
@@ -285,14 +254,14 @@ class QuestionsTest extends TestCase
         $question = Question::create($question_payload);
 
         $this->assertDatabaseCount('questions', 1);
-        $response = $this->json('PATCH', "api/questions/".(string)$question->id, $patch_payload); // need to use propper json request here.
+        $response = $this->json('PATCH', "api/questions/".$question->id, $patch_payload); // need to use propper json request here.
         $response->assertStatus(422);
         $this->assertDatabaseHas('questions', $question_payload); // check for unchanged question.
         $this->assertDatabaseCount('questions', 1);
     }
 
     /**
-     * FT-QE12
+     * FT-QE10
      * Test to check if updating a questions status works as expected.
      */
     public function test_patch_question_valid_request(): void {
@@ -308,7 +277,7 @@ class QuestionsTest extends TestCase
         ]);
         $this->assertDatabaseCount('questions', 1);
 
-        $response = $this->json('PATCH', "api/questions/".(string)$question->id, $payload);
+        $response = $this->json('PATCH', "api/questions/".$question->id, $payload);
         $response->assertStatus(200);
 
         $this->assertDatabaseCount('questions', 1);

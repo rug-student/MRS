@@ -29,26 +29,11 @@ class QuestionsController extends Controller
     }
 
     /**
-     * Gets a single question based on id.
-     */
-    public function getQuestion(Request $request) {
-
-        $question = Question::with("answer")
-        ->where("id", $request->id)
-        ->get();
-        if(!$question->isEmpty()) {
-            return response()->json($question, 200);
-        } else {
-            return response()->json("Question not found", 404);
-        }
-    }
-
-    /**
      * Creates a new question and stores it to the database.
      */
     public function createQuestion(Request $request) {
         $request_content = json_decode($request->getContent());
-        
+
         $validated = $request->validate([
             'question_description' => 'required',
             'is_open' => 'required|boolean',
