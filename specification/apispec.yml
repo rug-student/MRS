@@ -219,7 +219,7 @@ components:
           type: string
         question_id:
           type: integer
-        
+          readOnly: true
 
   responses:
     BadRequest:
