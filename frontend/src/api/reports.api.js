@@ -8,9 +8,9 @@
  * @param {Array} questions List of questions.
  * @param {Object} showOtherTextInput Key-value pairs of question IDs and whether "Other" text input is shown.
  * @param {string} uploadedFilePath Path to the uploaded file.
- * @param {Function} resetForm Function to reset the form.
+ * @returns {Boolean} True if report was successfully submitted, false otherwise.
  */
-export async function submitReport(malfunctionDescription, email, questionAnswers, questions, showOtherTextInput, uploadedFilePath, resetForm) {
+export async function submitReport(malfunctionDescription, email, questionAnswers, questions, showOtherTextInput, uploadedFilePath) {
   try {
     const questionAnswerIDs = await createAnswers(questions, questionAnswers, showOtherTextInput);
     const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/reports`, {
@@ -32,11 +32,12 @@ export async function submitReport(malfunctionDescription, email, questionAnswer
 
     if (response.ok) {
       // Handle successful response
-      resetForm();
       console.log('Report submitted successfully');
+      return(true);
     } else {
       // Handle error response
       console.error('Failed to submit report');
+      return(false);
     }
   } catch (error) {
     // Handle network error
