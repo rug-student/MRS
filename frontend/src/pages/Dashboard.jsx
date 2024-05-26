@@ -24,7 +24,7 @@ const Dashboard = () => {
     },
   ]);
   const [singleEdit, setSingleEdit] = useState({});
-  const { user } = useAuthContext();
+  const { user, checkLoggedIn } = useAuthContext();
   const navigate = useNavigate();
   const [modalShow, setModalShow] = useState(false);
   const [update, setUpdate] = useState(false);
@@ -37,13 +37,15 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    // if(!user) {
-    //   navigate('/login')
-    // }
+    
+    if(!user) {
+      navigate('/login')
+    }
+    checkLoggedIn();
 
     const getData = async () => {
       try {
-        const response = await fetch("http://localhost/api/reports");
+        const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/reports`);
         if (response.ok) {
           const result = await response.json();
           console.log(result);
