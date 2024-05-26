@@ -8,6 +8,7 @@ import { FaRegEdit } from "react-icons/fa";
 import styles from "./Dashboard.module.css";
 import ModalForm from "../components/ModalForm";
 import { getPriorityText, getStatusText } from "../helpers/mapReports";
+import { getReports } from "../api/reports.api";
 
 const Dashboard = () => {
   const [reportsData, setReportsData] = useState([
@@ -37,27 +38,14 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    
-    if(!user) {
-      navigate('/login')
-    }
     checkLoggedIn();
 
-    const getData = async () => {
-      try {
-        const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/reports`);
-        if (response.ok) {
-          const result = await response.json();
-          console.log(result);
-          setReportsData([...result]);
-        } else {
-          console.error("Fetch error: ", response.statusText);
-        }
-      } catch (error) {
-        console.error("Error:", error);
-      }
+    const fetchReports = async () => {
+        const reports = await getReports();
+        setReportsData(reports);
     };
-    getData();
+
+    fetchReports();
   }, [update]);
 
   return (
