@@ -12,7 +12,6 @@ import { getQuestions } from '../api/questions.api.js';
 
 function CreateReport() {
   
-  // State variables to hold form data
   const [email, setEmail] = useState('');
   const [malfunctionDescription, setMalfunctionDescription] = useState('');
   const [questions, setQuestions] = useState([]);
@@ -38,7 +37,6 @@ function CreateReport() {
     width: 1,
   });
   
-
   // populates report with questions upon page load
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -61,6 +59,7 @@ function CreateReport() {
     setMalfunctionDescription(event.target.value);
   };
 
+  // -------- Handling file upload --------
   const handleFilePathChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -72,12 +71,14 @@ function CreateReport() {
     }
   };
 
+  // // -------- Handling change in answer to open questions --------
   const handleQuestionResponseChange = (event, questionId) => {
     const newAnswers = { ...questionAnswers };
     newAnswers[questionId] = event.target.value;
     setQuestionAnswers(newAnswers);
   };
 
+  // -------- Handling change in answer to closed questions (dropdown menu) --------
   const handleSelectChange = (event, questionId) => {
     const value = event.target.value;
     const newAnswers = { ...questionAnswers };
@@ -89,6 +90,7 @@ function CreateReport() {
     setShowOtherTextInput(newShowOtherTextInput);
   };
   
+  // -------- Resetting form (for after successfull submit) --------
   const resetForm = () => {
     setEmail('');
     setMalfunctionDescription('');
