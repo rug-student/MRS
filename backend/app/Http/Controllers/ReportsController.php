@@ -56,8 +56,7 @@ class ReportsController extends Controller
      * Creates a new report.
      */
     public function createReport(Request $request) {
-
-        // return response()->json(["TEST::not", $request->files], 400);
+        $request_content = json_decode($request->getContent());
 
         $validated = $request->validate([
             'description' => 'required',
@@ -72,42 +71,47 @@ class ReportsController extends Controller
         $report->save();
 
         // Handle responses.
-        foreach($request->responses as $response_body) {
-            // Error handling
-            if(!Question::where("id", $response_body["question_id"])->exists()) {
-                return response()->json("ERROR: passed non-existing question", 400);
-            }
-            if(!Answer::where("id", $response_body["answer_id"])->exists()) {
-                return response()->json("ERROR: passed non-existing answer", 400);
-            }
-            $answer = Answer::find($response_body["answer_id"]);
-            if($answer->question_id != null && $answer->question_id != $response_body["question_id"]) {
-                return response()
-                ->json("ERROR: passed non-related question answer pair", 400);
-            }
+        if (property_exists($request_content, "responses")){
+            foreach($request_content->responses as $response_body) {
+                // Error handling
+                if(!Question::where("id", $response_body->question_id)->exists()) {
+                    return response()->json("ERROR: passed non-existing question", 400);
+                }
+                if(!Answer::where("id", $response_body->answer_id)->exists()) {
+                    return response()->json("ERROR: passed non-existing answer", 400);
+                }
+                $answer = Answer::find($response_body->answer_id);
+                if($answer->question_id != null && $answer->question_id != $response_body->question_id) {
+                    return response()
+                    ->json("ERROR: passed non-related question answer pair", 400);
+                }
 
-            $response = new Response();
-            $response->question_id = $response_body["question_id"];
-            $response->answer_id = $response_body["answer_id"];
-            $response->report_id = $report->id;
-            $response->save();
+                $response = new Response();
+                $response->question_id = $response_body->question_id;
+                $response->answer_id = $response_body->answer_id;
+                $response->report_id = $report->id;
+                $response->save();
 
-            $report->response()->save($response);
+                $report->response()->save($response);
+            }
         }
 
         // Handle files.
-        foreach(json_decode($request->getContent())->files as $file_body) {
-            if($file_body->file_path == "") {
-                return response()->json("ERROR: file_path is missing", 400);
+        if (property_exists($request_content, "files")) {
+            foreach($request_content->files as $file_body) {
+                if($file_body->file_path == "") {
+                    return response()->json("ERROR: file_path is missing", 400);
+                }
+
+                $file = new File();
+                $file->file_path = $file_body->file_path;
+                $file->report_id = $report->id;
+                $file->save();
+
+                $report->file()->save($file);
             }
-
-            $file = new File();
-            $file->file_path = $file_body->file_path;
-            $file->report_id = $report->id;
-            $file->save();
-
-            $report->file()->save($file);
         }
+
         $report->save();
         return response()->json(["Succesfully saved report", $report], 200);
     }

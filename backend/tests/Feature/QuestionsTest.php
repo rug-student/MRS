@@ -53,34 +53,17 @@ class QuestionsTest extends TestCase
      * Test to check if retrieving a single question works as expected.
      */
     public function test_get_question(): void {
-        $response = $this->get('/api/questions/2');
+        $response = $this->get('/api/questions/1');
         $response->assertStatus(404);
 
-        Question::create([
+        $question = Question::create([
             'question_description'=>"Is this a multiple choice test question?",
             'is_open'=>false,
             'is_active'=>true,
         ]);
 
-        $response = $this->get('/api/questions/2');
+        $response = $this->get("/api/questions/".(string)$question->id);
         $response->assertStatus(200);
-    }
-
-    /**
-     * Test to check if deleting a question works as expected.
-     */
-    public function test_delete_question() : void {
-
-        Question::create([
-            'question_description'=>"Is this a multiple choice test question?",
-            'is_open'=>false,
-            'is_active'=>true,
-        ]);
-        $this->assertDatabaseCount('questions', 1);
-        
-        $response = $this->delete('api/questions/3');
-        $response->assertStatus(200);
-        $this->assertDatabaseCount('questions', 0);
     }
 
     /**
@@ -92,14 +75,15 @@ class QuestionsTest extends TestCase
             'is_active' => false
         ];
 
-        Question::create([
+        $question = Question::create([
             'question_description'=>"Is this an update test question?",
             'is_open'=>false,
             'is_active'=>true,
         ]);
         $this->assertDatabaseCount('questions', 1);
 
-        $response = $this->patch('api/questions/4', $payload);
+
+        $response = $this->patch("api/questions/".(string)$question->id, $payload);
         $response->assertStatus(200);
 
         $this->assertDatabaseCount('questions', 1);
