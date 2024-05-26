@@ -10,7 +10,7 @@
  * @param {string} uploadedFilePath Path to the uploaded file.
  * @param {Function} resetForm Function to reset the form.
  */
-export async function submitReport(malfunctionDescription, email, questionAnswers, questions, showOtherTextInput, uploadedFilePath) {
+export async function submitReport(malfunctionDescription, email, questionAnswers, questions, showOtherTextInput, uploadedFilePath, resetForm) {
   try {
     const questionAnswerIDs = await createAnswers(questions, questionAnswers, showOtherTextInput);
     const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/reports`, {
@@ -32,7 +32,7 @@ export async function submitReport(malfunctionDescription, email, questionAnswer
 
     if (response.ok) {
       // Handle successful response
-      //resetForm();
+      resetForm();
       console.log('Report submitted successfully');
     } else {
       // Handle error response

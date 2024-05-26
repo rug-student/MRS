@@ -89,7 +89,7 @@ function CreateReport() {
     setShowOtherTextInput(newShowOtherTextInput);
   };
   
-  function resetForm() {
+  const resetForm = () => {
     setEmail('');
     setMalfunctionDescription('');
     setQuestionAnswers({});
@@ -108,7 +108,8 @@ function CreateReport() {
       questionAnswers,
       questions,
       showOtherTextInput,
-      uploadedFilePath
+      uploadedFilePath, 
+      resetForm
     );
   };
 
