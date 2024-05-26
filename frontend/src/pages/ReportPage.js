@@ -24,7 +24,6 @@ function CreateReport() {
   const [uploadedFilePath, setUploadedFilePath] = useState('');
   const [uploadedFileInfo, setUploadedFileInfo] = useState();
   const [openPopup, setOpenPopup] = useState(false);
-  const navigate = useNavigate();
  
   let questionNumber = 1; // Initialize the question number
 
