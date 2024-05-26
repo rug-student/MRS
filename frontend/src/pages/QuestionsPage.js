@@ -142,12 +142,13 @@ function NewQuestionPage() {
     const fetchQuestions = async () => {
       try {
         const fetchedQuestions = await getQuestions();
+        console.log(fetchedQuestions);
         setQuestions(fetchedQuestions);
       } catch (error) {
         console.error('Error occurred while fetching questions:', error);
       }
     };
-
+    
     fetchQuestions();
   }, []);
 

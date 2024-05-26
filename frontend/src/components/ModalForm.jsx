@@ -16,7 +16,7 @@ const ModalForm = ({ show, onHide, data, onUpdate }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const url = `http://localhost/api/reports/${id}`;
+      const url = `${process.env.REACT_APP_API_BASE_URL}/api/reports/${id}`;
       const myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
 

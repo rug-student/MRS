@@ -58,3 +58,29 @@ export async function getReport(reportID) {
     throw error;
   }
 }
+
+
+/**
+ * GETs a list of all existing reports.
+ * @returns list of reports that are in database.
+ */
+export const getReports = async () => {
+  try{
+    const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/reports`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json'
+      }
+    });
+    if (response.ok) {
+      const reports = await response.json();
+      return reports;
+    } else {
+      console.error("Fetch error: ", response.statusText);
+    }
+
+  } catch(error) {
+    console.error('Error occurred while fetching reports:', error);
+    throw error;
+  }
+}
