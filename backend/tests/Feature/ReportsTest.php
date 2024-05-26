@@ -8,6 +8,7 @@ use App\Models\Report;
 use App\Models\Response;
 use App\Models\File;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\DB;
 use Tests\TestCase;
 
 class ReportsTest extends TestCase
@@ -408,5 +409,88 @@ class ReportsTest extends TestCase
         $response->assertSee($report->submitter_email);
         $response->assertSee($priority);
         $response->assertSee($status);
+    }
+
+    /**
+     * FT-RE15
+     * Test GET /api/reports request on populated database with status filter.
+     */
+    public function test_get_reports_with_status_filter(): void {
+
+        $report_body1= [
+            'description'=>"This is a unique description with status = 0",
+            'priority'=>0,
+            'status'=>0,
+            'submitter_email'=>"test@testing.nl",
+        ];
+        $report_body2 = [
+            'description'=>"This is a test report with status = 1",
+            'priority'=>6,
+            'status'=>1,
+            'submitter_email'=>"test@testing.nl",
+        ];
+        $report_body3 = [
+            'description'=>"This is a very random message",
+            'priority'=>10,
+            'status'=>2,
+            'submitter_email'=>"test@testing.nl",
+        ];
+        $report1 = Report::create($report_body1);
+        $report2 = Report::create($report_body2);
+        $report3 = Report::create($report_body3);
+        $this->assertDatabaseCount('reports', 3);
+
+        $payload = [
+            "status" => "0"
+        ];
+
+
+        $response = $this->json('get', '/api/reports', $payload);
+        $response->assertStatus(200);
+        // finding unique report with description
+        $response->assertSee($report1->description);
+        $response->assertDontSee($report2->description);
+        $response->assertDontSee($report3->description);
+    }
+
+    /**
+     * FT-RE16
+     * Test GET /api/reports request on populated database with priority filter.
+     */
+    public function test_get_reports_with_priority_filter(): void {
+
+        $report_body1= [
+            'description'=>"This is a unique description with status = 0",
+            'priority'=>0,
+            'status'=>0,
+            'submitter_email'=>"test@testing.nl",
+        ];
+        $report_body2 = [
+            'description'=>"This is a test report with status = 1",
+            'priority'=>6,
+            'status'=>1,
+            'submitter_email'=>"test@testing.nl",
+        ];
+        $report_body3 = [
+            'description'=>"This is a very random message",
+            'priority'=>10,
+            'status'=>2,
+            'submitter_email'=>"test@testing.nl",
+        ];
+        $report1 = Report::create($report_body1);
+        $report2 = Report::create($report_body2);
+        $report3 = Report::create($report_body3);
+        $this->assertDatabaseCount('reports', 3);
+
+        $payload = [
+            "priority" => "0"
+        ];
+
+        $response = $this->json('get', '/api/reports', $payload);
+        $response->assertStatus(200);
+        // finding unique report with description
+        $response->assertSee($report1->description);
+        $response->assertDontSee($report2->description);
+        $response->assertDontSee($report3->description);
     }
 }
