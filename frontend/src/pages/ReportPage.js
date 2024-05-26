@@ -88,8 +88,8 @@ function CreateReport() {
     newShowOtherTextInput[questionId] = value === 'Other';
     setShowOtherTextInput(newShowOtherTextInput);
   };
-
-  const resetForm = () => {
+  
+  function resetForm() {
     setEmail('');
     setMalfunctionDescription('');
     setQuestionAnswers({});
@@ -98,83 +98,18 @@ function CreateReport() {
     setUploadedFilePath('');
     setOpenPopup(true);
   };
-
+ 
   // -------- SUBMITTING FORM --------
   const handleSubmit = async (event) => {
     event.preventDefault();
-  
-    const questionAnswerIDs = {};
-  
-    // Create new answers for open questions
-    for (const question of questions) {
-      if (question.is_open || showOtherTextInput[question.id]) {
-        try {
-          const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/answers/`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-              answer: questionAnswers[question.id],
-              question_id: null
-            })
-          });
-  
-          if (!response.ok) {
-            console.error(`Failed to update answer for question ${question.id}`);
-            return;
-          } else {
-            const responseData = await response.json();
-            questionAnswerIDs[question.id] = parseInt(responseData[1].id, 10);
-          }
-        } catch (error) {
-          console.error('Error occurred while updating answer:', error);
-        }
-      } else {
-        let id;
-        question.answer.forEach(answer => {
-          if (answer.answer === questionAnswers[question.id]) {
-            id = answer.id;
-          }
-        });
-        questionAnswerIDs[question.id] = id;
-      }
-    }
-
-  
-    // Perform POST request with form data
-    try {
-
-      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/reports`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify({
-          description: malfunctionDescription,
-          submitter_email: email,
-          responses: Object.keys(questionAnswerIDs).map(questionId => ({
-            question_id: questionId,
-            answer_id: questionAnswerIDs[questionId]
-          })),
-          files: uploadedFilePath ? [{ file_path: uploadedFilePath }] : []
-        })
-      });
-  
-      if (response.ok) {
-        // Handle successful response
-        resetForm();
-        console.log('Report submitted successfully');
-      } else {
-        // Handle error response
-        console.error('Failed to submit report');
-      }
-    } catch (error) {
-      // Handle network error
-      console.error('Error occurred while submitting report:', error);
-    }
+    await submitReport(
+      malfunctionDescription,
+      email,
+      questionAnswers,
+      questions,
+      showOtherTextInput,
+      uploadedFilePath
+    );
   };
 
   return (
