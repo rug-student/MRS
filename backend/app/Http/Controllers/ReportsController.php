@@ -123,6 +123,10 @@ class ReportsController extends Controller
             'priority'=> 'required',
             // 'maintainer'=> 'required',
         ]);
+
+        if(!Report::where("id", $request->id)->exists()) {
+            return response()->json("ERROR: report of given report id does not exist", 400);
+        }
         $report = Report::find($request->id);
         $report->status = $request->status;
         $report->priority = $request->priority;
