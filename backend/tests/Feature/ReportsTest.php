@@ -365,4 +365,48 @@ class ReportsTest extends TestCase
         $response->assertSee($response_body);
         $response->assertSee($file_body);
     }
+
+    /**
+     * FT-RE13
+     * Test if updating a report status and priority with invalid payload give expected error.
+     */
+    public function test_patch_report_invalid_request(): void {
+
+        $payload = [
+            'status' => 8,
+            'priority' => 8
+        ];
+
+        $response = $this->json('PATCH', "api/reports/1", $payload);
+        $response->assertStatus(400);
+    }
+
+    /**
+     * FT-RE14
+     * Test if updating a report status and priority with valid payload give expected result.
+     */
+    public function test_patch_report_valid_request(): void {
+        $status = 777;
+        $priority = 888;
+        $payload = [
+            'status' => $status,
+            'priority' => $priority
+        ];
+
+        $report_body = [
+            'description'=>"This is a test report",
+            'priority'=>1,
+            'status'=>0,
+            'submitter_email'=>"test@testing.nl"
+        ];
+        $report = Report::create($report_body);
+        $this->assertDatabaseCount('reports', 1);
+
+        $response = $this->json('PATCH', "api/reports/".$report->id, $payload);
+        $response->assertStatus(200);
+        $response->assertSee($report->description);
+        $response->assertSee($report->submitter_email);
+        $response->assertSee($priority);
+        $response->assertSee($status);
+    }
 }
