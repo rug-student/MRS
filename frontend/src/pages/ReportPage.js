@@ -181,7 +181,7 @@ function CreateReport() {
     /* ------ REPORT PAGE ------ */
     <div>
       <Header /> 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} id='report-page'>
 
         <div className='question-container'>
           <div className='question'>{questionNumber++}. What is your email?</div>

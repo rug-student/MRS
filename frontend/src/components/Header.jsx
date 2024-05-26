@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import '../pages/Header.css';
+import './Header.css';
 import { Link } from 'react-router-dom';
 import useAuthContext from '../context/AuthContext';
 
