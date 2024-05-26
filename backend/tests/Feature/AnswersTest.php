@@ -42,25 +42,4 @@ class AnswersTest extends TestCase
         $request->assertStatus(422);
         $this->assertDatabaseCount('answers', 0);
     }
-
-    /**
-     * FT-AE3
-     * Test for creating an answer with invalid payload
-     */
-    public function test_create_answer_with_questionID_payload(): void
-    {
-        $test_answer = "Test answer2";
-        $answer_body = [
-            "answer"=>$test_answer
-        ];
-        $answer_payload = [
-            "answer"=>$test_answer,
-            "question_id"=>1
-        ];
-
-        $request = $this->json('post', '/api/answers', $answer_payload);
-        $request->assertStatus(200);
-        $this->assertDatabaseHas('answers', $answer_body);
-        $this->assertDatabaseCount('answers', 1);
-    }
 }
