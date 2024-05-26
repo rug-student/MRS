@@ -13,6 +13,7 @@ class QuestionsTest extends TestCase
     use RefreshDatabase;  // Refresh the testing database after each test.
 
     /**
+     * FT-QE1
      * Test that checks if creating a open question adds it to the database.
      */
     public function test_create_question_with_invalid_request(): void {
@@ -45,6 +46,7 @@ class QuestionsTest extends TestCase
     }
 
     /**
+     * FT-QE2
      * Test that checks if creating a mc question enters that question in the database
      * in addition to answer entries for each mc option where the question_id is the foreign key.
      */
@@ -87,6 +89,7 @@ class QuestionsTest extends TestCase
     }
 
     /**
+     * FT-QE3
      * Test if creating a mc question with invalid answer option returns and error and does not store any question.
      */
     public function test_create_mc_question_with_null_answer(): void {
@@ -110,6 +113,7 @@ class QuestionsTest extends TestCase
     }
 
     /**
+     * FT-QE4
      * Test that checks if creating a question with no mc answers adds it to the database.
      */
     public function test_create_open_question(): void {
@@ -134,6 +138,7 @@ class QuestionsTest extends TestCase
     }
 
     /**
+     * FT-QE5
      * Basic test to check status and structure of get questions request.
      */
     public function test_get_questions_on_empty_database(): void {
@@ -143,6 +148,7 @@ class QuestionsTest extends TestCase
     }
 
     /**
+     * FT-QE6
      * Test get questions request response on populated database.
      */
     public function test_get_questions_on_populated_database(): void {
@@ -174,6 +180,7 @@ class QuestionsTest extends TestCase
     }
 
     /**
+     * FT-QE7
      * Test retrieving on nonexisting question id.
      */
     public function test_get_question_invalid_question_id(): void {
@@ -182,6 +189,7 @@ class QuestionsTest extends TestCase
     }
 
     /**
+     * FT-QE8
      * Test to check if retrieving a single question retreives all data.
      */
     public function test_get_question_valid_question_id(): void {
@@ -203,6 +211,7 @@ class QuestionsTest extends TestCase
     }
 
     /**
+     * FT-QE9
      * Test if updating a questions with invalid request give error.
      */
     public function test_patch_question_invalid_request(): void {
@@ -226,6 +235,7 @@ class QuestionsTest extends TestCase
     }
 
     /**
+     * FT-QE10
      * Test to check if updating a questions status works as expected.
      */
     public function test_patch_question_valid_request(): void {
