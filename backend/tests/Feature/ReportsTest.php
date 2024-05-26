@@ -5,6 +5,8 @@ namespace Tests\Feature;
 use App\Models\Answer;
 use App\Models\Question;
 use App\Models\Report;
+use App\Models\Response;
+use App\Models\File;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -38,10 +40,7 @@ class ReportsTest extends TestCase
 
         $response = $this->get('api/reports/'.$report->id);
         $response->assertStatus(200);
-        $response->assertSee($report->description);
-        $response->assertSee($report->priority);
-        $response->assertSee($report->status);
-        $response->assertSee($report->submitter_email);
+        $response->assertSee($report_body);
     }
 
     /**
@@ -166,7 +165,7 @@ class ReportsTest extends TestCase
     public function test_create_report_with_responses(): void {
 
         $question = Question::create([
-            'question_description'=>"This is a second question",
+            'question_description'=>"This is a question",
             'is_open'=>false,
             'is_active'=>false,
         ]);
@@ -247,7 +246,7 @@ class ReportsTest extends TestCase
     public function test_create_report_with_responses_and_files(): void {
 
         $question = Question::create([
-            'question_description'=>"This is a second question",
+            'question_description'=>"This is a question",
             'is_open'=>false,
             'is_active'=>false,
         ]);
@@ -305,5 +304,65 @@ class ReportsTest extends TestCase
             "report_id"=>json_decode($request->getContent())[1]->id
         ];
         $this->assertDatabaseHas('files', $file_body);
+    }
+
+    /**
+     * FT-RE12
+     * Tests the retrieval of a single report with responses and files.
+     */
+    public function test_get_report_with_responses_and_files(): void {
+        $report_body = [
+            'description'=>"This is a test report",
+            'priority'=>1,
+            'status'=>0,
+            'submitter_email'=>"test@testing.nl"
+        ];
+        $report = Report::create($report_body);
+
+        // Questions and answer model entities.
+        $question = Question::create([
+            'question_description'=>"This is a question",
+            'is_open'=>false,
+            'is_active'=>false,
+        ]);
+        $answer = Answer::create([
+            'answer'=>"this is an answer",
+            'question_id'=>$question->id
+        ]);
+
+        // response body and model entity
+        $response_body = [
+            "question_id"=> $question->id,
+            "answer_id"=> $answer->id,
+            "report_id"=> $report->id
+        ];
+        $response = new Response();
+        $response->question_id = $question->id;
+        $response->answer_id = $answer->id;
+        $response->report_id = $report->id;
+        $report->response()->save($response);
+
+        // File body and model entity
+        $file_body = [
+            "file_path"=> "some filepath",
+            "report_id"=>$report->id
+        ];
+        $file = new File();
+        $file->file_path = "some filepath";
+        $file->report_id = $report->id;
+        $report->file()->save($file);
+
+        // Test database entry counts of the following tables
+        $this->assertDatabaseCount('reports', 1);
+        $this->assertDatabaseCount('questions', 1);
+        $this->assertDatabaseCount('answers', 1);
+        $this->assertDatabaseCount('responses', 1);
+        $this->assertDatabaseCount('files', 1);
+
+        $response = $this->get('api/reports/'.$report->id);
+        $response->assertStatus(200);
+        $response->assertSee($report_body);
+        $response->assertSee($response_body);
+        $response->assertSee($file_body);
     }
 }
