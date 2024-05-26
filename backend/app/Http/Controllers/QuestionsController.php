@@ -48,10 +48,10 @@ class QuestionsController extends Controller
      */
     public function createQuestion(Request $request) {
         $request_content = json_decode($request->getContent());
-
+        
         $validated = $request->validate([
             'question_description' => 'required',
-            'is_open' => 'required',
+            'is_open' => 'required|boolean',
         ]);
 
         $question = new Question;
@@ -62,6 +62,11 @@ class QuestionsController extends Controller
 
         if (property_exists($request_content, "answers")){
             foreach($request_content->answers as $answer_str) {
+                if($answer_str == "") {
+                    $question->answer()->delete();
+                    $question->delete();
+                    return response()->json("ERROR: answer is null", 400);
+                }
                 $answer = new Answer();
                 $answer->answer = $answer_str;
                 $answer->question_id = $question->id;
@@ -76,6 +81,10 @@ class QuestionsController extends Controller
     }
 
     public function updateQuestion(Request $request) {
+        $validated = $request->validate([
+            'is_active' => 'required|boolean',
+        ]);
+
         $question = Question::find($request->id);
         $question->is_active = $request->is_active;
         $question->save();
