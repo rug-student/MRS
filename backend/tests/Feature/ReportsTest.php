@@ -16,7 +16,7 @@ class ReportsTest extends TestCase
     /**
      * Checks if the retrieving of a single test by id works as expected.
      */
-    public function get_report(): void {
+    public function test_get_report(): void {
         $response = $this->get('api/reports/1');
         $response->assertStatus(404);
 
@@ -57,14 +57,15 @@ class ReportsTest extends TestCase
      */
     public function test_create_report(): void {
         $malformed_report_payload = [
-            'description'=>"This is a malformed payload"
+            'malformed'=>"This is a malformed payload"
+            // is missing a discription
         ];
 
         $report_payload = [
             'description'=>"This is a test report",
             'submitter_email'=>"test@testing.nl",
             'responses'=>[
-                
+
             ]
         ];
 

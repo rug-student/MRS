@@ -13,14 +13,14 @@ class AnswersTest extends TestCase
      */
     public function test_create_answer(): void
     {
-        
+
         $malformed_answer_payload = [
             "bad_payload"=>"bad"
+            // is missing answers field
         ];
 
         $answer_payload = [
-            "answer" => "Test answer",
-            "question_id" => "1"
+            "answer" => "Test answer"
         ];
 
         $request = $this->json('post', '/api/answers', $answer_payload);
