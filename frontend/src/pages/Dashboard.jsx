@@ -5,7 +5,7 @@ import Header from "../components/Header";
 import { useNavigate } from "react-router-dom";
 import useAuthContext from "../context/AuthContext";
 import { FaRegEdit } from "react-icons/fa";
-import styles from "./Dashboard.css";
+import styles from "./Dashboard.module.css";
 import ModalForm from "../components/ModalForm";
 import { getPriorityText, getStatusText } from "../helpers/mapReports";
 import { getReports } from "../api/reports.api";
@@ -30,7 +30,11 @@ const Dashboard = () => {
   const [modalShow, setModalShow] = useState(false);
   const [update, setUpdate] = useState(false);
 
+  /**Navigate to Report Details */
 
+  const handleNavigate = (id) => {
+    navigate(`/dashboard/${id}`);
+  };
 
   const handleEdit = (id, submitter_email, priority, status) => {
     setSingleEdit({ id, submitter_email, priority, status });
@@ -41,8 +45,8 @@ const Dashboard = () => {
     checkLoggedIn();
 
     const fetchReports = async () => {
-        const reports = await getReports();
-        setReportsData(reports);
+      const reports = await getReports();
+      setReportsData(reports);
     };
 
     fetchReports();
@@ -53,45 +57,45 @@ const Dashboard = () => {
       <Header />
       <Container className={styles.dashboardContainer}>
         <h1 className="mb-3">Reports</h1>
-        <table className="table table-lg table-striped table-bordered">
+        <table className="table table-lg table-striped table-bordered dashboard-table">
           <thead>
-          <tr>
-            <th>ID</th>
-            <th>EMAIL</th>
-            <th>DESCRIPTION</th>
-            <th>PRIORITY</th>
-            <th>STATUS</th>
-            <th>CREATED AT</th>
-            <th>EDIT</th>
-          </tr>
+            <tr>
+              <th>ID</th>
+              <th>EMAIL</th>
+              <th>DESCRIPTION</th>
+              <th>PRIORITY</th>
+              <th>STATUS</th>
+              <th>CREATED AT</th>
+              <th>EDIT</th>
+            </tr>
           </thead>
           <tbody>
-          {reportsData
-            .sort((a, b) => b.priority - a.priority)
-            .map((element) => (
-              <tr key={element.id}>
-                <td>{element.id}</td>
-                <td>{element.submitter_email}</td>
-                <td>{element.description}</td>
-                <td>{getPriorityText(element.priority)} </td>
-                <td>{getStatusText(element.status)}</td>
-                <td>{moment(element.created_at).fromNow()}</td>
-                <td>
-                  <FaRegEdit
-                    className={styles.editIcon}
-                    onClick={() =>
-                      handleEdit(
-                        element.id,
-                        element.submitter_email,
-                        element.priority,
-                        element.status
-                      )
-                    }
-                  />
-                </td>
-              </tr>
-            ))}
-             </tbody>
+            {reportsData
+              .sort((a, b) => b.priority - a.priority)
+              .map((element) => (
+                <tr key={element.id} onClick={() => handleNavigate(element.id)} >
+                  <td>{element.id}</td>
+                  <td>{element.submitter_email}</td>
+                  <td>{element.description}</td>
+                  <td>{getPriorityText(element.priority)} </td>
+                  <td>{getStatusText(element.status)}</td>
+                  <td>{moment(element.created_at).fromNow()}</td>
+                  <td>
+                    <FaRegEdit
+                      className={styles.editIcon}
+                      onClick={() =>
+                        handleEdit(
+                          element.id,
+                          element.submitter_email,
+                          element.priority,
+                          element.status
+                        )
+                      }
+                    />
+                  </td>
+                </tr>
+              ))}
+          </tbody>
         </table>
         <ModalForm
           data={singleEdit}
