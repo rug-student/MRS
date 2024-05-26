@@ -3,10 +3,9 @@
     border: 1px solid #e0e0e0;
     border-radius: 12px;
     padding: 30px;
-    width: 400px; 
+    width: 60%; 
+    max-width: 400px;
     height: 400px;
-    margin-top: 100px;
-    margin-left: 500px;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
     text-align: center;
     transition: transform 0.3s, box-shadow 0.3s;
@@ -17,10 +16,19 @@
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
 }
 
-
-.p{
+.page{
     background-color: #1aa9ec;
-    height: 920px;
+    height: 100vh;
+    min-height: 500px;
+}
+
+.login-page {
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    min-height: 90vh; 
+    padding: 20px;
+    box-sizing: border-box; 
 }
 
 #subutton{
@@ -31,8 +39,6 @@
 
 #inuno{
     margin-top: 60px;
-
-
 }
 
 #indue{
