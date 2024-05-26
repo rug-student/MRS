@@ -152,35 +152,92 @@ class QuestionsTest extends TestCase
      * Test get questions request response on populated database.
      */
     public function test_get_questions_on_populated_database(): void {
-        $question1 = Question::create([
+        $question_body1 = [
             'question_description'=>"This is a test question",
             'is_open'=>true,
             'is_active'=>true,
-        ]);
-
-        $question2 = Question::create([
+        ];
+        $question_body2 = [
             'question_description'=>"This is a second question",
             'is_open'=>false,
             'is_active'=>false,
-        ]);
+        ];
+        $question1 = Question::create($question_body1);
+        $question2 = Question::create($question_body2);
 
         $response = $this->get('/api/questions');
         $response->assertStatus(200);
 
         // Assert question properties
-        $response->assertSee((string)$question1->id);
-        $response->assertSee($question1->question_description);
-        $response->assertSee($question1->is_open);
-        $response->assertSee($question1->is_active);
-
-        $response->assertSee((string)$question2->id);
-        $response->assertSee($question2->question_description);
-        $response->assertSee($question2->is_open);
-        $response->assertSee($question2->is_active);
+        $response->assertSee($question_body1);
+        $response->assertSee($question_body2);
+        $this->assertDatabaseCount('questions', 2);
     }
 
     /**
      * FT-QE7
+     * Test get questions request active questions on populated database.
+     */
+    public function test_get_active_questions_on_populated_database(): void {
+        $question_body1 = [
+            'question_description'=>"This is a test question",
+            'is_open'=>true,
+            'is_active'=>true,
+        ];
+        $question_body2 = [
+            'question_description'=>"This is a second question",
+            'is_open'=>false,
+            'is_active'=>false,
+        ];
+        $question1 = Question::create($question_body1);
+        $question2 = Question::create($question_body2);
+        $this->assertDatabaseCount('questions', 2);
+
+        $payload = [
+            "active"=>"true"
+        ];
+
+        $response = $this->json('GET', '/api/questions', $payload);
+        $response->assertStatus(200);
+
+        // Assert question ids
+        $response->assertSee($question1->id);
+        $response->assertDontSee($question2->id);
+    }
+
+    /**
+     * FT-QE8
+     * Test get questions request inactive questions on populated database.
+     */
+    public function test_get_inactive_questions_on_populated_database(): void {
+        $question_body1 = [
+            'question_description'=>"This is a test question",
+            'is_open'=>true,
+            'is_active'=>true,
+        ];
+        $question_body2 = [
+            'question_description'=>"This is a second question",
+            'is_open'=>false,
+            'is_active'=>false,
+        ];
+        $question1 = Question::create($question_body1);
+        $question2 = Question::create($question_body2);
+        $this->assertDatabaseCount('questions', 2);
+
+        $payload = [
+            "active"=>"false"
+        ];
+
+        $response = $this->json('GET', '/api/questions', $payload);
+        $response->assertStatus(200);
+
+        // Assert question ids
+        $response->assertSee($question2->id);
+        $response->assertDontSee($question1->id);
+    }
+
+    /**
+     * FT-QE9
      * Test retrieving on nonexisting question id.
      */
     public function test_get_question_invalid_question_id(): void {
@@ -189,7 +246,7 @@ class QuestionsTest extends TestCase
     }
 
     /**
-     * FT-QE8
+     * FT-QE10
      * Test to check if retrieving a single question retreives all data.
      */
     public function test_get_question_valid_question_id(): void {
@@ -211,7 +268,7 @@ class QuestionsTest extends TestCase
     }
 
     /**
-     * FT-QE9
+     * FT-QE11
      * Test if updating a questions with invalid request give error.
      */
     public function test_patch_question_invalid_request(): void {
@@ -235,7 +292,7 @@ class QuestionsTest extends TestCase
     }
 
     /**
-     * FT-QE10
+     * FT-QE12
      * Test to check if updating a questions status works as expected.
      */
     public function test_patch_question_valid_request(): void {
