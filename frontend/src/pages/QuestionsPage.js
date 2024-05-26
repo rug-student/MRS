@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './Questions.css';
+import './QuestionsPage.css';
 import Header from '../components/Header';
 import InsertOptions from './InsertOptions';
 import { OpenQuestionSummary, ClosedQuestionSummary } from './Summary';

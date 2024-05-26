@@ -7,7 +7,6 @@ import { useState, useEffect } from 'react';
 import { getReport } from '../api/reports.api.js';
 
 
-
 const style = {
   position: 'absolute',
   top: '50%',

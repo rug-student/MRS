@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './login.css';
+import './LoginPage.css';
 import Header from '../components/Header';
 import useAuthContext from '../context/AuthContext';
 

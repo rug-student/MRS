@@ -5,8 +5,6 @@ import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import Popup from '../components/Popup.js';
-import { useNavigate } from "react-router-dom";
-
 
 import { submitReport } from '../api/reports.api.js';
 import { getQuestions } from '../api/questions.api.js';
