@@ -1,11 +1,21 @@
-.editIcon{
+.editIcon {
   padding: 0 !important;
   background-color: transparent;
   cursor: pointer;
 }
-.dashboardContainer{
+.dashboardContainer {
   margin-top: 40px;
 }
-.BodyTableWrappe{
+.BodyTableWrappe {
   background-color: aqua;
+}
+
+.HeaderWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.filterSelector {
 }
