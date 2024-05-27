@@ -1,5 +1,5 @@
 import React from 'react';
-import './Summary.css';
+import '../styleSheets/Summary.css';
 import Header from '../components/Header';
 
 function BackButton({ onClick }) {
@@ -10,8 +10,9 @@ function BackButton({ onClick }) {
 
 function OpenQuestionSummary({ question, onSubmit, onBack }) {
   return (
-    <div>
+  <div>
       <Header/>
+      <div className='App2'>
       <div id="head1">   
         <div className="form-container2"> 
           <h1 className="subtitle2">Summary</h1>
@@ -21,6 +22,7 @@ function OpenQuestionSummary({ question, onSubmit, onBack }) {
         </div>
       </div>  
     </div>
+    </div>
   );
 }
 
@@ -28,6 +30,7 @@ function ClosedQuestionSummary({ question, options, onSubmit, onBack }) {
   return (
     <div>
       <Header/>
+      <div className='App2'>
       <div id="head1">    
         <div className="form-container3">   
           <h1 className="subtitle2">Summary</h1>
@@ -44,6 +47,7 @@ function ClosedQuestionSummary({ question, options, onSubmit, onBack }) {
           <BackButton onClick={onBack} />
         </div>
       </div>
+    </div>
     </div>
   );
 }

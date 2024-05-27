@@ -1,5 +1,5 @@
 import React from 'react';
-import './InsertOptions.css';
+import '../styleSheets/InsertOptions.css';
 import Header from '../components/Header';
 
 function BackButton({ onClick }) {
@@ -17,8 +17,20 @@ function InsertOptions({ options, onOptionsChange, onNext, onBack }) {
     }
   };
 
+  const handleOptionChange = (index, value) => {
+    const newOptions = [...options];
+    newOptions[index] = value;
+    onOptionsChange(newOptions);
+  };
+
+  const handleNext = () => {
+    const nonEmptyOptions = options.filter(option => option.trim() !== '');
+    onOptionsChange(nonEmptyOptions);
+    onNext();
+  };
+
   return (
-    <div> 
+    <div>
       <Header />
       <div className="centered-container">
         <div className="form-container">
@@ -26,7 +38,7 @@ function InsertOptions({ options, onOptionsChange, onNext, onBack }) {
             <h1 className="subtitle4">Insert Options</h1>
             <div className="buttons">
               <button id="quinto" onClick={handleAddOption}>Add Option</button>
-              <button id="sesto" onClick={onNext}>Next</button>
+              <button id="sesto" onClick={handleNext}>Next</button>
             </div>
           </div>
           <div className="options-list">
@@ -36,11 +48,7 @@ function InsertOptions({ options, onOptionsChange, onNext, onBack }) {
                   type="text"
                   placeholder={"Add a new option"}
                   value={option || ''}
-                  onChange={(e) => {
-                    const newOptions = [...options];
-                    newOptions[index] = e.target.value;
-                    onOptionsChange(newOptions);
-                  }}
+                  onChange={(e) => handleOptionChange(index, e.target.value)}
                 />
               </div>
             ))}
