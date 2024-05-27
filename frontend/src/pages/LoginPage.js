@@ -3,7 +3,7 @@ import './LoginPage.css';
 import Header from '../components/Header';
 import useAuthContext from '../context/AuthContext';
 
-function App() {
+function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
@@ -12,18 +12,19 @@ function App() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    login({email, password});
-    setMessage(errors);
+    await login({email, password});
+    console.log("errors: ", errors.email)
+    setMessage(errors.email);
   };
 
   return (
-    <div class="p">
+    <div className="p">
     <Header />
       <div id="logform1">
         <h1>Login</h1>
           <form onSubmit={handleSubmit}>
             <div>
-              <label class="labuno">Email:</label>
+              <label className="labuno">Email:</label>
                 <input
                   type="text"
                   value={email}
@@ -32,7 +33,7 @@ function App() {
                 />
           </div>
           <div>
-            <label class="labuno">Password:</label>
+            <label className="labuno">Password:</label>
             <input
               type="password"
               value={password}
@@ -43,10 +44,10 @@ function App() {
         <input type="hidden" name="_token" value="{{ csrf_token() }}" />
       <button id="subutton" type="submit">Login</button>
     </form>
-    <p>{message}</p>
+    <p className='errorMessage'>{message}</p>
   </div>
 </div>
   );
 }
 
-export default App;
+export default LoginPage;

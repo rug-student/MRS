@@ -38,6 +38,10 @@ export const AuthProvider = ({ children }) => {
             await getUser();
             if(response.status === 204) {
                 navigate("/dashboard", {replace: true});
+                setErrors([]);
+            }
+            if (response.status === 422) {
+                setErrors(response.data.errors);
             }
         } catch(e) {
             if (e.response.status === 422) {
