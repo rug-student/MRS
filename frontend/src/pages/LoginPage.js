@@ -1,29 +1,36 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../styleSheets/LoginPage.css';
 import Header from '../components/Header';
 import useAuthContext from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
-  const { login, errors } = useAuthContext();
+  const { user, login, errors } = useAuthContext();
+
+  const navigate = useNavigate();
+
+  useEffect (() => {
+    setMessage(errors.email);
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    login({email, password});
-    setMessage(errors);
+    await login({email, password});
+    setMessage(errors.email);
   };
 
   return (
-    <div class="page">
+    <div className="page">
     <Header />
-      <div class="login-page">
+      <div className="login-page">
         <div id="logform1">
           <h1>Login</h1>
             <form onSubmit={handleSubmit}>
               <div>
-                <label class="labuno">Email:</label>
+                <label className="labuno">Email:</label>
                   <input
                     type="text"
                     value={email}
@@ -32,7 +39,7 @@ function LoginPage() {
                   />
             </div>
             <div>
-              <label class="labuno">Password:</label>
+              <label className="labuno">Password:</label>
               <input
                 type="password"
                 value={password}
@@ -40,10 +47,9 @@ function LoginPage() {
                 id="indue"
               />
             </div>
-          <input type="hidden" name="_token" value="{{ csrf_token() }}" />
         <button id="subutton" type="submit">Login</button>
       </form>
-      <p>{message}</p>
+      <p className='errorMessage'>{message}</p>
     </div>
   </div>
 </div>

@@ -16,8 +16,10 @@ code {
 
 /******************Single Report****************/
 
-.dashboard-table tbody tr:hover {
-  cursor: pointer;
+.dashboard-table tbody tr > td:last-child{
+ display: flex;
+ gap: 6px;
+ align-items: center;
 }
 
 

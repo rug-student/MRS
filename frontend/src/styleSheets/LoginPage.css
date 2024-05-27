@@ -50,3 +50,7 @@
    margin-top: 30px;
    position: absolute;
 }
+
+.errorMessage{
+    color: crimson;
+}
