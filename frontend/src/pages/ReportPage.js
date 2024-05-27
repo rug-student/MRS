@@ -12,7 +12,6 @@ import { getQuestions } from '../api/questions.api.js';
 
 function CreateReport() {
   
-  // State variables to hold form data
   const [email, setEmail] = useState('');
   const [malfunctionDescription, setMalfunctionDescription] = useState('');
   const [questions, setQuestions] = useState([]);
@@ -22,6 +21,7 @@ function CreateReport() {
   const [uploadedFilePath, setUploadedFilePath] = useState('');
   const [uploadedFileInfo, setUploadedFileInfo] = useState();
   const [openPopup, setOpenPopup] = useState(false);
+  const [popupContent, setPopupContent] = useState('');
  
   let questionNumber = 1; // Initialize the question number
 
@@ -37,7 +37,6 @@ function CreateReport() {
     width: 1,
   });
   
-
   // populates report with questions upon page load
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -60,21 +59,26 @@ function CreateReport() {
     setMalfunctionDescription(event.target.value);
   };
 
+  // -------- Handling file upload --------
   const handleFilePathChange = (event) => {
-    setUploadedFileInfo(uploadedFile);
     const file = event.target.files[0];
     if (file) {
       setUploadedFile(file);
       setUploadedFilePath(URL.createObjectURL(file)); // Create a local URL for the file
+    } else {
+      setUploadedFile(null);
+      setUploadedFilePath('');
     }
   };
 
+  // // -------- Handling change in answer to open questions --------
   const handleQuestionResponseChange = (event, questionId) => {
     const newAnswers = { ...questionAnswers };
     newAnswers[questionId] = event.target.value;
     setQuestionAnswers(newAnswers);
   };
 
+  // -------- Handling change in answer to closed questions (dropdown menu) --------
   const handleSelectChange = (event, questionId) => {
     const value = event.target.value;
     const newAnswers = { ...questionAnswers };
@@ -86,6 +90,7 @@ function CreateReport() {
     setShowOtherTextInput(newShowOtherTextInput);
   };
   
+  // -------- Resetting form (for after successfull submit) --------
   const resetForm = () => {
     setEmail('');
     setMalfunctionDescription('');
@@ -99,15 +104,22 @@ function CreateReport() {
   // -------- SUBMITTING FORM --------
   const handleSubmit = async (event) => {
     event.preventDefault();
-    await submitReport(
+    const submitted = await submitReport(
       malfunctionDescription,
       email,
       questionAnswers,
       questions,
       showOtherTextInput,
       uploadedFilePath, 
-      resetForm
     );
+    if (submitted) {
+      setPopupContent("Report successfully submitted");
+      resetForm();
+    } else {
+      setPopupContent("Invalid email address");
+      setOpenPopup(true);
+    }
+
   };
 
   return (
@@ -183,7 +195,7 @@ function CreateReport() {
         
         <button type="submit" onClick={handleSubmit}>Submit</button>
         
-        <Popup content={"Report successfully submitted!"} open={openPopup} onClose={() => setOpenPopup(false)} />
+        <Popup content={popupContent} open={openPopup} onClose={() => setOpenPopup(false)} />
       </form>
     
     </div>

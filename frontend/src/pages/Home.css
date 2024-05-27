@@ -1,6 +1,7 @@
 .page {
     background-color: #1AA9EC;
 }
+
 Header {
     height: 10vh; 
 }
@@ -28,7 +29,6 @@ Header {
     text-align: left;
     margin-bottom: 10px;
     color: #ffffff;
-   
 }
 
 .subtitle-home {
@@ -52,7 +52,7 @@ Header {
     border: 1px solid #e0e0e0;
     border-radius: 12px;
     padding: 30px;
-    width: 500px; 
+    width: 500px;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
     text-align: center;
     transition: transform 0.3s, box-shadow 0.3s;
@@ -86,4 +86,37 @@ Header {
 .box:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+
+@media screen and (max-width: 768px) {
+  .homepage {
+    flex-direction: column; 
+    align-items: center; 
+  }
+  
+  .text-container {
+    width: 90%;
+    margin-right: 0;
+    margin-bottom: 20px;
+    align-items: center;
+  }
+
+  .title-home {
+    font-size: 2em;
+    text-align: center;
+}
+
+.subtitle-home {
+    font-size: 1em;
+    text-align: center;
+}
+
+  .home-container {
+    width: 90%;
+  }
+
+  .box {
+    width: 100%;
+  }
 }

@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }) => {
                 setErrors([]);
             }
             if (response.status === 422) {
-                setErrors(response.data.errors);
+                await setErrors(response.data.errors);
             }
         } catch(e) {
             if (e.response.status === 422) {

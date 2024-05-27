@@ -152,62 +152,88 @@ class QuestionsTest extends TestCase
      * Test get questions request response on populated database.
      */
     public function test_get_questions_on_populated_database(): void {
-        $question1 = Question::create([
+        $question_body1 = [
             'question_description'=>"This is a test question",
             'is_open'=>true,
             'is_active'=>true,
-        ]);
-
-        $question2 = Question::create([
+        ];
+        $question_body2 = [
             'question_description'=>"This is a second question",
             'is_open'=>false,
             'is_active'=>false,
-        ]);
+        ];
+        $question1 = Question::create($question_body1);
+        $question2 = Question::create($question_body2);
 
         $response = $this->get('/api/questions');
         $response->assertStatus(200);
 
         // Assert question properties
-        $response->assertSee((string)$question1->id);
-        $response->assertSee($question1->question_description);
-        $response->assertSee($question1->is_open);
-        $response->assertSee($question1->is_active);
-
-        $response->assertSee((string)$question2->id);
-        $response->assertSee($question2->question_description);
-        $response->assertSee($question2->is_open);
-        $response->assertSee($question2->is_active);
+        $response->assertSee($question_body1);
+        $response->assertSee($question_body2);
+        $this->assertDatabaseCount('questions', 2);
     }
 
     /**
      * FT-QE7
-     * Test retrieving on nonexisting question id.
+     * Test get questions request active questions on populated database.
      */
-    public function test_get_question_invalid_question_id(): void {
-        $response = $this->get('/api/questions/1');
-        $response->assertStatus(404);
+    public function test_get_active_questions_on_populated_database(): void {
+        $question_body1 = [
+            'question_description'=>"This is a test question",
+            'is_open'=>true,
+            'is_active'=>true,
+        ];
+        $question_body2 = [
+            'question_description'=>"This is a second question",
+            'is_open'=>false,
+            'is_active'=>false,
+        ];
+        $question1 = Question::create($question_body1);
+        $question2 = Question::create($question_body2);
+        $this->assertDatabaseCount('questions', 2);
+
+        $payload = [
+            "active"=>"true"
+        ];
+
+        $response = $this->json('GET', '/api/questions', $payload);
+        $response->assertStatus(200);
+
+        // Assert question ids
+        $response->assertSee($question1->id);
+        $response->assertDontSee($question2->id);
     }
 
     /**
      * FT-QE8
-     * Test to check if retrieving a single question retreives all data.
+     * Test get questions request inactive questions on populated database.
      */
-    public function test_get_question_valid_question_id(): void {
-
-        $question = Question::create([
+    public function test_get_inactive_questions_on_populated_database(): void {
+        $question_body1 = [
             'question_description'=>"This is a test question",
             'is_open'=>true,
             'is_active'=>true,
-        ]);
+        ];
+        $question_body2 = [
+            'question_description'=>"This is a second question",
+            'is_open'=>false,
+            'is_active'=>false,
+        ];
+        $question1 = Question::create($question_body1);
+        $question2 = Question::create($question_body2);
+        $this->assertDatabaseCount('questions', 2);
 
-        $response = $this->get("/api/questions/".(string)$question->id);
+        $payload = [
+            "active"=>"false"
+        ];
+
+        $response = $this->json('GET', '/api/questions', $payload);
         $response->assertStatus(200);
 
-        // Assert question properties
-        $response->assertSee((string)$question->id);
-        $response->assertSee($question->question_description);
-        $response->assertSee($question->is_open);
-        $response->assertSee($question->is_active);
+        // Assert question ids
+        $response->assertSee($question2->id);
+        $response->assertDontSee($question1->id);
     }
 
     /**
@@ -228,7 +254,7 @@ class QuestionsTest extends TestCase
         $question = Question::create($question_payload);
 
         $this->assertDatabaseCount('questions', 1);
-        $response = $this->json('PATCH', "api/questions/".(string)$question->id, $patch_payload); // need to use propper json request here.
+        $response = $this->json('PATCH', "api/questions/".$question->id, $patch_payload); // need to use propper json request here.
         $response->assertStatus(422);
         $this->assertDatabaseHas('questions', $question_payload); // check for unchanged question.
         $this->assertDatabaseCount('questions', 1);
@@ -251,7 +277,7 @@ class QuestionsTest extends TestCase
         ]);
         $this->assertDatabaseCount('questions', 1);
 
-        $response = $this->json('PATCH', "api/questions/".(string)$question->id, $payload);
+        $response = $this->json('PATCH', "api/questions/".$question->id, $payload);
         $response->assertStatus(200);
 
         $this->assertDatabaseCount('questions', 1);
