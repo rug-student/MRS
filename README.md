@@ -3,10 +3,12 @@ Malfunction report system for Gomibo's maintaiance team in Groningen.
 
 ## Prequisites
 For the backend, you need:
-- [php ^8.1](https://www.php.net/manual/en/install.php)
-With php extensions and modules
+- [php 8.1](https://www.php.net/manual/en/install.php)
+  - php8.1-curl
+  - php8.1-xml
+  - php8.1-mysql
+  - php8.1-mbstring
 - [composer](https://getcomposer.org/download/)
-- [php-mysql] (sudo apt install php-mysql)
 - [Docker desktop](https://www.docker.com/products/docker-desktop/)
 
 ## Deployment
@@ -61,6 +63,3 @@ Ensure that the database is running.
 php artisan migrate --database=testing
 php artisan test
 ```
-
-1. `./vendor/bin/sail up mysql phpmyadmin`
-2. `./vendor/bin/phpunit`
