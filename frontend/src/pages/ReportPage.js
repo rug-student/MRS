@@ -22,6 +22,7 @@ function CreateReport() {
   const [uploadedFileInfo, setUploadedFileInfo] = useState();
   const [openPopup, setOpenPopup] = useState(false);
   const [popupContent, setPopupContent] = useState('');
+  const [formSubmitted, setFormSubmitted] = useState(false);
  
   let questionNumber = 1; // Initialize the question number
 
@@ -65,13 +66,14 @@ function CreateReport() {
     if (file) {
       setUploadedFile(file);
       setUploadedFilePath(URL.createObjectURL(file)); // Create a local URL for the file
+      setUploadedFileInfo(file);
     } else {
       setUploadedFile(null);
       setUploadedFilePath('');
     }
   };
 
-  // // -------- Handling change in answer to open questions --------
+  // -------- Handling change in answer to open questions --------
   const handleQuestionResponseChange = (event, questionId) => {
     const newAnswers = { ...questionAnswers };
     newAnswers[questionId] = event.target.value;
@@ -98,12 +100,14 @@ function CreateReport() {
     setShowOtherTextInput({});
     setUploadedFile(null);
     setUploadedFilePath('');
+    setFormSubmitted(false);
     setOpenPopup(true);
   };
  
   // -------- SUBMITTING FORM --------
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setFormSubmitted(true);
     const submitted = await submitReport(
       malfunctionDescription,
       email,
@@ -116,10 +120,9 @@ function CreateReport() {
       setPopupContent("Report successfully submitted");
       resetForm();
     } else {
-      setPopupContent("Invalid email address");
+      setPopupContent("Please correctly fill in all fields.");
       setOpenPopup(true);
     }
-
   };
 
   return (
@@ -130,12 +133,24 @@ function CreateReport() {
 
         <div className='question-container'>
           <div className='question'>{questionNumber++}. What is your email?</div>
-          <input type="email" className='answer' value={email} onChange={handleEmailChange}/>
+          <input 
+            required 
+            type="email" 
+            className={`answer ${formSubmitted ? 'submitted' : 'notSubmitted'}`} 
+            value={email} 
+            onChange={handleEmailChange}
+          />
         </div>
 
         <div className='question-container'>
           <div className='question'>{questionNumber++}. Describe the malfunction.</div>
-          <textarea className='answer' value={malfunctionDescription} onChange={handleDescriptionChange}/>
+          <input 
+            required 
+            type="text" 
+            className={`answer ${formSubmitted ? 'submitted' : 'notSubmitted'}`} 
+            value={malfunctionDescription} 
+            onChange={handleDescriptionChange}
+          />
         </div>
 
         {/* displaying questions created by maintenance personel */}
@@ -145,11 +160,22 @@ function CreateReport() {
           
             {question.is_open ? (
               /* If the question is open, render a text input*/
-              <input type="text" className='answer' value={question.answer.id} onChange={e => handleQuestionResponseChange(e, question.id)}/>
+              <input 
+                required 
+                type="text" 
+                className={`answer ${formSubmitted ? 'submitted' : 'notSubmitted'}`} 
+                value={question.answer.id} 
+                onChange={e => handleQuestionResponseChange(e, question.id)}
+              />
               ) : (
               <>
               {/* If the question is not open, dropdown menu with the MC answers */}
-              <select className='answer' value={question.answer.answer} onChange={e => handleSelectChange(e, question.id)}>
+              <select 
+                required 
+                className={`answer ${formSubmitted ? 'submitted' : 'notSubmitted'}`} 
+                value={question.answer.answer} 
+                onChange={e => handleSelectChange(e, question.id)}
+              >
                 <option disabled selected value="">-- Select Answer --</option>
                 {/* Map through question answers to populate the dropdown */}
                 {question.answer.map(answer => (
@@ -157,8 +183,15 @@ function CreateReport() {
                  ))}
                 <option value="Other">Other</option>
               </select>
+              
               {showOtherTextInput[question.id] && (
-                <input type="text" className='answer' value={question.answer.id} onChange={e => handleQuestionResponseChange(e, question.id)}/>
+                <input 
+                  required 
+                  type="text" 
+                  className={`answer ${formSubmitted ? 'submitted' : 'notSubmitted'}`} 
+                  value={question.answer.id} 
+                  onChange={e => handleQuestionResponseChange(e, question.id)}
+                />
               )}
               </>
             )}
@@ -192,12 +225,9 @@ function CreateReport() {
           </section>
       )}
         </div>
-        
         <button type="submit" onClick={handleSubmit}>Submit</button>
-        
         <Popup content={popupContent} open={openPopup} onClose={() => setOpenPopup(false)} />
       </form>
-    
     </div>
   );
 }
