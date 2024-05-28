@@ -214,9 +214,8 @@ function CreateReport() {
             Upload file
             <VisuallyHiddenInput className='answer' type="file" onChange={handleFilePathChange}/>
           </Button>
-          {uploadedFileInfo && (
+          {uploadedFileInfo && uploadedFile && (
           <section>
-            File details:
             <ul>
               <li>Name: {uploadedFile.name}</li>
               <li>Type: {uploadedFile.type}</li>
