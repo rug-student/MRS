@@ -4,10 +4,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import LoginPage from './pages/LoginPage';
 import ReportPage from './pages/ReportPage';
 import QuestionsPage from './pages/QuestionsPage';
-import Dashboard from './pages/Dashboard';
-import Home from './pages/Home';
+import Dashboard from './pages/DashboardPage';
+import Home from './pages/HomePage';
 import { Route, Routes } from 'react-router-dom';
-import SingleReport from './pages/SingleReport';
+import SingleReport from './pages/DashboardSingleReportPage';
 
 
 function App() {
