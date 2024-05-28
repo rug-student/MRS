@@ -22,6 +22,7 @@ export const AuthProvider = ({ children }) => {
         try{
             const { data } = await api.get('/api/user', {withCredentials: true, withXSRFToken: true});
             setUser(data);
+            localStorage.setItem('user', data);
         } catch(e) {
             console.log(e);
         }
@@ -58,10 +59,24 @@ export const AuthProvider = ({ children }) => {
      * always happens regardless whether the user is logged in or not.
      */
     const checkLoggedIn = () => {
-        if(!user) {
+        if(!isLoggedIn()) {
             navigate('/')
         }
     };
+
+    /**
+     * Returns if the user is logged in or not
+     * @returns logged in status
+     */
+    const isLoggedIn = () => {
+        const loggedInUser = localStorage.getItem('user');
+        if(loggedInUser) {
+            setUser(loggedInUser);
+            return true
+        } else {
+            return false
+        }
+    }
 
     /**
      * Logs out the currently logged in user.
@@ -69,6 +84,7 @@ export const AuthProvider = ({ children }) => {
     const logout = () => {
         api.post('/logout', [], {withCredentials: true, withXSRFToken: true}).then(() => {
             setUser(null);
+            localStorage.clear();
         });
     };
 
