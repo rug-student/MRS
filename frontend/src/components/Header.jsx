@@ -5,7 +5,7 @@ import useAuthContext from '../context/AuthContext';
 import MenuIcon from '@mui/icons-material/Menu'; 
 
 function Header() {
-    const { logout, isLoggedIn} = useAuthContext();
+    const { logout, user } = useAuthContext();
     const [showMenu, setShowMenu] = useState(false);
 
     const toggleMenu = () => {
@@ -28,7 +28,7 @@ function Header() {
             </Link>
             
             <div className={`menu-items ${showMenu ? 'show' : 'noShow'}`}>
-                {isLoggedIn() ? (
+                {user ? (
                     <>
                         <div className="header-btn"><Link to="/report">Report</Link></div>
                         <div className="header-btn"><Link to="/dashboard">Dashboard</Link></div>
