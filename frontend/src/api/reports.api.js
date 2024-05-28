@@ -129,9 +129,9 @@ export async function getReport(reportID) {
  * GETs a list of all existing reports.
  * @returns list of reports that are in database.
  */
-export const getReports = async () => {
+export const getReports = async (page) => {
   try{
-    const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/reports`, {
+    const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/reports?page=${page}`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json'

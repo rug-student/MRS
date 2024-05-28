@@ -30,8 +30,8 @@ class ReportsController extends Controller
         if ($request->priority != null) {
             $query->where("priority", $request->priority);
         }
-
-        $reports = $query->get();
+            
+        $reports = $query->paginate(10);
 
         return response()->json($reports, 200);
     }
@@ -116,12 +116,13 @@ class ReportsController extends Controller
         return response()->json(["Succesfully saved report", $report], 200);
     }
 
-
+    /**
+     * Updates a reports status and/or priority.
+     */
     public function updateReport(Request $request) {
         $validated = $request->validate([
             'status' => 'required',
             'priority'=> 'required',
-            // 'maintainer'=> 'required',
         ]);
 
         if(!Report::where("id", $request->id)->exists()) {

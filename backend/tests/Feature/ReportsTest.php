@@ -51,7 +51,7 @@ class ReportsTest extends TestCase
     public function test_get_reports_on_empty_database(): void {
         $response = $this->get('/api/reports');
         $response->assertStatus(200);
-        $response->assertContent("[]");
+        $response->assertSee('data');
 
         Report::create([
             'description'=>"This is a test report",

@@ -14,7 +14,7 @@ function LoginPage() {
 
   useEffect (() => {
     setMessage(errors.email);
-  }, []);
+  }, [message]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

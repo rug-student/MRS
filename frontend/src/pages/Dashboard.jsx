@@ -9,6 +9,8 @@ import styles from "./Dashboard.module.css";
 import ModalForm from "../components/ModalForm";
 import { getPriorityText, getStatusText } from "../helpers/mapReports";
 import { getReports } from "../api/reports.api";
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
 
 const Dashboard = () => {
   const [reportsData, setReportsData] = useState([
@@ -29,7 +31,8 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [modalShow, setModalShow] = useState(false);
   const [update, setUpdate] = useState(false);
-
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   /**Navigate to Report Details */
 
   const handleNavigate = (id) => {
@@ -41,16 +44,29 @@ const Dashboard = () => {
     setModalShow(true);
   };
 
+  const handlePage = (event, value) => {
+    setPage(value);
+  };
+
+  const fetchReports = async (page) => {
+    const reports = await getReports(page);
+    setReportsData(reports.data);
+
+    const total = reports.total;
+    const per_page = reports.per_page
+    if(total%per_page >= 1) {
+      setTotalPages(Math.floor(total/per_page)+1);
+    } else {
+      setTotalPages(Math.floor(total/per_page));
+    }
+  };
+
   useEffect(() => {
     checkLoggedIn();
 
-    const fetchReports = async () => {
-      const reports = await getReports();
-      setReportsData(reports);
-    };
 
-    fetchReports();
-  }, [update]);
+    fetchReports(page);
+  }, [update, page]);
 
   return (
     <>
@@ -104,6 +120,9 @@ const Dashboard = () => {
           onUpdate={() => setUpdate(!update)}
         />
       </Container>
+      <Stack spacing={2}>
+        <Pagination count={totalPages} siblingCount={0} page ={page} onChange={handlePage}/>
+      </Stack>
     </>
   );
 };
