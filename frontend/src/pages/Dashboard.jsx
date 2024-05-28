@@ -52,7 +52,7 @@ const Dashboard = () => {
   };
 
   const fetchReports = async (page) => {
-    const reports = await getReports(page);
+    const reports = await getReports(page, sortOption, "desc");
     setReportsData(reports.data);
 
     const total = reports.total;

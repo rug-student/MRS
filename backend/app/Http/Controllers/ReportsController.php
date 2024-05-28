@@ -30,7 +30,22 @@ class ReportsController extends Controller
         if ($request->priority != null) {
             $query->where("priority", $request->priority);
         }
-            
+        
+        if($request->order == "asc") {
+            $order = "asc";
+        } else {
+            $order = "desc";
+        }
+
+        if($request->sort == "status") {
+            $sort = "status";
+        } elseif($request->sort == "priority") {
+            $sort = "priority";
+        } else {
+            $sort = "created_at";
+        }
+
+        $query->orderBy($sort, $order);
         $reports = $query->paginate(10);
 
         return response()->json($reports, 200);

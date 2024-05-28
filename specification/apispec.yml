@@ -268,6 +268,20 @@ components:
       description: Page for desired pagination of results.
       schema:
         type: integer
+    report-sort-by:
+      name: sort-by
+      in: query
+      required: false
+      description: Sort by "priority", "date" or "status". Sorts by date by default.
+      schema:
+        type: string
+    report-order:
+      name: order
+      in: query
+      required: false
+      description: Order results as "asc" or "desc". Order is descending by default.
+      schema:
+        type: string
     question-filter-is_active:
       name: active
       in: query
@@ -322,6 +336,8 @@ paths:
         - $ref: "#/components/parameters/report-filter-status"
         - $ref: "#/components/parameters/report-filter-priority"
         - $ref: "#/components/parameters/report-pagination-page"
+        - $ref: "#/components/parameters/report-sort-by"
+        - $ref: "#/components/parameters/report-order"
       responses:
         '200':
           description: "OK"
