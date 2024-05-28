@@ -1,0 +1,21 @@
+.editIcon {
+  padding: 0 !important;
+  background-color: transparent;
+  cursor: pointer;
+}
+.dashboardContainer {
+  margin-top: 40px;
+}
+.BodyTableWrappe {
+  background-color: aqua;
+}
+
+.HeaderWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.filterSelector {
+}

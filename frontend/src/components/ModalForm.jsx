@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Button, Col, Form, Modal, Row } from "react-bootstrap";
-import Styles from "./ModalForm.module.css";
+import Styles from "../styleSheets/ModalForm.module.css";
 
 const ModalForm = ({ show, onHide, data, onUpdate }) => {
   const { id, submitter_email, priority, status } = data;

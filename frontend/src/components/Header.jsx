@@ -1,5 +1,5 @@
 import React, { useState, useEffect} from 'react';
-import './Header.css';
+import '../styleSheets/Header.css';
 import { Link } from 'react-router-dom';
 import useAuthContext from '../context/AuthContext';
 import MenuIcon from '@mui/icons-material/Menu'; 

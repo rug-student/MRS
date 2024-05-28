@@ -7,16 +7,19 @@ import { Container } from "react-bootstrap";
 import { IoIosArrowBack } from "react-icons/io";
 import Header from "../components/Header";
 import useAuthContext from "../context/AuthContext";
+import { formatDate } from "../helpers/formDate";
 
 const SingleReport = () => {
   const { ReportId } = useParams();
   const [report, setReport] = useState({});
   const navigate = useNavigate();
-  const {checkLoggedIn } = useAuthContext();
+  const { checkLoggedIn } = useAuthContext();
+
+ 
 
   useEffect(() => {
     checkLoggedIn();
-
+    console.log();
     const fetchReport = async () => {
       const data = await getReport(ReportId);
       setReport(data[0]);
@@ -28,7 +31,13 @@ const SingleReport = () => {
     <div>
       <Header />
       <Container className="pt-5">
-        <div className="d-flex justify-content-end align-items-center w-100"><IoIosArrowBack size={30} className="back_report_icon" onClick={() => navigate(-1)} /></div>
+        <div className="d-flex justify-content-end align-items-center w-100">
+          <IoIosArrowBack
+            size={30}
+            className="back_report_icon"
+            onClick={() => navigate(-1)}
+          />
+        </div>
         <h1>Single Report</h1>
         <table className="table table-lg table-striped table-bordered">
           <thead>
@@ -42,14 +51,14 @@ const SingleReport = () => {
             </tr>
           </thead>
           <tbody>
-              <tr>
-                <td>{report.id}</td>
-                <td>{report.submitter_email}</td>
-                <td>{report.description}</td>
-                <td>{getPriorityText(report.priority)} </td>
-                <td>{getStatusText(report.status)}</td>
-                <td>{moment(report.created_at).fromNow()}</td>
-              </tr>
+            <tr>
+              <td>{report.id}</td>
+              <td>{report.submitter_email}</td>
+              <td>{report.description}</td>
+              <td>{getPriorityText(report.priority)} </td>
+              <td>{getStatusText(report.status)}</td>
+              <td>{moment(formatDate(report.created_at)).fromNow()}</td>
+            </tr>
           </tbody>
         </table>
         <table className="table table-lg table-striped table-bordered">
@@ -59,12 +68,24 @@ const SingleReport = () => {
             </tr>
           </thead>
           <tbody>
-          {report.response?.length > 1 ? report.response.map((element, index) => (
-                <tr key={index} >
-                  <td><p><strong>{element.question.question_description}</strong><span>{element.answer.answer}</span></p></td>
-           
+            {report.response?.length > 0 ? (
+              report.response.map((element, index) => (
+                <tr key={index}>
+                  <td>
+                    <p>
+                      <strong>{index+1}. {element.question.question_description}: </strong>
+                      <span>{element.answer.answer}</span>
+                    </p>
+                  </td>
                 </tr>
-              )):(<tr><td><p>The Report does not have Responses</p></td></tr>)}
+              ))
+            ) : (
+              <tr>
+                <td>
+                  <p>The Report does not have Responses</p>
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </Container>
@@ -73,4 +94,3 @@ const SingleReport = () => {
 };
 
 export default SingleReport;
-

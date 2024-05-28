@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './QuestionsPage.css';
+import '../styleSheets/QuestionsPage.css';
 import Header from '../components/Header';
 import InsertOptions from './InsertOptions';
 import { OpenQuestionSummary, ClosedQuestionSummary } from './Summary';
@@ -132,6 +132,7 @@ function NewQuestionPage() {
   const [isActive, setIsActive] = useState(null);
   const [options, setOptions] = useState([]);
   const { user, checkLoggedIn } = useAuthContext();
+  const [error, setError] = useState(null);
 
   const navigate = useNavigate();
 
@@ -184,17 +185,18 @@ function NewQuestionPage() {
     setStep(5);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    setError(null); 
     setStep(0);
     console.log('New question data:', { currentQuestion, isOpen, options });
     try {
-      const response = submitQuestion(currentQuestion, isOpen, options);
+      const response = await submitQuestion(currentQuestion, isOpen, options);
       console.log(response);
     } catch (error) {
       console.log(error);
+      setError('Failed to submit the question. Please try again.');
     }
   };
-
   const handleBack = () => {
     if (step === 1 || step === 2) {
       setStep(0);
@@ -218,6 +220,7 @@ function NewQuestionPage() {
               <button className="b" onClick={() => setStep(1)}>Add Question</button>
               <button className="b" id="delete" onClick={() => setStep(2)}>Delete Question</button>
             </div>
+            {error && <div className="error-message">{error}</div>}
           </div>
         </div>
       )}

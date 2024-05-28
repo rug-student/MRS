@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './LoginPage.css';
+import '../styleSheets/LoginPage.css';
 import Header from '../components/Header';
 import useAuthContext from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
