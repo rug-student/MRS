@@ -8,6 +8,7 @@ import { IoIosArrowBack } from "react-icons/io";
 import Header from "../components/Header";
 import useAuthContext from "../context/AuthContext";
 import { formatDate } from "../helpers/formDate";
+import styles from '../styleSheets/SingleReport.module.css'
 
 const SingleReport = () => {
   const { ReportId } = useParams();
@@ -19,7 +20,6 @@ const SingleReport = () => {
 
   useEffect(() => {
     checkLoggedIn();
-    console.log();
     const fetchReport = async () => {
       const data = await getReport(ReportId);
       setReport(data[0]);
@@ -38,7 +38,8 @@ const SingleReport = () => {
             onClick={() => navigate(-1)}
           />
         </div>
-        <h1>Single Report</h1>
+        <h1 className={styles.reportTitle}>Single Report</h1>
+        <div class={`table-responsive ${styles.myTableResponsive}`}>
         <table className="table table-lg table-striped table-bordered">
           <thead>
             <tr>
@@ -61,6 +62,8 @@ const SingleReport = () => {
             </tr>
           </tbody>
         </table>
+        </div>
+        <div class={`table-responsive ${styles.myTableResponsive}`}>
         <table className="table table-lg table-striped table-bordered">
           <thead>
             <tr>
@@ -88,6 +91,7 @@ const SingleReport = () => {
             )}
           </tbody>
         </table>
+        </div>
       </Container>
     </div>
   );

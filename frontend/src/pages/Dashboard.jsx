@@ -2,15 +2,15 @@ import React, { useEffect, useState } from "react";
 import moment from "moment";
 import { Container, Form } from "react-bootstrap";
 import Header from "../components/Header";
-import {useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import useAuthContext from "../context/AuthContext";
 import { FaRegEdit } from "react-icons/fa";
 import styles from "../styleSheets/Dashboard.module.css";
 import ModalForm from "../components/ModalForm";
 import { getPriorityText, getStatusText } from "../helpers/mapReports";
 import { getReports } from "../api/reports.api";
-import Pagination from '@mui/material/Pagination';
-import Stack from '@mui/material/Stack';
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 import { GrView } from "react-icons/gr";
 
 const Dashboard = () => {
@@ -56,17 +56,16 @@ const Dashboard = () => {
     setReportsData(reports.data);
 
     const total = reports.total;
-    const per_page = reports.per_page
-    if(total%per_page >= 1) {
-      setTotalPages(Math.floor(total/per_page)+1);
+    const per_page = reports.per_page;
+    if (total % per_page >= 1) {
+      setTotalPages(Math.floor(total / per_page) + 1);
     } else {
-      setTotalPages(Math.floor(total/per_page));
+      setTotalPages(Math.floor(total / per_page));
     }
   };
 
   useEffect(() => {
-    // checkLoggedIn();
-
+    checkLoggedIn();
 
     fetchReports(page);
   }, [update, page]);
@@ -101,49 +100,50 @@ const Dashboard = () => {
             </Form.Select>
           </div>
         </div>
-
-        <table className="table table-lg table-striped table-bordered dashboard-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>EMAIL</th>
-              <th>DESCRIPTION</th>
-              <th>PRIORITY</th>
-              <th>STATUS</th>
-              <th>CREATED AT</th>
-              <th>ACTIONS</th>
-            </tr>
-          </thead>
-          <tbody>
-            {getSortedReports().map((element) => (
-              <tr key={element.id}>
-                <td>{element.id}</td>
-                <td>{element.submitter_email}</td>
-                <td>{element.description}</td>
-                <td>{getPriorityText(element.priority)} </td>
-                <td>{getStatusText(element.status)}</td>
-                <td>{moment(element.created_at).fromNow()}</td>
-                <td>
-                  <FaRegEdit
-                    className={styles.editIcon}
-                    onClick={() =>
-                      handleEdit(
-                        element.id,
-                        element.submitter_email,
-                        element.priority,
-                        element.status
-                      )
-                    }
-                  />
-                  <GrView
-                    onClick={() => handleNavigate(element.id)}
-                    className={styles.editIcon}
-                  />
-                </td>
+        <div class={`table-responsive ${styles.myTableResponsive}`}>
+          <table className="table table-lg table-striped table-bordered dashboard-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>EMAIL</th>
+                <th>DESCRIPTION</th>
+                <th>PRIORITY</th>
+                <th>STATUS</th>
+                <th>CREATED AT</th>
+                <th>ACTIONS</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {getSortedReports().map((element) => (
+                <tr key={element.id}>
+                  <td>{element.id}</td>
+                  <td>{element.submitter_email}</td>
+                  <td>{element.description}</td>
+                  <td>{getPriorityText(element.priority)} </td>
+                  <td>{getStatusText(element.status)}</td>
+                  <td>{moment(element.created_at).fromNow()}</td>
+                  <td>
+                    <FaRegEdit
+                      className={styles.editIcon}
+                      onClick={() =>
+                        handleEdit(
+                          element.id,
+                          element.submitter_email,
+                          element.priority,
+                          element.status
+                        )
+                      }
+                    />
+                    <GrView
+                      onClick={() => handleNavigate(element.id)}
+                      className={styles.editIcon}
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
         <ModalForm
           data={singleEdit}
           show={modalShow}
@@ -151,8 +151,16 @@ const Dashboard = () => {
           onUpdate={() => setUpdate(!update)}
         />
       </Container>
-      <Stack spacing={2}>
-        <Pagination count={totalPages} siblingCount={0} page ={page} onChange={handlePage}/>
+      <Stack spacing={2} className="pt-5">
+        <Pagination
+        className={styles.dashboardPagination}
+          shape="rounded"
+          size="small"
+          count={totalPages}
+          siblingCount={0}
+          page={page}
+          onChange={handlePage}
+        />
       </Stack>
     </>
   );

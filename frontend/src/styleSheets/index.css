@@ -5,6 +5,11 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+html {
+  overflow-x: hidden;
 }
 
 code {
@@ -25,4 +30,15 @@ code {
 
 .back_report_icon:hover{
 cursor: pointer;
+}
+
+.css-wjh20t-MuiPagination-ul{
+justify-content: center;
+}
+
+/****************Dashboard*********************/
+button.MuiButtonBase-root{
+  width: 40px;
+  height: 40px;
+  border-radius: 100%; 
 }
