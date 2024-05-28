@@ -6,7 +6,7 @@ import {useNavigate } from "react-router-dom";
 import useAuthContext from "../context/AuthContext";
 import { FaRegEdit } from "react-icons/fa";
 import styles from "../styleSheets/Dashboard.module.css";
-import ModalForm from "../components/ModalForm";
+import ModalForm from "../components/dashboard/ModalForm";
 import { getPriorityText, getStatusText } from "../helpers/mapReports";
 import { getReports } from "../api/reports.api";
 import Pagination from '@mui/material/Pagination';

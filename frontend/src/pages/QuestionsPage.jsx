@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import '../styleSheets/QuestionsPage.css';
-import Header from '../components/Header';
-import InsertOptions from './InsertOptions';
-import { OpenQuestionSummary, ClosedQuestionSummary } from './Summary';
+import Header from '../components/Header.jsx';
+import InsertOptions from '../components/question/InsertOptions.jsx';
+import { OpenQuestionSummary, ClosedQuestionSummary } from '../components/question/QuestionSummary.jsx';
 import {getQuestions, submitQuestion, DeleteQue} from '../api/questions.api.js';
-import useAuthContext from '../context/AuthContext';
+import useAuthContext from '../context/AuthContext.jsx';
 import { useNavigate } from "react-router-dom";
 
 function BackButton({ onClick }) {

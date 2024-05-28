@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import '../styleSheets/ReportPage.css';
-import Header from '../components/Header';
+import Header from '../components/Header.jsx';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import Popup from '../components/Popup.js';
+import Popup from '../components/popups/Popup.jsx';
 
 import { submitReport } from '../api/reports.api.js';
 import { getQuestions } from '../api/questions.api.js';
