@@ -37,6 +37,17 @@
   width: 100%; 
 }
 
+input:invalid.submitted, select:invalid.submitted {
+  border: 1px solid red;
+  border-radius: 3px;
+}
+
+input, select {
+  border: 1px solid black;
+  border-radius: 3px;
+}
+
+
 
 /* Media Query for larger screens */
 @media (min-width: 768px) {
