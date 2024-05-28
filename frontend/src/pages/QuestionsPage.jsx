@@ -137,7 +137,7 @@ function NewQuestionPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    checkLoggedIn(false, '/');
+    checkLoggedIn(false, '/login');
 
     const fetchQuestions = async () => {
       try {
