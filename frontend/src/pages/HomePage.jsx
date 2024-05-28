@@ -1,18 +1,11 @@
 import '../styleSheets/Home.css';
 import Header from '../components/Header';
 import { Link } from 'react-router-dom';
-import { useEffect } from 'react';
 import useAuthContext from '../context/AuthContext';
 
 function HomePage() {
  
-  const {user, getUser} = useAuthContext();
-
-  useEffect(() => {
-    if(!user) {
-      getUser();
-    }
-  }, [])
+  const {isLoggedIn} = useAuthContext();
 
   return (
       <div className='page'>
@@ -28,7 +21,7 @@ function HomePage() {
                 <h1>Create a New Report</h1>
                 <Link to="/report">Report</Link>
               </div>
-              {user ? 
+              {isLoggedIn() ? 
               <>
                 <div className="box">
                   <h1>View Dashboard</h1>

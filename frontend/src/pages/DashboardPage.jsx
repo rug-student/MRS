@@ -66,7 +66,7 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    checkLoggedIn();
+    checkLoggedIn(false, '/login');
 
     fetchReports(page);
   }, [update, page]);

@@ -52,15 +52,15 @@ export const AuthProvider = ({ children }) => {
     };
 
     /**
-     * Returns user to main page if user is not logged in.
-     *
-     * KNOWN BUG: when called at the top of a useEffect,
-     * on page refresh the user is not loaded yet in the state, so this redirection
-     * always happens regardless whether the user is logged in or not.
+     * Returns user to a specified page if user is not logged in or not.
+     * @param loggedUser true if the user needs to be logged in to be redirected or not.
+     * @param page the page to send the user to.
      */
-    const checkLoggedIn = () => {
-        if(!isLoggedIn()) {
-            navigate('/')
+    const checkLoggedIn = (loggedUser, page) => {
+        if (isLoggedIn() && loggedUser) {
+            navigate(page)
+        } else if (!isLoggedIn() && !loggedUser) {
+            navigate(page)
         }
     };
 
@@ -88,7 +88,7 @@ export const AuthProvider = ({ children }) => {
         });
     };
 
-    return <AuthContext.Provider value={{user, errors, getUser, login, logout, checkLoggedIn}}>
+    return <AuthContext.Provider value={{user, errors, login, logout, checkLoggedIn, isLoggedIn}}>
         {children}
     </AuthContext.Provider>
 }
