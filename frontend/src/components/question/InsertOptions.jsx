@@ -10,11 +10,7 @@ function BackButton({ onClick }) {
 
 function InsertOptions({ options, onOptionsChange, onNext, onBack }) {
   const handleAddOption = () => {
-    if (options.length < 10) {
       onOptionsChange([...options, '']);
-    } else {
-      alert('You cannot add more than 10 options.');
-    }
   };
 
   const handleOptionChange = (index, value) => {
