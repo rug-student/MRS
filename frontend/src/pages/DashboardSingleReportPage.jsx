@@ -18,7 +18,12 @@ const SingleReport = () => {
 
   const fetchReport = async () => {
   const data = await getReport(ReportId);
-  setReport(data[0]);
+  if (data === null) {
+    console.log("Report does not exist: redirecting")
+    navigate('/dashboard')
+  } else {
+    setReport(data[0]);
+  }
 };
  
 

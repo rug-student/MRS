@@ -109,12 +109,13 @@ export async function getReport(reportID) {
 
     if (response.status === 200) {
       return response.data;
-    } else {
-      throw new Error('Failed to fetch report');
     }
   } catch (error) {
-    console.error('Error occurred while fetching report:', error);
-    throw error;
+    if (error.response.status === 404) {
+      return null
+    } else {
+      console.error('Error occurred while fetching report:', error);
+    }
   }
 }
 
