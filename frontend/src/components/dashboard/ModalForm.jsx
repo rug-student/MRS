@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Button, Col, Form, Modal, Row } from "react-bootstrap";
 import Styles from "../../styleSheets/ModalForm.module.css";
+import {updateReport} from "../../api/reports.api";
+
 
 const ModalForm = ({ show, onHide, data, onUpdate }) => {
   const { id, submitter_email, priority, status } = data;
@@ -15,34 +17,9 @@ const ModalForm = ({ show, onHide, data, onUpdate }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const url = `${process.env.REACT_APP_API_BASE_URL}/api/reports/${id}`;
-      const myHeaders = new Headers();
-      myHeaders.append("Content-Type", "application/json");
-
-      const body = JSON.stringify({
-        status: formStatus,
-        priority: formPriority,
-      });
-
-      const requestOptions = {
-        method: "PATCH",
-        headers: myHeaders,
-        body: body,
-        redirect: "follow",
-      };
-      const response = await fetch(url, requestOptions);
-      if (response.ok) {
-        const result = await response.json();
-        console.log("Update result:", result);
-        onUpdate();
-        onHide();
-      } else {
-        console.error("Fetch error:", response.statusText);
-      }
-    } catch (error) {
-      console.error("Error:", error);
-    }
+    updateReport(id, formStatus, formPriority);
+    onUpdate();
+    onHide();
   };
 
   return (

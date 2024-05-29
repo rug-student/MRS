@@ -18,24 +18,28 @@ use App\Http\Controllers\AuthController;
 |
 */
 
-// Routes for reports endpoints.
-Route::get("/reports", [ReportsController::class, "getAllReports"]);
-Route::post("/reports", [ReportsController::class, "createReport"]);
-Route::get("/reports/{id}", [ReportsController::class, "getReport"]);
-Route::patch("/reports/{id}", [ReportsController::class, "updateReport"]);
-
-// Routes for questions endpoints.
-Route::get("/questions", [QuestionsController::class, "getAllQuestions"]);
-Route::post("/questions", [QuestionsController::class, "createQuestion"]);
-Route::patch("/questions/{id}", [QuestionsController::class, "updateQuestion"]);
-
-// Routes for answers endpoints.
-Route::post("/answers", [AnswersController::class, "createAnswer"]);
-
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', [AuthController::class, 'user']);
+
+    // Routes for authenticated reports endpoints
+    Route::get("/reports", [ReportsController::class, "getAllReports"]);
+    Route::get("/reports/{id}", [ReportsController::class, "getReport"]);
+    Route::patch("/reports/{id}", [ReportsController::class, "updateReport"]);
+    
+    // Routes for authenticated question endpoints
+    Route::post("/questions", [QuestionsController::class, "createQuestion"]);
+    Route::patch("/questions/{id}", [QuestionsController::class, "updateQuestion"]);
 });
+// Routes for reports endpoints.
+Route::post("/reports", [ReportsController::class, "createReport"]);
+
+// Routes for questions endpoints.
+Route::get("/questions", [QuestionsController::class, "getAllQuestions"]);
+
+// Routes for answers endpoints.
+Route::post("/answers", [AnswersController::class, "createAnswer"]);
+

@@ -1,4 +1,4 @@
-
+import api from "../api/axios";
 /**
  * Submits a new report with given data.
  * 
@@ -105,14 +105,9 @@ export async function createAnswers(questions, questionAnswers, showOtherTextInp
  */
 export async function getReport(reportID) {
   try {
-    const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/reports/${reportID}`, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json'
-      }
-    });
+    const response = await api.get(`${process.env.REACT_APP_API_BASE_URL}/api/reports/${reportID}`);
 
-    if (response.ok) {
+    if (response.status === 200) {
       const reportSummary = await response.json();
       return reportSummary;
     } else {
@@ -131,21 +126,41 @@ export async function getReport(reportID) {
  */
 export const getReports = async (page, sort, order) => {
   try{
-    const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/reports?page=${page}&sort=${sort}&order=${order}`, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json'
-      }
-    });
-    if (response.ok) {
-      const reports = await response.json();
-      return reports;
+    const response = await api.get(`${process.env.REACT_APP_API_BASE_URL}/api/reports?page=${page}&sort=${sort}&order=${order}`);
+    // console.log(response)
+    if (response.status === 200) {
+      return response.data;
     } else {
-      console.error("Fetch error: ", response.statusText);
+      console.error("Fetch error: ", response.data.error);
     }
 
   } catch(error) {
-    console.error('Error occurred while fetching reports:', error);
-    throw error;
+    if (Response.status === 401) {
+      console.error(error.response.message)
+    }
   }
+}
+
+/**
+ * Updates a report with according status and priority.
+ * @returns Updated report.
+ */
+
+export const updateReport = async (id, status, priority) => {
+  const body = JSON.stringify({
+    status: status,
+    priority: priority,
+  });
+  try{
+
+    const response = await api.patch(`/api/reports/${id}`, body);
+    if (response.status === 200) {
+      console.log('Report updated successfully');
+      return response;
+    } else {
+      console.error('Failed to updated report');
+    }
+  } catch(error) {
+      console.error('Error occurred while updated report:', error);
+  };
 }

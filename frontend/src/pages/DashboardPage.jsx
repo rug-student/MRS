@@ -29,7 +29,7 @@ const Dashboard = () => {
     },
   ]);
   const [singleEdit, setSingleEdit] = useState({});
-  const { user, checkLoggedIn } = useAuthContext();
+  const {isLoggedIn } = useAuthContext();
   const navigate = useNavigate();
   const [modalShow, setModalShow] = useState(false);
   const [update, setUpdate] = useState(false);
@@ -66,9 +66,11 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    checkLoggedIn(false, '/login');
-
-    fetchReports(page);
+    if (isLoggedIn()) {
+      fetchReports(page);
+    } else {
+      navigate('/login')
+    }
   }, [update, page]);
 
   // Function to handle the sort option change

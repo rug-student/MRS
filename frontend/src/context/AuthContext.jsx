@@ -65,19 +65,6 @@ export const AuthProvider = ({ children }) => {
     };
 
     /**
-     * Returns user to a specified page if user is not logged in or not.
-     * @param loggedUser true if the user needs to be logged in to be redirected or not.
-     * @param page the page to send the user to.
-     */
-    const checkLoggedIn = (loggedUser, page) => {
-        if (isLoggedIn() && loggedUser) {
-            navigate(page)
-        } else if (!isLoggedIn() && !loggedUser) {
-            navigate(page)
-        }
-    };
-
-    /**
      * Returns if the user is logged in or not
      * @returns logged in status
      */
@@ -99,7 +86,7 @@ export const AuthProvider = ({ children }) => {
         });
     };
 
-    return <AuthContext.Provider value={{user, errors, login, logout, checkLoggedIn, isLoggedIn}}>
+    return <AuthContext.Provider value={{user, errors, login, logout, isLoggedIn}}>
         {children}
     </AuthContext.Provider>
 }

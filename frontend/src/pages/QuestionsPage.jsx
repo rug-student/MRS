@@ -131,25 +131,26 @@ function NewQuestionPage() {
   const [isOpen, setIsOpen] = useState(null);
   const [isActive, setIsActive] = useState(null);
   const [options, setOptions] = useState([]);
-  const { user, checkLoggedIn } = useAuthContext();
+  const {isLoggedIn } = useAuthContext();
   const [error, setError] = useState(null);
 
   const navigate = useNavigate();
-
+  const fetchQuestions = async () => {
+    try {
+      const fetchedQuestions = await getQuestions();
+      console.log(fetchedQuestions);
+      setQuestions(fetchedQuestions);
+    } catch (error) {
+      console.error('Error occurred while fetching questions:', error);
+    }
+  };
+  
   useEffect(() => {
-    checkLoggedIn(false, '/login');
-
-    const fetchQuestions = async () => {
-      try {
-        const fetchedQuestions = await getQuestions();
-        console.log(fetchedQuestions);
-        setQuestions(fetchedQuestions);
-      } catch (error) {
-        console.error('Error occurred while fetching questions:', error);
-      }
-    };
-    
-    fetchQuestions();
+    if (isLoggedIn()) { 
+      fetchQuestions();
+    } else {
+      navigate('/login')
+    }
   }, []);
 
   const handleAddQuestion = (question) => {

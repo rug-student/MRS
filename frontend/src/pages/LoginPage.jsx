@@ -8,12 +8,14 @@ function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
-  const {login, errors, checkLoggedIn } = useAuthContext();
+  const {login, errors, isLoggedIn } = useAuthContext();
 
   const navigate = useNavigate();
 
   useEffect (() => {
-    checkLoggedIn(true, '/');
+    if (isLoggedIn()) {
+      navigate('/')
+    }
     setMessage(errors.email);
   }, [message]);
 
