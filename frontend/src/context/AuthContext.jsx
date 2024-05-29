@@ -9,20 +9,32 @@ const AuthContext = createContext({});
  * @returns Provider containing a set of state variables and auth methods.
  */
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
+    const [user, _setUser] = useState(localStorage.getItem('user'));
     const [errors, setErrors] = useState([]);
     const navigate = useNavigate();
 
     const csrf = () => api.get('/sanctum/csrf-cookie');
+
+
+    // set user to local storage
+	const setUser = (user) => {
+		if (user) {
+			localStorage.setItem('user', user);
+		} else {
+			localStorage.removeItem('user');
+		}
+		_setUser(user);
+	};
+
 
     /**
      * GETs the currently logged in user, if there is any.
      */
     const getUser = async () => {
         try{
-            const { data } = await api.get('/api/user', {withCredentials: true, withXSRFToken: true});
-            setUser(data);
-            localStorage.setItem('user', data);
+            const response = await api.get('/api/user', {withCredentials: true, withXSRFToken: true});
+            console.log(response.status)
+            setUser(response.data)
         } catch(e) {
             console.log(e);
         }
@@ -36,8 +48,9 @@ export const AuthProvider = ({ children }) => {
         csrf();
         try {
             const response = await api.post('api/login', data, {withCredentials: true, withXSRFToken: true});
-            await getUser();
+            // await getUser();
             if(response.status === 200) {
+                setUser(data);
                 navigate("/dashboard", {replace: true});
                 setErrors([]);
             }
@@ -69,9 +82,7 @@ export const AuthProvider = ({ children }) => {
      * @returns logged in status
      */
     const isLoggedIn = () => {
-        const loggedInUser = localStorage.getItem('user');
-        if(loggedInUser) {
-            setUser(loggedInUser);
+        if (user) {
             return true
         } else {
             return false
