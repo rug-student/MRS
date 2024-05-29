@@ -35,9 +35,9 @@ export const AuthProvider = ({ children }) => {
     const login  = async ({ ...data }) => {
         csrf();
         try {
-            const response = await api.post('/login', data, {withCredentials: true, withXSRFToken: true});
+            const response = await api.post('api/login', data, {withCredentials: true, withXSRFToken: true});
             await getUser();
-            if(response.status === 204) {
+            if(response.status === 200) {
                 navigate("/dashboard", {replace: true});
                 setErrors([]);
             }
@@ -82,7 +82,7 @@ export const AuthProvider = ({ children }) => {
      * Logs out the currently logged in user.
      */
     const logout = () => {
-        api.post('/logout', [], {withCredentials: true, withXSRFToken: true}).then(() => {
+        api.post('/api/logout', [], {withCredentials: true, withXSRFToken: true}).then(() => {
             setUser(null);
             localStorage.clear();
         });
