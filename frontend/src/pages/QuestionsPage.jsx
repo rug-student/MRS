@@ -191,11 +191,15 @@ function NewQuestionPage() {
     try {
       const response = await submitQuestion(currentQuestion, isOpen, options);
       console.log(response);
+      if (!isOpen) {
+        setOptions([]); // Clear options after submitting a closed question
+      }
     } catch (error) {
       console.log(error);
       setError('Failed to submit the question. Please try again.');
     }
   };
+
   const handleBack = () => {
     if (step === 1 || step === 2) {
       setStep(0);
