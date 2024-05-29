@@ -14,18 +14,21 @@ const SingleReport = () => {
   const { ReportId } = useParams();
   const [report, setReport] = useState({});
   const navigate = useNavigate();
-  const { checkLoggedIn } = useAuthContext();
+  const { isLoggedIn } = useAuthContext();
 
+  const fetchReport = async () => {
+  const data = await getReport(ReportId);
+  setReport(data[0]);
+};
  
 
   useEffect(() => {
-    checkLoggedIn();
-    const fetchReport = async () => {
-      const data = await getReport(ReportId);
-      setReport(data[0]);
-    };
+    if (isLoggedIn()) {
+      fetchReport();
+    } else {
+      navigate('/login')
+    }
 
-    fetchReport();
   }, [ReportId]);
   return (
     <div>

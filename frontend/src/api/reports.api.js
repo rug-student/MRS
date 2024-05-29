@@ -108,8 +108,7 @@ export async function getReport(reportID) {
     const response = await api.get(`${process.env.REACT_APP_API_BASE_URL}/api/reports/${reportID}`);
 
     if (response.status === 200) {
-      const reportSummary = await response.json();
-      return reportSummary;
+      return response.data;
     } else {
       throw new Error('Failed to fetch report');
     }
