@@ -48,7 +48,6 @@ function CreateReport() {
         console.error('Error occurred while fetching questions:', error);
       }
     };
-
     fetchQuestions();
   }, []);
   
@@ -100,9 +99,28 @@ function CreateReport() {
     setShowOtherTextInput({});
     setUploadedFile(null);
     setUploadedFilePath('');
+      
+    // Clear textboxes for open questions
+    const openQuestionIds = questions.filter(question => question.is_open).map(question => question.id);
+    openQuestionIds.forEach(questionId => {
+      const input = document.getElementById(`question-${questionId}`);
+      if (input) {
+        input.value = '';
+      }
+    });
+    
+    // Reset dropdown menus for closed questions
+    const closedQuestionIds = questions.filter(question => !question.is_open).map(question => question.id);
+    closedQuestionIds.forEach(questionId => {
+      const select = document.getElementById(`question-${questionId}`);
+      if (select) {
+        select.selectedIndex = 0; // Reset to the first option (placeholder)
+      }
+    });
+
     setFormSubmitted(false);
     setOpenPopup(true);
-  };
+  }
  
   // -------- SUBMITTING FORM --------
   const handleSubmit = async (event) => {
@@ -164,7 +182,8 @@ function CreateReport() {
                 required 
                 type="text" 
                 className={`answer ${formSubmitted ? 'submitted' : 'notSubmitted'}`} 
-                value={question.answer.id} 
+                id={`question-${question.id}`} // Add unique ID
+                value={question.answer.id } // Set value from state
                 onChange={e => handleQuestionResponseChange(e, question.id)}
               />
               ) : (
@@ -173,14 +192,15 @@ function CreateReport() {
               <select 
                 required 
                 className={`answer ${formSubmitted ? 'submitted' : 'notSubmitted'}`} 
-                value={question.answer.answer} 
+                id={`question-${question.id}`} // Add unique ID
+                value={question.answer.answer} // Set value from state
                 onChange={e => handleSelectChange(e, question.id)}
               >
                 <option disabled selected value="">-- Select Answer --</option>
                 {/* Map through question answers to populate the dropdown */}
                 {question.answer.map(answer => (
                   <option key={answer.id} value={answer.answer}>{answer.answer}</option>
-                 ))}
+                ))}
                 <option value="Other">Other</option>
               </select>
               
@@ -189,7 +209,8 @@ function CreateReport() {
                   required 
                   type="text" 
                   className={`answer ${formSubmitted ? 'submitted' : 'notSubmitted'}`} 
-                  value={question.answer.id} 
+                  id={`question-${question.id}`} // Add unique ID
+                  value={question.answer.id } // Set value from state
                   onChange={e => handleQuestionResponseChange(e, question.id)}
                 />
               )}
@@ -197,6 +218,7 @@ function CreateReport() {
             )}
           </div>
         ))}
+
 
         {/* File upload question */}
         <div className='question-container'>
