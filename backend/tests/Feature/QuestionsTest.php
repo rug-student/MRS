@@ -5,6 +5,8 @@ namespace Tests\Feature;
 use App\Models\Question;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Laravel\Sanctum\Sanctum;
+use App\Models\User;
 use Tests\TestCase;
 
 class QuestionsTest extends TestCase
@@ -17,6 +19,7 @@ class QuestionsTest extends TestCase
      * Test that checks if creating a open question adds it to the database.
      */
     public function test_create_question_with_invalid_request(): void {
+        Sanctum::actingAs(User::factory()->create());
         $question_payload = [
             "question_description"=> null,
             "is_open"=> true,
@@ -51,6 +54,7 @@ class QuestionsTest extends TestCase
      * in addition to answer entries for each mc option where the question_id is the foreign key.
      */
     public function test_create_mc_question(): void {
+        Sanctum::actingAs(User::factory()->create());
 
         $question_body = [
             'question_description'=>"Is this a multiple choice test question?",
@@ -93,6 +97,8 @@ class QuestionsTest extends TestCase
      * Test if creating a mc question with invalid answer option returns and error and does not store any question.
      */
     public function test_create_mc_question_with_null_answer(): void {
+        Sanctum::actingAs(User::factory()->create());
+
         $question_payload = [
             "question_description"=> "Is this a multiple choice test question?",
             "is_open"=> false,
@@ -117,6 +123,7 @@ class QuestionsTest extends TestCase
      * Test that checks if creating a question with no mc answers adds it to the database.
      */
     public function test_create_open_question(): void {
+        Sanctum::actingAs(User::factory()->create());
 
         $example_open_question_body = [
                 'question_description'=>"Is this a multiple choice test question?",
@@ -241,6 +248,7 @@ class QuestionsTest extends TestCase
      * Test if updating a questions with invalid request give error.
      */
     public function test_patch_question_invalid_request(): void {
+        Sanctum::actingAs(User::factory()->create());
 
         $patch_payload = [
             "is_active"=>"false" // not boolean value
@@ -265,6 +273,7 @@ class QuestionsTest extends TestCase
      * Test to check if updating a questions status works as expected.
      */
     public function test_patch_question_valid_request(): void {
+        Sanctum::actingAs(User::factory()->create());
 
         $payload = [
             'is_active' => false

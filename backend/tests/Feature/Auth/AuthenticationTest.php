@@ -4,44 +4,50 @@ namespace Tests\Feature\Auth;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
 class AuthenticationTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_users_can_authenticate_using_the_login_screen(): void
-    {
+    /**
+     * FT-AUTH1
+     * Test to check if user can login.
+     */
+    public function test_users_can_authenticate_using_the_login_endpoint(): void {
         $user = User::factory()->create();
 
-        $response = $this->post('/login', [
+        $response = $this->post('/api/login', [
             'email' => $user->email,
             'password' => 'password',
         ]);
-
-        $this->assertAuthenticated();
-        $response->assertNoContent();
+        $response->assertStatus(200);
     }
 
-    public function test_users_can_not_authenticate_with_invalid_password(): void
-    {
+    /**
+     * FT-AUTH2
+     * Test to check if user is unautherized when loggin in with invalid password.
+     */
+    public function test_users_can_not_authenticate_with_invalid_password(): void {
         $user = User::factory()->create();
 
-        $this->post('/login', [
+        $response = $this->post('/api/login', [
             'email' => $user->email,
             'password' => 'wrong-password',
         ]);
 
-        $this->assertGuest();
+        $response->assertUnauthorized();
     }
 
-    public function test_users_can_logout(): void
-    {
-        $user = User::factory()->create();
+    /**
+     * FT-AUTH3
+     * Test to check if autherized user can logout.
+     */
+    public function test_users_can_logout(): void {
+        Sanctum::actingAs(User::factory()->create());
+        $response = $this->post('/api/logout');
 
-        $response = $this->actingAs($user)->post('/logout');
-
-        $this->assertGuest();
-        $response->assertNoContent();
+        $response->assertOk();
     }
 }
