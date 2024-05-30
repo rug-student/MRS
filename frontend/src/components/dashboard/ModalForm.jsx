@@ -14,7 +14,6 @@ const ModalForm = ({ show, onHide, data, onUpdate }) => {
   const [formPriority, setFormPriority] = useState("");
   const [formStatus, setFormStatus] = useState("");
   const [formAssigned, setFormAssigned] = useState(false);
-  const [user_id, setUserId] = useState(0);
   const {user} = useAuthContext();
 
   useEffect(() => {
@@ -25,9 +24,9 @@ const ModalForm = ({ show, onHide, data, onUpdate }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (formAssigned) {
-      setUserId(user.user.id);
+      updateReport(id, formStatus, formPriority, user.user.id);
     }
-    updateReport(id, formStatus, formPriority, user_id);
+    updateReport(id, formStatus, formPriority, 0);
     onUpdate();
     onHide();
   };
