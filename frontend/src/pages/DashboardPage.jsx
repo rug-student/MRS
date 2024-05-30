@@ -29,7 +29,7 @@ const Dashboard = () => {
     },
   ]);
   const [singleEdit, setSingleEdit] = useState({});
-  const {isLoggedIn } = useAuthContext();
+  const {isLoggedIn, logout } = useAuthContext();
   const navigate = useNavigate();
   const [modalShow, setModalShow] = useState(false);
   const [update, setUpdate] = useState(false);
@@ -54,14 +54,19 @@ const Dashboard = () => {
 
   const fetchReports = async (page) => {
     const reports = await getReports(page, sortOption, "desc");
-    setReportsData(reports.data);
-
-    const total = reports.total;
-    const per_page = reports.per_page;
-    if (total % per_page >= 1) {
-      setTotalPages(Math.floor(total / per_page) + 1);
+    if (reports.status === 401) {
+      logout()
     } else {
-      setTotalPages(Math.floor(total / per_page));
+
+      setReportsData(reports.data);
+      
+      const total = reports.total;
+      const per_page = reports.per_page;
+      if (total % per_page >= 1) {
+        setTotalPages(Math.floor(total / per_page) + 1);
+      } else {
+        setTotalPages(Math.floor(total / per_page));
+      }
     }
   };
 

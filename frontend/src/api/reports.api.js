@@ -1,4 +1,6 @@
 import api from "../api/axios";
+import useAuthContext from '../context/AuthContext';
+
 /**
  * Submits a new report with given data.
  * 
@@ -135,8 +137,9 @@ export const getReports = async (page, sort, order) => {
     }
 
   } catch(error) {
-    if (Response.status === 401) {
+    if (error.response.status === 401) {
       console.error(error.response.message)
+      return error.response
     }
   }
 }

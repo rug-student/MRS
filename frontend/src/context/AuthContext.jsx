@@ -9,7 +9,7 @@ const AuthContext = createContext({});
  * @returns Provider containing a set of state variables and auth methods.
  */
 export const AuthProvider = ({ children }) => {
-    const [user, _setUser] = useState(localStorage.getItem('user'));
+    const [user, _setUser] = useState(JSON.parse(localStorage.getItem('user')));
     const [errors, setErrors] = useState([]);
     const navigate = useNavigate();
 
@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
     // set user to local storage
 	const setUser = (user) => {
 		if (user) {
-			localStorage.setItem('user', user);
+			localStorage.setItem('user', JSON.stringify(user));
 		} else {
 			localStorage.removeItem('user');
 		}
@@ -36,7 +36,12 @@ export const AuthProvider = ({ children }) => {
             console.log(response.status)
             setUser(response.data)
         } catch(e) {
-            console.log(e);
+            console.error(e);
+            if (e.response.status === 401) {
+                console.error("Authentication failed")
+                setUser(null)
+                navigate('/login')
+            }
         }
     };
 
@@ -48,9 +53,8 @@ export const AuthProvider = ({ children }) => {
         csrf();
         try {
             const response = await api.post('api/login', data, {withCredentials: true, withXSRFToken: true});
-            // await getUser();
             if(response.status === 200) {
-                setUser(data);
+                setUser(response.data);
                 navigate("/dashboard", {replace: true});
                 setErrors([]);
             }
@@ -79,14 +83,21 @@ export const AuthProvider = ({ children }) => {
     /**
      * Logs out the currently logged in user.
      */
-    const logout = () => {
-        api.post('/api/logout', [], {withCredentials: true, withXSRFToken: true}).then(() => {
+    const logout = async () => {
+        try {
+            const response = await api.post('/api/logout', [], {withCredentials: true, withXSRFToken: true})
             setUser(null);
-            localStorage.clear();
-        });
+            console.log("Login succesful")
+            
+        } catch(e) {
+            if (e.response.status === 401) {
+                console.error("User authentication failed.")
+                setUser(null);
+            }
+        }
     };
 
-    return <AuthContext.Provider value={{user, errors, login, logout, isLoggedIn}}>
+    return <AuthContext.Provider value={{user, errors, login, logout, getUser, isLoggedIn}}>
         {children}
     </AuthContext.Provider>
 }
