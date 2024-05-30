@@ -24,7 +24,7 @@ const Dashboard = () => {
       updated_at: "2024-05-15T19:30:06.000000Z",
       status: 0,
       submitter_email: "test@test.com",
-      maintainer_id: null,
+      user_id: null,
       response: [],
     },
   ]);
@@ -118,6 +118,7 @@ const Dashboard = () => {
                 <th>PRIORITY</th>
                 <th>STATUS</th>
                 <th>CREATED AT</th>
+                <th>ASSIGNED</th>
                 <th>ACTIONS</th>
               </tr>
             </thead>
@@ -130,6 +131,7 @@ const Dashboard = () => {
                   <td>{getPriorityText(element.priority)} </td>
                   <td>{getStatusText(element.status)}</td>
                   <td>{moment(element.created_at).fromNow()}</td>
+                  <td>{element.user_id}</td>
                   <td>
                     <FaRegEdit
                       className={styles.editIcon}

@@ -149,10 +149,11 @@ export const getReports = async (page, sort, order) => {
  * @returns Updated report.
  */
 
-export const updateReport = async (id, status, priority) => {
+export const updateReport = async (id, status, priority, user_id) => {
   const body = JSON.stringify({
     status: status,
     priority: priority,
+    user_id: user_id,
   });
   try{
 

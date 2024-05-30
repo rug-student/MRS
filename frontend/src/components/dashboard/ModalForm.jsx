@@ -1,7 +1,11 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Col, Form, Modal, Row } from "react-bootstrap";
 import Styles from "../../styleSheets/ModalForm.module.css";
 import {updateReport} from "../../api/reports.api";
+import * as React from 'react';
+import Checkbox from '@mui/material/Checkbox';
+import useAuthContext from "../../context/AuthContext";
+
 
 
 const ModalForm = ({ show, onHide, data, onUpdate }) => {
@@ -9,6 +13,9 @@ const ModalForm = ({ show, onHide, data, onUpdate }) => {
 
   const [formPriority, setFormPriority] = useState("");
   const [formStatus, setFormStatus] = useState("");
+  const [formAssigned, setFormAssigned] = useState(false);
+  const [user_id, setUserId] = useState(0);
+  const {user} = useAuthContext();
 
   useEffect(() => {
     setFormPriority(priority);
@@ -17,9 +24,17 @@ const ModalForm = ({ show, onHide, data, onUpdate }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    updateReport(id, formStatus, formPriority);
+    if (formAssigned) {
+      setUserId(user.user.id);
+    }
+    updateReport(id, formStatus, formPriority, user_id);
     onUpdate();
     onHide();
+  };
+
+
+  const handleFormAssigned = () => {
+    setFormAssigned(!formAssigned);
   };
 
   return (
@@ -67,6 +82,16 @@ const ModalForm = ({ show, onHide, data, onUpdate }) => {
               <option value={2}>In Progress</option>
               <option value={3}>Dropped</option>
             </select>
+          </div>
+          <div className={Styles.fieldWrapper}>
+            <label htmlFor="assignmentField">Assignment</label>
+            <div>
+            <Checkbox
+              label="Value 1"
+              value={formAssigned}
+              onChange={handleFormAssigned}
+            />
+          </div>
           </div>
         </Modal.Body>
         <Modal.Footer>

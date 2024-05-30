@@ -162,6 +162,8 @@ components:
           type: integer
         priority:
           type: integer
+        user_id:
+          type: integer
 
     Response:
       type: object

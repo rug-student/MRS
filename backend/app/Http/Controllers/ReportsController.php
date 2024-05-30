@@ -6,9 +6,11 @@ use App\Models\Question;
 use App\Models\Report;
 use App\Models\Answer;
 use App\Models\File;
+use App\Models\User;
 use App\Models\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Controller class that handles the api calls for reports
@@ -30,7 +32,7 @@ class ReportsController extends Controller
         if ($request->priority != null) {
             $query->where("priority", $request->priority);
         }
-        
+
         if($request->order == "asc") {
             $order = "asc";
         } else {
@@ -147,6 +149,17 @@ class ReportsController extends Controller
         $report->status = $request->status;
         $report->priority = $request->priority;
         $report->save();
+
+        if ($request->user_id != null){
+            // Error handling
+            if(!User::where("id", $request->user_id)->exists()) {
+                return response()->json("ERROR: passed non-existing user id", 400);
+            }
+            $user = User::find($request->user_id);
+            $user->reports()->save($report);
+            $user->save();
+        }
+
 
         return response()->json(["Report updated succesfully.", $report], 200);
     }
