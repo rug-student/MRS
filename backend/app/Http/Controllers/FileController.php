@@ -12,16 +12,25 @@ class FileController extends Controller
     // Receives a file upload
     public function upload(Request $request): JsonResponse
     {
+        // Validate the incoming request
+        $request->validate([
+            'file' => 'required',
+        ]);
+        
         $file = $request->file('file');
         $fileName = Str::random(20) . '.' . $file->getClientOriginalExtension();
         $file->storeAs('uploads', $fileName);
 
-        File::create([
+        $newFile = File::create([
             'original_name' => $file->getClientOriginalName(),
             'generated_name' => $fileName,
         ]);
 
-        return response()->json(['message' => 'File uploaded successfully']);
+        $newFile->save();
+        return response()->json([
+            'message' => 'File uploaded successfully',
+            'file' => $newFile, 
+        ]);
     }
 
     // Returns a list of previously uploaded files

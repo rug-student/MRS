@@ -17,7 +17,6 @@ class File extends Model
         'original_name',
         'generated_name',
     ];
-
     protected $hidden= [
         "report_id"
     ];

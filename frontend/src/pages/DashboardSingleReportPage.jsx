@@ -22,9 +22,11 @@ const SingleReport = () => {
     console.log("Report does not exist: redirecting")
     navigate('/dashboard')
   } else {
+    console.log("date is:", data);
     setReport(data[0]);
   }
 };
+console.log(report);
  
 
   useEffect(() => {

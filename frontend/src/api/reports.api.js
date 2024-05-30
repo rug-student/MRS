@@ -16,6 +16,8 @@ export async function submitReport(malfunctionDescription, email, questionAnswer
   try {
     const questionAnswerIDs = await createAnswers(questions, questionAnswers, showOtherTextInput);
     const file = await uploadFile(uploadedFile);
+    console.log('file is: ', file);
+
     const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/reports`, {
       method: 'POST',
       headers: {
@@ -29,7 +31,7 @@ export async function submitReport(malfunctionDescription, email, questionAnswer
           question_id: questionId,
           answer_id: questionAnswerIDs[questionId]
         })),
-        files: [file]
+        files: [file.file],
       })
     });
 
@@ -112,6 +114,9 @@ export async function uploadFile(uploadedFile) {
 
     const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/files/upload`, {
       method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+      },
       body: formData
     });
 
@@ -121,13 +126,14 @@ export async function uploadFile(uploadedFile) {
       return data;
     } else {
       console.error('Failed to upload file');
-      return null;
+      throw new Error('Failed to upload file');
     }
   } catch (error) {
-    console.error('Error occurred while uploading file:', error);
-    return null;
+    console.error('Error occurred while uploading file2:', error);
+    throw error; // Rethrow the error to be handled by the caller
   }
 }
+
 
 
 
@@ -143,6 +149,7 @@ export async function getReport(reportID) {
     const response = await api.get(`${process.env.REACT_APP_API_BASE_URL}/api/reports/${reportID}`);
 
     if (response.status === 200) {
+      console.log(response);
       return response.data;
     }
   } catch (error) {

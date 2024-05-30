@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
@@ -60,12 +61,12 @@ class ReportsController extends Controller
 
         $report = Report::where("id", $request->id)
         ->with(["response.question", "response.answer", "file"])
-        ->get();
+        ->first();
 
-        if($report->isEmpty()) {
+        if(!$report) {
             return response()->json("ERROR: Resource not found.", 404);
         }
-
+    
         return response()->json($report, 200);
     }
 
@@ -114,8 +115,8 @@ class ReportsController extends Controller
         }
 
         // Handle files.
-        if ($request->hasFile('files')) {
-            foreach ($request->file('files') as $file) {
+        if (property_exists($request_content, "file")){
+            foreach ($request->file('file') as $file) {
                 $fileName = Str::random(20) . '.' . $file->getClientOriginalExtension();
                 $file->storeAs('uploads', $fileName);
 
@@ -126,10 +127,10 @@ class ReportsController extends Controller
                 $fileModel->save();
             }
         }
-
+    
         return response()->json(["Successfully saved report", $report], 200);
     }
-    
+
 
     /**
      * Updates a reports status and/or priority.
