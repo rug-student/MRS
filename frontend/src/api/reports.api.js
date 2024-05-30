@@ -12,9 +12,10 @@ import useAuthContext from '../context/AuthContext';
  * @param {string} uploadedFilePath Path to the uploaded file.
  * @returns {Boolean} True if report was successfully submitted, false otherwise.
  */
-export async function submitReport(malfunctionDescription, email, questionAnswers, questions, showOtherTextInput, uploadedFilePath) {
+export async function submitReport(malfunctionDescription, email, questionAnswers, questions, showOtherTextInput, uploadedFile) {
   try {
     const questionAnswerIDs = await createAnswers(questions, questionAnswers, showOtherTextInput);
+    const file = await uploadFile(uploadedFile);
     const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/reports`, {
       method: 'POST',
       headers: {
@@ -28,7 +29,7 @@ export async function submitReport(malfunctionDescription, email, questionAnswer
           question_id: questionId,
           answer_id: questionAnswerIDs[questionId]
         })),
-        files: uploadedFilePath ? [{ file_path: uploadedFilePath }] : []
+        files: [file]
       })
     });
 
@@ -96,6 +97,38 @@ export async function createAnswers(questions, questionAnswers, showOtherTextInp
     }
     return questionAnswerIDs;
 }
+
+
+/**
+ * Uploads a file to the server.
+ * 
+ * @param {File} file The file to be uploaded.
+ * @returns {Object} The response data containing the file path or an error message.
+ */
+export async function uploadFile(uploadedFile) {
+  try {
+    const formData = new FormData();
+    formData.append('file', uploadedFile);
+
+    const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/files/upload`, {
+      method: 'POST',
+      body: formData
+    });
+
+    if (response.ok) {
+      console.log('File uploaded successfully');
+      const data = await response.json();
+      return data;
+    } else {
+      console.error('Failed to upload file');
+      return null;
+    }
+  } catch (error) {
+    console.error('Error occurred while uploading file:', error);
+    return null;
+  }
+}
+
 
 
 

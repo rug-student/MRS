@@ -114,24 +114,22 @@ class ReportsController extends Controller
         }
 
         // Handle files.
-        if (property_exists($request_content, "files")) {
-            foreach($request_content->files as $file_body) {
-                if($file_body->file_path == "") {
-                    return response()->json("ERROR: file_path is missing", 400);
-                }
+        if ($request->hasFile('files')) {
+            foreach ($request->file('files') as $file) {
+                $fileName = Str::random(20) . '.' . $file->getClientOriginalExtension();
+                $file->storeAs('uploads', $fileName);
 
-                $file = new File();
-                $file->file_path = $file_body->file_path;
-                $file->report_id = $report->id;
-                $file->save();
-
-                $report->file()->save($file);
+                $fileModel = new File();
+                $fileModel->original_name = $file->getClientOriginalName();
+                $fileModel->generated_name = $fileName;
+                $fileModel->report_id = $report->id;
+                $fileModel->save();
             }
         }
 
-        $report->save();
-        return response()->json(["Succesfully saved report", $report], 200);
+        return response()->json(["Successfully saved report", $report], 200);
     }
+    
 
     /**
      * Updates a reports status and/or priority.
