@@ -24,7 +24,7 @@ class ReportsTest extends TestCase
      */
     public function test_get_report_invalid_id(): void {
         Sanctum::actingAs(User::factory()->create());
-        $response = $this->get('api/reports/1');
+        $response = $this->get('/api/reports/1');
         $response->assertStatus(404);
     }
 
@@ -43,7 +43,7 @@ class ReportsTest extends TestCase
         $report = Report::create($report_body);
         $this->assertDatabaseCount('reports', 1);
 
-        $response = $this->get('api/reports/'.$report->id);
+        $response = $this->get('/api/reports/'.$report->id);
         $response->assertStatus(200);
         $response->assertSee($report_body);
     }
@@ -386,7 +386,7 @@ class ReportsTest extends TestCase
             'priority' => 8
         ];
 
-        $response = $this->json('PATCH', "api/reports/1", $payload);
+        $response = $this->json('PATCH', "/api/reports/1", $payload);
         $response->assertStatus(400);
     }
 
@@ -412,7 +412,7 @@ class ReportsTest extends TestCase
         $report = Report::create($report_body);
         $this->assertDatabaseCount('reports', 1);
 
-        $response = $this->json('PATCH', "api/reports/".$report->id, $payload);
+        $response = $this->json('PATCH', "/api/reports/".$report->id, $payload);
         $response->assertStatus(200);
         $response->assertSee($report->description);
         $response->assertSee($report->submitter_email);
@@ -503,5 +503,64 @@ class ReportsTest extends TestCase
         $response->assertSee($report1->description);
         $response->assertDontSee($report2->description);
         $response->assertDontSee($report3->description);
+    }
+
+    /**
+     * FT-RE17
+     * Test GET /api/reports request with insufficient authorization.
+     */
+    public function test_get_reports_with_insufficient_authorization(): void {
+
+        $report = Report::create([
+            'description'=>"This is a test report",
+            'priority'=>0,
+            'status'=>0,
+            'submitter_email'=>"test@testing.nl",
+            'responses'=>[]
+        ]);
+
+        $response = $this->get('/api/reports');
+        $response->assertUnauthorized();
+    }
+
+    /**
+     * FT-RE18
+     * Test GET /api/reports/{id} request with insufficient authorization
+     */
+    public function test_get_report_with_insufficient_authorization(): void {
+        $report_body = [
+            'description'=>"This is a test report",
+            'priority'=>1,
+            'status'=>0,
+            'submitter_email'=>"test@testing.nl"
+        ];
+        $report = Report::create($report_body);
+        $this->assertDatabaseCount('reports', 1);
+
+        $response = $this->get('/api/reports/'.$report->id);
+        $response->assertUnauthorized();
+    }
+
+    /**
+     * FT-RE19
+     * Test PATCH /api/reports/{id} request with insufficient authorization
+     */
+    public function test_patch_report_with_insufficient_authorization(): void {
+        $payload = [
+            'status' => 1,
+            'priority' => 2
+        ];
+
+        $report_body = [
+            'description'=>"This is a test report",
+            'priority'=>1,
+            'status'=>0,
+            'submitter_email'=>"test@testing.nl"
+        ];
+        $report = Report::create($report_body);
+        $this->assertDatabaseCount('reports', 1);
+
+        $response = $this->json('PATCH', "/api/reports/".$report->id, $payload);
+        $response->assertUnauthorized();
     }
 }

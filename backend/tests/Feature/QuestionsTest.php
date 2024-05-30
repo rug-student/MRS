@@ -25,8 +25,8 @@ class QuestionsTest extends TestCase
             "is_open"=> true,
             "answers"=> []
         ];
-        $request = $this->json('post', '/api/questions', $question_payload);
-        $request->assertStatus(422);
+        $response = $this->json('post', '/api/questions', $question_payload);
+        $response->assertStatus(422);
         $this->assertDatabaseCount('questions', 0);
 
         $question_payload = [
@@ -34,8 +34,8 @@ class QuestionsTest extends TestCase
             "is_open"=> null,
             "answers"=> []
         ];
-        $request = $this->json('post', '/api/questions', $question_payload);
-        $request->assertStatus(422);
+        $response = $this->json('post', '/api/questions', $question_payload);
+        $response->assertStatus(422);
         $this->assertDatabaseCount('questions', 0);
 
         $question_payload = [
@@ -43,8 +43,8 @@ class QuestionsTest extends TestCase
             "is_open"=> "test",
             "answers"=> []
         ];
-        $request = $this->json('post', '/api/questions', $question_payload);
-        $request->assertStatus(422);
+        $response = $this->json('post', '/api/questions', $question_payload);
+        $response->assertStatus(422);
         $this->assertDatabaseCount('questions', 0);
     }
 
@@ -293,5 +293,39 @@ class QuestionsTest extends TestCase
         $this->assertDatabaseHas('questions', $payload);
     }
 
+    /**
+     * FT-QE11
+     * Test that checks if creating a question with insufficient authorization returns 401.
+     */
+    public function test_create_open_question_with_insufficient_authorization(): void {
+        $open_question_payload = [
+            "question_description"=> "Is this a multiple choice test question?",
+            "is_open"=> true,
+            "answers"=> []
+        ];
 
+        $response = $this->json('post', '/api/questions', $open_question_payload);
+        $response->assertUnauthorized();
+    }
+
+    /**
+     * FT-QE12
+     * Test to check if updating a questions with insufficient authorization returns 401.
+     */
+    public function test_patch_question_with_insufficient_authorization(): void {
+
+        $payload = [
+            'is_active' => false
+        ];
+
+        $question = Question::create([
+            'question_description'=>"Is this an update test question?",
+            'is_open'=>false,
+            'is_active'=>true,
+        ]);
+        $this->assertDatabaseCount('questions', 1);
+
+        $response = $this->json('PATCH', "api/questions/".$question->id, $payload);
+        $response->assertUnauthorized();
+    }
 }

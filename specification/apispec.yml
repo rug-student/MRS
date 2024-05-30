@@ -266,7 +266,7 @@ components:
     report-pagination-page:
       name: page
       in: query
-      required: true
+      # required: true
       description: Page for desired pagination of results.
       schema:
         type: integer
