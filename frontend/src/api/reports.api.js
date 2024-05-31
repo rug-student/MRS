@@ -1,4 +1,6 @@
 import api from "../api/axios";
+import useAuthContext from '../context/AuthContext';
+
 /**
  * Submits a new report with given data.
  * 
@@ -136,8 +138,9 @@ export const getReports = async (page, sort, order) => {
     }
 
   } catch(error) {
-    if (Response.status === 401) {
+    if (error.response.status === 401) {
       console.error(error.response.message)
+      return error.response
     }
   }
 }
@@ -147,10 +150,11 @@ export const getReports = async (page, sort, order) => {
  * @returns Updated report.
  */
 
-export const updateReport = async (id, status, priority) => {
+export const updateReport = async (id, status, priority, user_id) => {
   const body = JSON.stringify({
     status: status,
     priority: priority,
+    user_id: user_id,
   });
   try{
 

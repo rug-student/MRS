@@ -7,8 +7,7 @@ import { useNavigate } from 'react-router-dom';
 function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
-  const {login, errors, isLoggedIn } = useAuthContext();
+  const {login, errorMessage, isLoggedIn } = useAuthContext();
 
   const navigate = useNavigate();
 
@@ -16,13 +15,11 @@ function LoginPage() {
     if (isLoggedIn()) {
       navigate('/')
     }
-    setMessage(errors.email);
-  }, [message]);
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     await login({email, password});
-    setMessage(errors.email);
   };
 
   return (
@@ -52,7 +49,7 @@ function LoginPage() {
             </div>
         <button id="subutton" type="submit">Login</button>
       </form>
-      <p className='errorMessage'>{message}</p>
+      <p className='errorMessage'>{errorMessage}</p>
     </div>
   </div>
 </div>

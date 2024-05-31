@@ -21,8 +21,11 @@ class Report extends Model
         return $this->hasMany(File::class);
     }
 
-    public function user(): HasMany {
-        return $this->hasMany(User::class);
+    /**
+     * Get the user of the report.
+     */
+    public function user() {
+        return $this->belongsTo(User::class);
     }
 
     protected $fillable = [
@@ -30,8 +33,8 @@ class Report extends Model
             "priority",
             "status",
             "submitter_email",
-            "notify_submitter"
+            "notify_submitter",
+            'user_id',
     ];
-
     // Created_at & updated_at get automatically handled by the ORM.
 }

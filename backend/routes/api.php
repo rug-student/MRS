@@ -18,7 +18,6 @@ use App\Http\Controllers\AuthController;
 |
 */
 
-Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -29,7 +28,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get("/reports", [ReportsController::class, "getAllReports"]);
     Route::get("/reports/{id}", [ReportsController::class, "getReport"]);
     Route::patch("/reports/{id}", [ReportsController::class, "updateReport"]);
-    
+
     // Routes for authenticated question endpoints
     Route::post("/questions", [QuestionsController::class, "createQuestion"]);
     Route::patch("/questions/{id}", [QuestionsController::class, "updateQuestion"]);

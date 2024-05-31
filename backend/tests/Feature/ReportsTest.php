@@ -8,6 +8,8 @@ use App\Models\Report;
 use App\Models\Response;
 use App\Models\File;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Laravel\Sanctum\Sanctum;
+use App\Models\User;
 use Illuminate\Foundation\Testing\DB;
 use Tests\TestCase;
 
@@ -21,7 +23,8 @@ class ReportsTest extends TestCase
      * Test the get /reports/{id} endpoint with invalid id
      */
     public function test_get_report_invalid_id(): void {
-        $response = $this->get('api/reports/1');
+        Sanctum::actingAs(User::factory()->create());
+        $response = $this->get('/api/reports/1');
         $response->assertStatus(404);
     }
 
@@ -30,6 +33,7 @@ class ReportsTest extends TestCase
      * Tests the retrieval of a created report.
      */
     public function test_get_report(): void {
+        Sanctum::actingAs(User::factory()->create());
         $report_body = [
             'description'=>"This is a test report",
             'priority'=>1,
@@ -39,7 +43,7 @@ class ReportsTest extends TestCase
         $report = Report::create($report_body);
         $this->assertDatabaseCount('reports', 1);
 
-        $response = $this->get('api/reports/'.$report->id);
+        $response = $this->get('/api/reports/'.$report->id);
         $response->assertStatus(200);
         $response->assertSee($report_body);
     }
@@ -49,6 +53,7 @@ class ReportsTest extends TestCase
      * Test GET /api/reports request on empty database
      */
     public function test_get_reports_on_empty_database(): void {
+        Sanctum::actingAs(User::factory()->create());
         $response = $this->get('/api/reports');
         $response->assertStatus(200);
         $response->assertSee('data');
@@ -71,6 +76,7 @@ class ReportsTest extends TestCase
      * Test GET /api/reports request on populated database
      */
     public function test_get_reports_on_populated_database(): void {
+        Sanctum::actingAs(User::factory()->create());
 
         $report = Report::create([
             'description'=>"This is a test report",
@@ -312,6 +318,7 @@ class ReportsTest extends TestCase
      * Tests the retrieval of a single report with responses and files.
      */
     public function test_get_report_with_responses_and_files(): void {
+        Sanctum::actingAs(User::factory()->create());
         $report_body = [
             'description'=>"This is a test report",
             'priority'=>1,
@@ -372,13 +379,14 @@ class ReportsTest extends TestCase
      * Test if updating a report status and priority with invalid payload give expected error.
      */
     public function test_patch_report_invalid_request(): void {
+        Sanctum::actingAs(User::factory()->create());
 
         $payload = [
             'status' => 8,
             'priority' => 8
         ];
 
-        $response = $this->json('PATCH', "api/reports/1", $payload);
+        $response = $this->json('PATCH', "/api/reports/1", $payload);
         $response->assertStatus(400);
     }
 
@@ -387,6 +395,7 @@ class ReportsTest extends TestCase
      * Test if updating a report status and priority with valid payload give expected result.
      */
     public function test_patch_report_valid_request(): void {
+        Sanctum::actingAs(User::factory()->create());
         $status = 777;
         $priority = 888;
         $payload = [
@@ -403,7 +412,7 @@ class ReportsTest extends TestCase
         $report = Report::create($report_body);
         $this->assertDatabaseCount('reports', 1);
 
-        $response = $this->json('PATCH', "api/reports/".$report->id, $payload);
+        $response = $this->json('PATCH', "/api/reports/".$report->id, $payload);
         $response->assertStatus(200);
         $response->assertSee($report->description);
         $response->assertSee($report->submitter_email);
@@ -416,6 +425,7 @@ class ReportsTest extends TestCase
      * Test GET /api/reports request on populated database with status filter.
      */
     public function test_get_reports_with_status_filter(): void {
+        Sanctum::actingAs(User::factory()->create());
 
         $report_body1= [
             'description'=>"This is a unique description with status = 0",
@@ -458,6 +468,7 @@ class ReportsTest extends TestCase
      * Test GET /api/reports request on populated database with priority filter.
      */
     public function test_get_reports_with_priority_filter(): void {
+        Sanctum::actingAs(User::factory()->create());
 
         $report_body1= [
             'description'=>"This is a unique description with status = 0",
@@ -492,5 +503,32 @@ class ReportsTest extends TestCase
         $response->assertSee($report1->description);
         $response->assertDontSee($report2->description);
         $response->assertDontSee($report3->description);
+    }
+
+    /**
+     * FT-RE17
+     * Test GET /api/reports request with insufficient authorization.
+     */
+    public function test_get_reports_with_insufficient_authorization(): void {
+        $response = $this->json('GET', "/api/reports");
+        $response->assertUnauthorized();
+    }
+
+    /**
+     * FT-RE18
+     * Test GET /api/reports/{id} request with insufficient authorization
+     */
+    public function test_get_report_with_insufficient_authorization(): void {
+        $response = $this->json('GET', "/api/reports/1");
+        $response->assertUnauthorized();
+    }
+
+    /**
+     * FT-RE19
+     * Test PATCH /api/reports/{id} request with insufficient authorization
+     */
+    public function test_patch_report_with_insufficient_authorization(): void {
+        $response = $this->json('PATCH', "/api/reports/1");
+        $response->assertUnauthorized();
     }
 }

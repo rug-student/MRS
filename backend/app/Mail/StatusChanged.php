@@ -48,7 +48,7 @@ class StatusChanged extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Your Malfunction Report Status Changed'
+            subject: 'The status of your malfunction report has been updated.'
         );
     }
 
@@ -58,7 +58,7 @@ class StatusChanged extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.status_changed',
+            markdown: 'emails.status_changed',
             with: [
                 'description' => $this->report->description,
                 'created_at' => $this->report->created_at,

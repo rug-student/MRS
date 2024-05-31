@@ -9,8 +9,8 @@ const AuthContext = createContext({});
  * @returns Provider containing a set of state variables and auth methods.
  */
 export const AuthProvider = ({ children }) => {
-    const [user, _setUser] = useState(localStorage.getItem('user'));
-    const [errors, setErrors] = useState([]);
+    const [user, _setUser] = useState(JSON.parse(localStorage.getItem('user')));
+    const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
 
     const csrf = () => api.get('/sanctum/csrf-cookie');
@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
     // set user to local storage
 	const setUser = (user) => {
 		if (user) {
-			localStorage.setItem('user', user);
+			localStorage.setItem('user', JSON.stringify(user));
 		} else {
 			localStorage.removeItem('user');
 		}
@@ -36,7 +36,12 @@ export const AuthProvider = ({ children }) => {
             console.log(response.status)
             setUser(response.data)
         } catch(e) {
-            console.log(e);
+            console.error(e);
+            if (e.response.status === 401) {
+                console.error("Authentication failed")
+                setUser(null)
+                navigate('/login')
+            }
         }
     };
 
@@ -48,18 +53,16 @@ export const AuthProvider = ({ children }) => {
         csrf();
         try {
             const response = await api.post('api/login', data, {withCredentials: true, withXSRFToken: true});
-            // await getUser();
             if(response.status === 200) {
-                setUser(data);
+                setUser(response.data);
+                console.log("Login succesful");
                 navigate("/dashboard", {replace: true});
-                setErrors([]);
-            }
-            if (response.status === 422) {
-                await setErrors(response.data.errors);
+                setErrorMessage(null);
             }
         } catch(e) {
-            if (e.response.status === 422) {
-                setErrors(e.response.data.errors)
+            if (e.response.status === 401) {
+                console.error(e.response.data.message);
+                setErrorMessage(e.response.data.message);
             }
         }
     };
@@ -79,14 +82,23 @@ export const AuthProvider = ({ children }) => {
     /**
      * Logs out the currently logged in user.
      */
-    const logout = () => {
-        api.post('/api/logout', [], {withCredentials: true, withXSRFToken: true}).then(() => {
-            setUser(null);
-            localStorage.clear();
-        });
+    const logout = async () => {
+        try {
+            const response = await api.post('/api/logout', [], {withCredentials: true, withXSRFToken: true})
+            if (response.status === 200) {
+                setUser(null);
+                console.log("Logout succesful")
+            }
+            
+        } catch(e) {
+            if (e.response.status === 401) {
+                console.error("User authentication for logout failed. Probably cookie token expired, logging out")
+                setUser(null);
+            }
+        }
     };
 
-    return <AuthContext.Provider value={{user, errors, login, logout, isLoggedIn}}>
+    return <AuthContext.Provider value={{user, errorMessage, login, logout, getUser, isLoggedIn}}>
         {children}
     </AuthContext.Provider>
 }

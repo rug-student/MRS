@@ -42,3 +42,8 @@ php artisan serve
 ## How to view database using phpMyAdmin:
 1. go to `localhost:8001`
 2. login with credentials in `.env` file (default username=`root`, empty password)
+
+## Additional information
+
+### Mailing
+This application has the capability to automatically send emails to reporters who choose to receive so. To enable this a mailing host is required. To enable mailing please set `MAILING_ENABLED=true` in the `.env` file, also set the correct values in `MAIL_HOST`, `MAIL_PORT`,`MAIL_USERNAME`, `MAIL_PASSWORD` corresponding to those of your host.

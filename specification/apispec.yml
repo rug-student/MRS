@@ -168,6 +168,8 @@ components:
           type: integer
         priority:
           type: integer
+        user_id:
+          type: integer
 
     Response:
       type: object
@@ -270,7 +272,7 @@ components:
     report-pagination-page:
       name: page
       in: query
-      required: true
+      # required: true
       description: Page for desired pagination of results.
       schema:
         type: integer
