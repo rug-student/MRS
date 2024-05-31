@@ -10,7 +10,7 @@ const AuthContext = createContext({});
  */
 export const AuthProvider = ({ children }) => {
     const [user, _setUser] = useState(JSON.parse(localStorage.getItem('user')));
-    const [errors, setErrors] = useState([]);
+    const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
 
     const csrf = () => api.get('/sanctum/csrf-cookie');
@@ -55,15 +55,14 @@ export const AuthProvider = ({ children }) => {
             const response = await api.post('api/login', data, {withCredentials: true, withXSRFToken: true});
             if(response.status === 200) {
                 setUser(response.data);
+                console.log("Login succesful");
                 navigate("/dashboard", {replace: true});
-                setErrors([]);
-            }
-            if (response.status === 422) {
-                await setErrors(response.data.errors);
+                setErrorMessage(null);
             }
         } catch(e) {
-            if (e.response.status === 422) {
-                setErrors(e.response.data.errors)
+            if (e.response.status === 401) {
+                console.error(e.response.data.message);
+                setErrorMessage(e.response.data.message);
             }
         }
     };
@@ -86,18 +85,20 @@ export const AuthProvider = ({ children }) => {
     const logout = async () => {
         try {
             const response = await api.post('/api/logout', [], {withCredentials: true, withXSRFToken: true})
-            setUser(null);
-            console.log("Login succesful")
+            if (response.status === 200) {
+                setUser(null);
+                console.log("Logout succesful")
+            }
             
         } catch(e) {
             if (e.response.status === 401) {
-                console.error("User authentication failed.")
+                console.error("User authentication for logout failed. Probably cookie token expired, logging out")
                 setUser(null);
             }
         }
     };
 
-    return <AuthContext.Provider value={{user, errors, login, logout, getUser, isLoggedIn}}>
+    return <AuthContext.Provider value={{user, errorMessage, login, logout, getUser, isLoggedIn}}>
         {children}
     </AuthContext.Provider>
 }
