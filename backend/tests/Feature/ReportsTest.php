@@ -510,16 +510,7 @@ class ReportsTest extends TestCase
      * Test GET /api/reports request with insufficient authorization.
      */
     public function test_get_reports_with_insufficient_authorization(): void {
-
-        $report = Report::create([
-            'description'=>"This is a test report",
-            'priority'=>0,
-            'status'=>0,
-            'submitter_email'=>"test@testing.nl",
-            'responses'=>[]
-        ]);
-
-        $response = $this->get('/api/reports');
+        $response = $this->json('GET', "/api/reports");
         $response->assertUnauthorized();
     }
 
@@ -528,16 +519,7 @@ class ReportsTest extends TestCase
      * Test GET /api/reports/{id} request with insufficient authorization
      */
     public function test_get_report_with_insufficient_authorization(): void {
-        $report_body = [
-            'description'=>"This is a test report",
-            'priority'=>1,
-            'status'=>0,
-            'submitter_email'=>"test@testing.nl"
-        ];
-        $report = Report::create($report_body);
-        $this->assertDatabaseCount('reports', 1);
-
-        $response = $this->get('/api/reports/'.$report->id);
+        $response = $this->json('GET', "/api/reports/1");
         $response->assertUnauthorized();
     }
 
@@ -546,21 +528,7 @@ class ReportsTest extends TestCase
      * Test PATCH /api/reports/{id} request with insufficient authorization
      */
     public function test_patch_report_with_insufficient_authorization(): void {
-        $payload = [
-            'status' => 1,
-            'priority' => 2
-        ];
-
-        $report_body = [
-            'description'=>"This is a test report",
-            'priority'=>1,
-            'status'=>0,
-            'submitter_email'=>"test@testing.nl"
-        ];
-        $report = Report::create($report_body);
-        $this->assertDatabaseCount('reports', 1);
-
-        $response = $this->json('PATCH', "/api/reports/".$report->id, $payload);
+        $response = $this->json('PATCH', "/api/reports/1");
         $response->assertUnauthorized();
     }
 }
