@@ -21,6 +21,7 @@ class CreateReportsTable extends Migration
             $table->timestamps();
             $table->integer("status");
             $table->string("submitter_email")->nullable();
+            $table->boolean("notify_submitter");
             $table->foreignIdFor(User::class)->nullable()->constrained();
         });
     }

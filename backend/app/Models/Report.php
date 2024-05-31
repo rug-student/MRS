@@ -29,7 +29,8 @@ class Report extends Model
             "description",
             "priority",
             "status",
-            "submitter_email"
+            "submitter_email",
+            "notify_submitter"
     ];
 
     // Created_at & updated_at get automatically handled by the ORM.

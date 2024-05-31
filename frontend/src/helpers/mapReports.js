@@ -16,7 +16,7 @@
     }
   };
 
-  //Map the status
+  //Map the status, when changed backend/app/Mail/SatusChanged.php should also be changed.
 
   export const getStatusText = (status) => {
     switch (status) {

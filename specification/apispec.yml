@@ -88,6 +88,9 @@ components:
         submitter_email:
           type: string
           description: Email of the report submitter
+        notify_submitter:
+          type: boolean
+          description: Boolean denoting if the submitter wants to receive email notifications.
         created_at: 
           type: string
           format: date-time
@@ -156,6 +159,9 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/File"
+        notify_submitter:
+          type: boolean
+
     ReportPATCHBody:
       properties:
         status:

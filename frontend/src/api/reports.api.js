@@ -10,7 +10,7 @@ import api from "../api/axios";
  * @param {string} uploadedFilePath Path to the uploaded file.
  * @returns {Boolean} True if report was successfully submitted, false otherwise.
  */
-export async function submitReport(malfunctionDescription, email, questionAnswers, questions, showOtherTextInput, uploadedFilePath) {
+export async function submitReport(malfunctionDescription, email, notify_submitter, questionAnswers, questions, showOtherTextInput, uploadedFilePath) {
   try {
     const questionAnswerIDs = await createAnswers(questions, questionAnswers, showOtherTextInput);
     const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/reports`, {
@@ -22,6 +22,7 @@ export async function submitReport(malfunctionDescription, email, questionAnswer
       body: JSON.stringify({
         description: malfunctionDescription,
         submitter_email: email,
+        notify_submitter: notify_submitter,
         responses: Object.keys(questionAnswerIDs).map(questionId => ({
           question_id: questionId,
           answer_id: questionAnswerIDs[questionId]

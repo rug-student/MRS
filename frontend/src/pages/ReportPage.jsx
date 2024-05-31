@@ -23,7 +23,8 @@ function CreateReport() {
   const [openPopup, setOpenPopup] = useState(false);
   const [popupContent, setPopupContent] = useState('');
   const [formSubmitted, setFormSubmitted] = useState(false);
- 
+  const [notifyMe, setNotifyMe] = useState(false);
+
   let questionNumber = 1; // Initialize the question number
 
   const VisuallyHiddenInput = styled('input')({
@@ -53,6 +54,10 @@ function CreateReport() {
   
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
+  };
+
+  const handleNotifyBoxChange = (event) => {
+    setNotifyMe(event.target.checked);
   };
 
   const handleDescriptionChange = (event) => {
@@ -129,6 +134,7 @@ function CreateReport() {
     const submitted = await submitReport(
       malfunctionDescription,
       email,
+      notifyMe,
       questionAnswers,
       questions,
       showOtherTextInput,
@@ -158,6 +164,10 @@ function CreateReport() {
             value={email} 
             onChange={handleEmailChange}
           />
+          <div>
+            Notify me on status updates
+            <input type='checkbox'onClick={handleNotifyBoxChange}/>
+          </div>
         </div>
 
         <div className='question-container'>

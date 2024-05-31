@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\StatusChanged;
 use App\Models\Question;
 use App\Models\Report;
 use App\Models\Answer;
@@ -9,6 +10,8 @@ use App\Models\File;
 use App\Models\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 /**
  * Controller class that handles the api calls for reports
@@ -76,12 +79,14 @@ class ReportsController extends Controller
         $validated = $request->validate([
             'description' => 'required',
             'submitter_email'=> 'email',
+            'notify_submitter' => 'required |boolean'
         ]);
 
         $report = new Report;
         $report->description = $request->description;
         $report->status = 0;
         $report->submitter_email = $request->submitter_email;
+        $report->notify_submitter = $request->notify_submitter;
         $report->priority = -1;
         $report->save();
 
@@ -144,9 +149,19 @@ class ReportsController extends Controller
             return response()->json("ERROR: report of given report id does not exist", 400);
         }
         $report = Report::find($request->id);
+        $oldStatus = $report->status;
         $report->status = $request->status;
         $report->priority = $request->priority;
         $report->save();
+
+        if(env('MAILING_ENABLED', false) && $report->notify_submitter && $oldStatus != $report->status) {
+            Log::channel('abuse')->info('sending email', [
+                'destination email' => $report->submitter_email,
+                'old status' => $oldStatus,
+                'new status' => $report->status
+            ]);
+            Mail::to($report->submitter_email)->send(new StatusChanged($report, $oldStatus));
+        }
 
         return response()->json(["Report updated succesfully.", $report], 200);
     }
