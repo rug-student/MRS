@@ -28,11 +28,11 @@ const SingleReport = () => {
  
 
   useEffect(() => {
-    if (isLoggedIn()) {
+    // if (isLoggedIn()) {
       fetchReport();
-    } else {
-      navigate('/login')
-    }
+    // } else {
+    //   navigate('/login')
+    // }
 
   }, [ReportId]);
   return (
@@ -66,7 +66,7 @@ const SingleReport = () => {
               <td>{report.description}</td>
               <td>{getPriorityText(report.priority)} </td>
               <td>{getStatusText(report.status)}</td>
-              <td>{moment(formatDate(report.created_at)).fromNow()}</td>
+              <td>{moment.utc(formatDate(report.created_at)).fromNow()}</td>
             </tr>
           </tbody>
         </table>

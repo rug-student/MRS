@@ -26,7 +26,6 @@ function Header() {
             <Link className='logo' to="/">
                 <img src="/imgs/gomibologo.png" className="logoHeader" alt="logo" />
             </Link>
-            
             <div className={`menu-items ${showMenu ? 'show' : 'noShow'}`}>
                 {isLoggedIn() ? (
                     <>

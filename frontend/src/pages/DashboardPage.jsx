@@ -13,6 +13,7 @@ import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import { GrView } from "react-icons/gr";
 import ModalForm from "../components/dashboard/ModalForm";
+import Cookies from 'js-cookie';
 
 const Dashboard = () => {
   const [reportsData, setReportsData] = useState([
@@ -33,9 +34,11 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [modalShow, setModalShow] = useState(false);
   const [update, setUpdate] = useState(false);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(parseInt(Cookies.get('currentPage')) || 1);
   const [totalPages, setTotalPages] = useState(1);
-  const [sortOption, setSortOption] = useState("priority");
+  const [sortOption, setSortOption] = useState(Cookies.get('sortOption') || "priority");
+  const [orderOption, setOrderOption] = useState(Cookies.get('orderOption') || "desc");
+  const COOKIE_EXPIRATION_TIME = 1; // 1 day
 
   /**Navigate to Report Details */
 
@@ -49,11 +52,13 @@ const Dashboard = () => {
   };
 
   const handlePage = (event, value) => {
-    setPage(value);
+    const currentPage = value;
+    setPage(currentPage);
+    Cookies.set('currentPage', currentPage, { expires: COOKIE_EXPIRATION_TIME }); // Save to cookie with expiration
   };
 
   const fetchReports = async (page) => {
-    const reports = await getReports(page, sortOption, "desc");
+    const reports = await getReports(page, sortOption, orderOption);
     if (reports.status === 401) {
       logout()
     } else {
@@ -71,29 +76,26 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    if (isLoggedIn()) {
+    // if (isLoggedIn()) {
       fetchReports(page);
-    } else {
-      navigate('/login')
-    }
-  }, [update, page]);
+    // } else {
+    //   navigate('/login')
+    // }
+  }, [update, page, sortOption, orderOption]);
 
   // Function to handle the sort option change
   const handleSortOptionChange = (event) => {
-    setSortOption(event.target.value);
+    const newSortOption = event.target.value;
+    setSortOption(newSortOption);
+    Cookies.set('sortOption', newSortOption, { expires: COOKIE_EXPIRATION_TIME }); // Save to cookie with expiration
+  };
+  // Function to handle the order option change
+  const handleOrderOptionChange = (event) => {
+    const newOrderOption = event.target.value;
+    setOrderOption(newOrderOption);
+    Cookies.set('orderOption', newOrderOption, { expires: COOKIE_EXPIRATION_TIME }); // Save to cookie with expiration
   };
 
-  // Function to get sorted reports based on the selected sort option
-  const getSortedReports = () => {
-    if (sortOption === "priority") {
-      return [...reportsData].sort((a, b) => b.priority - a.priority);
-    } else if (sortOption === "date") {
-      return [...reportsData].sort(
-        (a, b) => new Date(b.created_at) - new Date(a.created_at)
-      );
-    }
-    return reportsData;
-  };
 
   return (
     <>
@@ -105,6 +107,12 @@ const Dashboard = () => {
             <Form.Select value={sortOption} onChange={handleSortOptionChange}>
               <option value="priority">Sort by Priority</option>
               <option value="date">Sort by Date</option>
+            </Form.Select>
+          </div>
+          <div className={styles.filterSelector}>
+            <Form.Select value={orderOption} onChange={handleOrderOptionChange}>
+              <option value="desc">Descending</option>
+              <option value="asc">Ascending</option>
             </Form.Select>
           </div>
         </div>
@@ -123,14 +131,14 @@ const Dashboard = () => {
               </tr>
             </thead>
             <tbody>
-              {getSortedReports().map((element) => (
+              {reportsData?.map((element) => (
                 <tr key={element.id}>
                   <td>{element.id}</td>
                   <td>{element.submitter_email}</td>
                   <td>{element.description}</td>
                   <td>{getPriorityText(element.priority)} </td>
                   <td>{getStatusText(element.status)}</td>
-                  <td>{moment(element.created_at).fromNow()}</td>
+                  <td>{moment.utc(element.created_at).fromNow()}</td>
                   <td>{element.user_id}</td>
                   <td>
                     <FaRegEdit
