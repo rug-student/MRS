@@ -60,7 +60,7 @@ class ReportsController extends Controller
     public function getReport(Request $request) {
 
         $report = Report::where("id", $request->id)
-        ->with(["response.question", "response.answer", "file"])
+        ->with(["response.question", "response.answer", "files"])
         ->first();
 
         if(!$report) {
@@ -111,20 +111,6 @@ class ReportsController extends Controller
                 $response->save();
 
                 $report->response()->save($response);
-            }
-        }
-
-        // Handle files.
-        if (property_exists($request_content, "file")){
-            foreach ($request->file('file') as $file) {
-                $fileName = Str::random(20) . '.' . $file->getClientOriginalExtension();
-                $file->storeAs('uploads', $fileName);
-
-                $fileModel = new File();
-                $fileModel->original_name = $file->getClientOriginalName();
-                $fileModel->generated_name = $fileName;
-                $fileModel->report_id = $report->id;
-                $fileModel->save();
             }
         }
     

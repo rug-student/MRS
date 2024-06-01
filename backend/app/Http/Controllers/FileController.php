@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\File;
+use App\Models\Report;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class FileController extends Controller
@@ -17,6 +19,9 @@ class FileController extends Controller
             'file' => 'required',
         ]);
         
+        Log::channel('abuse')->info('upload file: report_id, ',
+        [ 'report_id' => $request->get('report_id')]);
+
         $file = $request->file('file');
         $fileName = Str::random(20) . '.' . $file->getClientOriginalExtension();
         $file->storeAs('uploads', $fileName);
@@ -27,6 +32,10 @@ class FileController extends Controller
         ]);
 
         $newFile->save();
+
+        $report = Report::find($request->get('report_id'));
+        $report->files()->save($newFile);
+        
         return response()->json([
             'message' => 'File uploaded successfully',
             'file' => $newFile, 

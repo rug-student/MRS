@@ -13,6 +13,7 @@ return new class extends Migration
             $table->id();
             $table->string('original_name');
             $table->string('generated_name');
+            $table->foreignIdFor(Report::class)->nullable();
             $table->timestamps();
         });
     }

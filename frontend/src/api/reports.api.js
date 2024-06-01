@@ -15,8 +15,6 @@ import useAuthContext from '../context/AuthContext';
 export async function submitReport(malfunctionDescription, email, questionAnswers, questions, showOtherTextInput, uploadedFile) {
   try {
     const questionAnswerIDs = await createAnswers(questions, questionAnswers, showOtherTextInput);
-    const file = await uploadFile(uploadedFile);
-    console.log('file is: ', file);
 
     const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/reports`, {
       method: 'POST',
@@ -31,13 +29,15 @@ export async function submitReport(malfunctionDescription, email, questionAnswer
           question_id: questionId,
           answer_id: questionAnswerIDs[questionId]
         })),
-        files: [file.file],
       })
     });
 
     if (response.ok) {
       // Handle successful response
       console.log('Report submitted successfully');
+      const report = (await response.json())[1];
+      console.log("trying to set file: report: ", report, " file: ", uploadFile);
+      const file = await uploadFile(uploadedFile, report);
       return(true);
     } else {
       // Handle error response
@@ -107,10 +107,11 @@ export async function createAnswers(questions, questionAnswers, showOtherTextInp
  * @param {File} file The file to be uploaded.
  * @returns {Object} The response data containing the file path or an error message.
  */
-export async function uploadFile(uploadedFile) {
+export async function uploadFile(uploadedFile, report) {
   try {
     const formData = new FormData();
     formData.append('file', uploadedFile);
+    formData.append('report_id', report.id)
 
     const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/files/upload`, {
       method: 'POST',

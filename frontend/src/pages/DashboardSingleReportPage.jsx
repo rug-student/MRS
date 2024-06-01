@@ -17,16 +17,16 @@ const SingleReport = () => {
   const { isLoggedIn } = useAuthContext();
 
   const fetchReport = async () => {
-  const data = await getReport(ReportId);
-  if (data === null) {
-    console.log("Report does not exist: redirecting")
-    navigate('/dashboard')
-  } else {
-    console.log("date is:", data);
-    setReport(data[0]);
-  }
-};
-console.log(report);
+    const data = await getReport(ReportId);
+    if (data === null) {
+      console.log("Report does not exist: redirecting")
+      navigate('/dashboard')
+    } else {
+      console.log("data is:", data);
+      setReport(data);
+    }
+  };
+  console.log(report);
  
 
   useEffect(() => {
