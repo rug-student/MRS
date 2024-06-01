@@ -12,7 +12,7 @@ import useAuthContext from '../context/AuthContext';
  * @param {string} uploadedFilePath Path to the uploaded file.
  * @returns {Boolean} True if report was successfully submitted, false otherwise.
  */
-export async function submitReport(malfunctionDescription, email, questionAnswers, questions, showOtherTextInput, uploadedFile) {
+export async function submitReport(malfunctionDescription, email, notify_submitter, questionAnswers, questions, showOtherTextInput, uploadedFile) {
   try {
     const questionAnswerIDs = await createAnswers(questions, questionAnswers, showOtherTextInput);
 
