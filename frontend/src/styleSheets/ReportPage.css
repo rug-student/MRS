@@ -47,6 +47,9 @@ input, select {
   border-radius: 3px;
 }
 
+.notify-btn{
+  margin-top: 15px;
+}
 
 
 /* Media Query for larger screens */
