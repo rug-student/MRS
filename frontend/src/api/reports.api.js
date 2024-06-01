@@ -12,9 +12,10 @@ import useAuthContext from '../context/AuthContext';
  * @param {string} uploadedFilePath Path to the uploaded file.
  * @returns {Boolean} True if report was successfully submitted, false otherwise.
  */
-export async function submitReport(malfunctionDescription, email, notify_submitter, questionAnswers, questions, showOtherTextInput, uploadedFilePath) {
+export async function submitReport(malfunctionDescription, email, questionAnswers, questions, showOtherTextInput, uploadedFile) {
   try {
     const questionAnswerIDs = await createAnswers(questions, questionAnswers, showOtherTextInput);
+
     const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/reports`, {
       method: 'POST',
       headers: {
@@ -29,13 +30,17 @@ export async function submitReport(malfunctionDescription, email, notify_submitt
           question_id: questionId,
           answer_id: questionAnswerIDs[questionId]
         })),
-        files: uploadedFilePath ? [{ file_path: uploadedFilePath }] : []
       })
     });
 
     if (response.ok) {
       // Handle successful response
       console.log('Report submitted successfully');
+      const report = (await response.json())[1];
+      if (uploadedFile) {
+        console.log("trying to set file: report: ", report, " file: ", uploadFile);
+        const file = await uploadFile(uploadedFile, report);
+      }
       return(true);
     } else {
       // Handle error response
@@ -99,6 +104,41 @@ export async function createAnswers(questions, questionAnswers, showOtherTextInp
 }
 
 
+/**
+ * Uploads a file to the server.
+ * 
+ * @param {File} file The file to be uploaded.
+ * @returns {Object} The response data containing the file path or an error message.
+ */
+export async function uploadFile(uploadedFile, report) {
+  try {
+    const formData = new FormData();
+    formData.append('file', uploadedFile);
+    formData.append('report_id', report.id)
+
+    const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/files/upload`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+      },
+      body: formData
+    });
+
+    if (response.ok) {
+      console.log('File uploaded successfully');
+      const data = await response.json();
+      return data;
+    } else {
+      console.error('Failed to upload file');
+      throw new Error('Failed to upload file');
+    }
+  } catch (error) {
+    console.error('Error occurred while uploading file:', error);
+    throw error; // Rethrow the error to be handled by the caller
+  }
+}
+
+
 
 /**
  * GETs a detailed single report with specified id.
@@ -111,6 +151,7 @@ export async function getReport(reportID) {
     const response = await api.get(`${process.env.REACT_APP_API_BASE_URL}/api/reports/${reportID}`);
 
     if (response.status === 200) {
+      console.log(response);
       return response.data;
     }
   } catch (error) {
@@ -168,4 +209,33 @@ export const updateReport = async (id, status, priority, user_id) => {
   } catch(error) {
       console.error('Error occurred while updated report:', error);
   };
+}
+
+
+/**
+ * Downloads a file with the specified ID.
+ * @param {string} fileId The ID of the file to be downloaded.
+ * @returns {Promise<Blob>} A promise containing the file blob.
+ */
+export async function downloadFile(fileId) {
+  try {
+    const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/files/${fileId}/download`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/octet-stream', // Specify the content type
+      },
+    });
+
+    if (response.ok) {
+      // Convert the response to a blob
+      const blob = await response.blob();
+      return blob;
+    } else {
+      console.error('Failed to download file');
+      return null;
+    }
+  } catch (error) {
+    console.error('Error occurred while downloading file:', error);
+    return null;
+  }
 }

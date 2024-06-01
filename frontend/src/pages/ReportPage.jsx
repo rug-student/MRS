@@ -16,10 +16,8 @@ function CreateReport() {
   const [malfunctionDescription, setMalfunctionDescription] = useState('');
   const [questions, setQuestions] = useState([]);
   const [questionAnswers, setQuestionAnswers] = useState({});
-  const [showOtherTextInput, setShowOtherTextInput] = useState({});
-  const [uploadedFile, setUploadedFile] = useState([]);
-  const [uploadedFilePath, setUploadedFilePath] = useState('');
-  const [uploadedFileInfo, setUploadedFileInfo] = useState();
+  const [showOtherTextInput, setShowOtherTextInput] = useState({}); 
+  const [uploadedFile, setUploadedFile] = useState(null);
   const [openPopup, setOpenPopup] = useState(false);
   const [popupContent, setPopupContent] = useState('');
   const [formSubmitted, setFormSubmitted] = useState(false);
@@ -65,15 +63,12 @@ function CreateReport() {
   };
 
   // -------- Handling file upload --------
-  const handleFilePathChange = (event) => {
-    const file = event.target.files[0];
+  const handleFileChange = (event) => {
+    const file = event.target.files[0]; 
     if (file) {
       setUploadedFile(file);
-      setUploadedFilePath(URL.createObjectURL(file)); // Create a local URL for the file
-      setUploadedFileInfo(file);
     } else {
       setUploadedFile(null);
-      setUploadedFilePath('');
     }
   };
 
@@ -103,7 +98,6 @@ function CreateReport() {
     setQuestionAnswers({});
     setShowOtherTextInput({});
     setUploadedFile(null);
-    setUploadedFilePath('');
       
     // Clear textboxes for open questions
     const openQuestionIds = questions.filter(question => question.is_open).map(question => question.id);
@@ -138,7 +132,7 @@ function CreateReport() {
       questionAnswers,
       questions,
       showOtherTextInput,
-      uploadedFilePath, 
+      uploadedFile, 
     );
     if (submitted) {
       setPopupContent("Report successfully submitted");
@@ -232,7 +226,7 @@ function CreateReport() {
 
         {/* File upload question */}
         <div className='question-container'>
-          <div className='question'>{questionNumber++}. Upload a photo of the malfunction.</div>
+          <div className='question'>{questionNumber++}. Upload a photo of the malfunction. (optional)</div>
           <Button className='upload-btn'
             component="label"
             role={undefined}
@@ -244,9 +238,9 @@ function CreateReport() {
             }}
           >
             Upload file
-            <VisuallyHiddenInput className='answer' type="file" onChange={handleFilePathChange}/>
+            <VisuallyHiddenInput className='answer' type="file" onChange={handleFileChange}/>
           </Button>
-          {uploadedFileInfo && uploadedFile && (
+          { (uploadedFile != null) && (
           <section>
             <ul>
               <li>Name: {uploadedFile.name}</li>

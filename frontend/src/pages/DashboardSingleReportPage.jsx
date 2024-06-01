@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getReport } from "../api/reports.api";
+import { getReport, downloadFile } from "../api/reports.api";
 import { getPriorityText, getStatusText } from "../helpers/mapReports";
 import moment from "moment";
 import { Container } from "react-bootstrap";
@@ -9,22 +9,27 @@ import Header from "../components/Header";
 import useAuthContext from "../context/AuthContext";
 import { formatDate } from "../helpers/formDate";
 import styles from '../styleSheets/SingleReport.module.css'
+import SingleReportImages from "../components/dashboard/SingleReportImages";
 
 const SingleReport = () => {
   const { ReportId } = useParams();
   const [report, setReport] = useState({});
+  const [fileUrl, setFileUrl] = useState(null);
+  const [showFile, setShowFile] = useState(false);
   const navigate = useNavigate();
   const { isLoggedIn } = useAuthContext();
 
   const fetchReport = async () => {
-  const data = await getReport(ReportId);
-  if (data === null) {
-    console.log("Report does not exist: redirecting")
-    navigate('/dashboard')
-  } else {
-    setReport(data[0]);
-  }
-};
+    const data = await getReport(ReportId);
+    if (data === null) {
+      console.log("Report does not exist: redirecting")
+      navigate('/dashboard')
+    } else {
+      console.log("data is:", data);
+      setReport(data);
+    }
+  };
+  console.log(report);
  
 
   useEffect(() => {
@@ -35,6 +40,36 @@ const SingleReport = () => {
     }
 
   }, [ReportId]);
+
+  useEffect(() => {
+    const loadFile = async () => {
+      if (report.files?.length > 0) {
+        const fileId = report.files[0].id; // Assuming you want to display the first file
+        try {
+          const fileBlob = await downloadFile(fileId);
+          // Create a URL for the blob
+          const url = URL.createObjectURL(fileBlob);
+          // Set the file URL in the state
+          setFileUrl(url);
+        } catch (error) {
+          console.error('Error displaying file:', error);
+        }
+      }
+    };
+
+    loadFile();
+    // Clean up function to revoke the object URL
+    return () => {
+      if (fileUrl) {
+        URL.revokeObjectURL(fileUrl);
+      }
+    };
+  }, [report.files]); // Run effect when report.files changes
+
+  const handleFileClose = () => {
+    setShowFile(false);
+  };
+
   return (
     <div>
       <Header />
@@ -100,6 +135,41 @@ const SingleReport = () => {
           </tbody>
         </table>
         </div>
+
+      {/* Display files */}
+      {/* Display files */}
+      <div className={`table-responsive ${styles.myTableResponsive}`}>
+          <table className="table table-lg table-striped table-bordered">
+            <thead>
+              <tr>
+                <th>FILES</th>
+              </tr>
+            </thead>
+            <tbody>
+              {fileUrl ? (
+                <tr>
+                  <td>
+                    <img src={fileUrl} 
+                      alt="Report File" 
+                      style={{ cursor: "pointer", maxWidth: '40%', height: 'auto' }} 
+                      onClick={() => setShowFile(true)}
+                      />
+                  </td>
+                </tr>
+              ) : (
+                <tr>
+                  <td>No files attached</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+        <SingleReportImages
+          show={showFile}
+          handleClose={handleFileClose}
+          fileUrl={fileUrl}
+        />
+             
       </Container>
     </div>
   );

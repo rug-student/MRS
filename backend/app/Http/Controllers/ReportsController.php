@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
@@ -85,13 +86,13 @@ class ReportsController extends Controller
     public function getReport(Request $request) {
 
         $report = Report::where("id", $request->id)
-        ->with(["response.question", "response.answer", "file"])
-        ->get();
+        ->with(["response.question", "response.answer", "files"])
+        ->first();
 
-        if($report->isEmpty()) {
+        if(!$report) {
             return response()->json("ERROR: Resource not found.", 404);
         }
-
+    
         return response()->json($report, 200);
     }
 
@@ -139,26 +140,10 @@ class ReportsController extends Controller
                 $report->response()->save($response);
             }
         }
-
-        // Handle files.
-        if (property_exists($request_content, "files")) {
-            foreach($request_content->files as $file_body) {
-                if($file_body->file_path == "") {
-                    return response()->json("ERROR: file_path is missing", 400);
-                }
-
-                $file = new File();
-                $file->file_path = $file_body->file_path;
-                $file->report_id = $report->id;
-                $file->save();
-
-                $report->file()->save($file);
-            }
-        }
-
-        $report->save();
-        return response()->json(["Succesfully saved report", $report], 200);
+    
+        return response()->json(["Successfully saved report", $report], 200);
     }
+
 
     /**
      * Updates a reports status and/or priority.
