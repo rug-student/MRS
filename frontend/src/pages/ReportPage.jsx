@@ -98,6 +98,7 @@ function CreateReport() {
     setQuestionAnswers({});
     setShowOtherTextInput({});
     setUploadedFile(null);
+    setNotifyMe(false);
       
     // Clear textboxes for open questions
     const openQuestionIds = questions.filter(question => question.is_open).map(question => question.id);
@@ -159,7 +160,7 @@ function CreateReport() {
             onChange={handleEmailChange}
           />
           <div className="notify-btn">
-            <input type='checkbox' onClick={handleNotifyBoxChange}/>
+            <input type='checkbox' onClick={handleNotifyBoxChange} checked={notifyMe}/>
             Notify me on status updates
           </div>
         </div>
