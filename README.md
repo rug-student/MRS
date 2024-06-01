@@ -11,6 +11,9 @@ For the backend, you need:
 - [composer](https://getcomposer.org/download/)
 - [Docker desktop](https://www.docker.com/products/docker-desktop/)
 
+For the frontend, you need:
+- [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+
 ## Deployment
 Make sure you meet all the [prequisites](#prequisites) to deploy the application.
 ### The setup
@@ -55,6 +58,10 @@ npm start
 
 
 ## Testing:
+
+For coverage value analysis install:
+- [php-pcov](https://github.com/krakjoe/pcov/blob/develop/INSTALL.md)
+
 ### Backend and API tests
 
 Ensure that the database is running.
@@ -62,4 +69,8 @@ Ensure that the database is running.
 # execute in backend/
 php artisan migrate --database=testing
 php artisan test
+```
+For coverage analysis execute:
+```
+php artisan test --coverage
 ```
