@@ -76,11 +76,11 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    // if (isLoggedIn()) {
+    if (isLoggedIn()) {
       fetchReports(page);
-    // } else {
-    //   navigate('/login')
-    // }
+    } else {
+      navigate('/login')
+    }
   }, [update, page, sortOption, orderOption]);
 
   // Function to handle the sort option change

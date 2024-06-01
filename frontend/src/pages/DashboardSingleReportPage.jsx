@@ -28,11 +28,11 @@ const SingleReport = () => {
  
 
   useEffect(() => {
-    // if (isLoggedIn()) {
+    if (isLoggedIn()) {
       fetchReport();
-    // } else {
-    //   navigate('/login')
-    // }
+    } else {
+      navigate('/login')
+    }
 
   }, [ReportId]);
   return (
