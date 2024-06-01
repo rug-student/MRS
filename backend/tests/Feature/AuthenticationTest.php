@@ -18,7 +18,7 @@ class AuthenticationTest extends TestCase
     public function test_users_can_authenticate_using_the_login_endpoint(): void {
         $user = User::factory()->create();
 
-        $response = $this->post('/api/login', [
+        $response = $this->json('POST', "/api/login", [
             'email' => $user->email,
             'password' => 'password',
         ]);
@@ -32,7 +32,7 @@ class AuthenticationTest extends TestCase
     public function test_users_can_not_authenticate_with_invalid_password(): void {
         $user = User::factory()->create();
 
-        $response = $this->post('/api/login', [
+        $response = $this->json('POST', "/api/login", [
             'email' => $user->email,
             'password' => 'wrong-password',
         ]);
@@ -46,8 +46,20 @@ class AuthenticationTest extends TestCase
      */
     public function test_users_can_logout(): void {
         Sanctum::actingAs(User::factory()->create());
-        $response = $this->post('/api/logout');
+        $response = $this->json('POST', "/api/logout");
 
         $response->assertOk();
+    }
+
+    /**
+     * FT-AUTH4
+     * Test to check if autherized user can get user data.
+     */
+    public function test_users_can_get_user_data(): void {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
+        $response = $this->json('GET', "/api/user");
+        $response->assertOk();
+        $response->assertSee($user->toArray());
     }
 }

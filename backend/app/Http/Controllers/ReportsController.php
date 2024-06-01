@@ -104,8 +104,7 @@ class ReportsController extends Controller
                 }
                 $answer = Answer::find($response_body->answer_id);
                 if($answer->question_id != null && $answer->question_id != $response_body->question_id) {
-                    return response()
-                    ->json("ERROR: passed non-related question answer pair", 400);
+                    return response()->json("ERROR: passed non-related question answer pair", 400);
                 }
 
                 $response = new Response();

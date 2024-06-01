@@ -10,7 +10,6 @@ use App\Models\File;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
 use App\Models\User;
-use Illuminate\Foundation\Testing\DB;
 use Tests\TestCase;
 
 class ReportsTest extends TestCase
@@ -98,6 +97,7 @@ class ReportsTest extends TestCase
      * Test POST /reports endpoint with no discription
      */
     public function test_create_report_invalid_payload(): void {
+
         $malformed_report_payload = [
             'malformed'=>"This is a malformed payload"
             // is missing a discription
@@ -129,21 +129,14 @@ class ReportsTest extends TestCase
      */
     public function test_create_report_default_status_and_priority(): void {
 
-        $report_payload = [
-            'description'=>"This is a test report",
-            'submitter_email'=>"test@testing.nl"
-        ];
-
-        $report_body = [
-            'description'=>"This is a test report",
+        $report_payload = Report::factory()->make([
             'priority'=>-1,
             'status'=>0,
-            'submitter_email'=>"test@testing.nl",
-        ];
+        ])->toArray();
 
         $request = $this->json('post', '/api/reports', $report_payload);
         $request->assertStatus(200);
-        $this->assertDatabaseHas('reports', $report_body);
+        $this->assertDatabaseHas('reports', $report_payload);
         $this->assertDatabaseCount('reports', 1);
     }
 
@@ -153,13 +146,14 @@ class ReportsTest extends TestCase
      */
     public function test_create_report_base(): void {
 
-        $report_payload = [
-            'description'=>"This is a test report",
-            'submitter_email'=>"test@testing.nl"
-        ];
+        $report_payload = Report::factory()->make()->toArray();
 
         $request = $this->json('post', '/api/reports', $report_payload);
         $request->assertStatus(200);
+
+        $report_payload['priority'] = -1;
+        $report_payload['status'] = 0;
+
         $this->assertDatabaseHas('reports', $report_payload);
         $this->assertDatabaseCount('reports', 1);
     }
@@ -184,6 +178,7 @@ class ReportsTest extends TestCase
         $report_payload = [
             'description'=>"This is a test report",
             'submitter_email'=>"test@testing.nl",
+            'notify_submitter'=>false,
             'responses' => [
                 '1'=>[
                     "question_id"=> $question->id,
@@ -218,6 +213,7 @@ class ReportsTest extends TestCase
         $report_payload = [
             'description'=>"This is a test report",
             'submitter_email'=>"test@testing.nl",
+            'notify_submitter'=>false,
             'files' => [
                 'a'=> [
                     "file_path"=> $file_path1
@@ -268,6 +264,7 @@ class ReportsTest extends TestCase
         $report_payload = [
             'description'=>"This is a test report",
             'submitter_email'=>"test@testing.nl",
+            'notify_submitter'=>false,
             'responses' => [
                 '1'=>[
                     "question_id"=> $question->id,
@@ -319,13 +316,15 @@ class ReportsTest extends TestCase
      */
     public function test_get_report_with_responses_and_files(): void {
         Sanctum::actingAs(User::factory()->create());
-        $report_body = [
-            'description'=>"This is a test report",
-            'priority'=>1,
-            'status'=>0,
-            'submitter_email'=>"test@testing.nl"
-        ];
-        $report = Report::create($report_body);
+
+        $report = Report::factory()->create();
+        // = [
+        //     'description'=>"This is a test report",
+        //     'priority'=>1,
+        //     'status'=>0,
+        //     'submitter_email'=>"test@testing.nl"
+        // ];
+        // $report = Report::create($report_body);
 
         // Questions and answer model entities.
         $question = Question::create([
@@ -369,7 +368,7 @@ class ReportsTest extends TestCase
 
         $response = $this->get('api/reports/'.$report->id);
         $response->assertStatus(200);
-        $response->assertSee($report_body);
+        $response->assertSee($report->toArray);
         $response->assertSee($response_body);
         $response->assertSee($file_body);
     }
@@ -395,12 +394,14 @@ class ReportsTest extends TestCase
      * Test if updating a report status and priority with valid payload give expected result.
      */
     public function test_patch_report_valid_request(): void {
-        Sanctum::actingAs(User::factory()->create());
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
         $status = 777;
         $priority = 888;
         $payload = [
             'status' => $status,
-            'priority' => $priority
+            'priority' => $priority,
+            'user_id' => $user->id,
         ];
 
         $report_body = [
@@ -416,6 +417,7 @@ class ReportsTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee($report->description);
         $response->assertSee($report->submitter_email);
+        $response->assertSee($report->user_id);
         $response->assertSee($priority);
         $response->assertSee($status);
     }
@@ -530,5 +532,25 @@ class ReportsTest extends TestCase
     public function test_patch_report_with_insufficient_authorization(): void {
         $response = $this->json('PATCH', "/api/reports/1");
         $response->assertUnauthorized();
+    }
+
+    /**
+     * FT-RE20
+     * Test if updating a report's maintainer (user_id) returns error if user_id not a user..
+     */
+    public function test_patch_report_invalid_user_id_request(): void {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
+        $payload = [
+            'status' => 1,
+            'priority' => 1,
+            'user_id' => $user->id+1,
+        ];
+        $report = Report::factory()->create();
+        $this->assertDatabaseCount('reports', 1);
+
+        $response = $this->json('PATCH', "/api/reports/".$report->id, $payload);
+        $response->assertStatus(400);
+        $response->assertSee("ERROR: passed non-existing user id");
     }
 }
