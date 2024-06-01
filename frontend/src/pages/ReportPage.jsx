@@ -216,7 +216,7 @@ function CreateReport() {
 
         {/* File upload question */}
         <div className='question-container'>
-          <div className='question'>{questionNumber++}. Upload a photo of the malfunction.</div>
+          <div className='question'>{questionNumber++}. Upload a photo of the malfunction. (optional)</div>
           <Button className='upload-btn'
             component="label"
             role={undefined}

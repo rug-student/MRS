@@ -30,7 +30,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get("/reports", [ReportsController::class, "getAllReports"]);
     Route::get("/reports/{id}", [ReportsController::class, "getReport"]);
     Route::patch("/reports/{id}", [ReportsController::class, "updateReport"]);
-    
+
     // Routes for authenticated question endpoints
     Route::post("/questions", [QuestionsController::class, "createQuestion"]);
     Route::patch("/questions/{id}", [QuestionsController::class, "updateQuestion"]);
@@ -39,7 +39,6 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::post("/reports", [ReportsController::class, "createReport"]);
 
 // Routes for file endpoints.
-Route::get('/files', [FileController::class, 'index'])->name('files.index');
 Route::post('/files/upload', [FileController::class, 'upload'])->name('files.upload');
 Route::get('/files/{file}/download', [FileController::class, 'download'])->name('files.download');
 

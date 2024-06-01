@@ -16,7 +16,7 @@ class FileController extends Controller
     {
         // Validate the incoming request
         $request->validate([
-            'file' => 'required',
+            'file' => 'required|image',
         ]);
         
         Log::channel('abuse')->info('upload file: report_id, ',
@@ -40,13 +40,6 @@ class FileController extends Controller
             'message' => 'File uploaded successfully',
             'file' => $newFile, 
         ]);
-    }
-
-    // Returns a list of previously uploaded files
-    public function index(): JsonResponse
-    {
-        $files = File::all();
-        return response()->json($files);
     }
 
     // Sends the requested file as a download, if found

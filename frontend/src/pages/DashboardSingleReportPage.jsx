@@ -9,10 +9,13 @@ import Header from "../components/Header";
 import useAuthContext from "../context/AuthContext";
 import { formatDate } from "../helpers/formDate";
 import styles from '../styleSheets/SingleReport.module.css'
+import SingleReportImages from "../components/dashboard/SingleReportImages";
 
 const SingleReport = () => {
   const { ReportId } = useParams();
   const [report, setReport] = useState({});
+  const [fileUrl, setFileUrl] = useState(null);
+  const [showFile, setShowFile] = useState(false);
   const navigate = useNavigate();
   const { isLoggedIn } = useAuthContext();
 
@@ -38,22 +41,34 @@ const SingleReport = () => {
 
   }, [ReportId]);
 
-  // Function to handle file display
-  const displayFile = async (fileId) => {
-    try {
-      const fileBlob = await downloadFile(fileId);
-      // Create a URL for the blob
-      const fileUrl = URL.createObjectURL(fileBlob);
-      // Set the file URL in the report state
-      setReport(prevState => ({
-        ...prevState,
-        fileUrl
-      }));
-    } catch (error) {
-      console.error('Error displaying file:', error);
-    }
-  };
+  useEffect(() => {
+    const loadFile = async () => {
+      if (report.files?.length > 0) {
+        const fileId = report.files[0].id; // Assuming you want to display the first file
+        try {
+          const fileBlob = await downloadFile(fileId);
+          // Create a URL for the blob
+          const url = URL.createObjectURL(fileBlob);
+          // Set the file URL in the state
+          setFileUrl(url);
+        } catch (error) {
+          console.error('Error displaying file:', error);
+        }
+      }
+    };
 
+    loadFile();
+    // Clean up function to revoke the object URL
+    return () => {
+      if (fileUrl) {
+        URL.revokeObjectURL(fileUrl);
+      }
+    };
+  }, [report.files]); // Run effect when report.files changes
+
+  const handleFileClose = () => {
+    setShowFile(false);
+  };
 
   return (
     <div>
@@ -122,6 +137,7 @@ const SingleReport = () => {
         </div>
 
       {/* Display files */}
+      {/* Display files */}
       <div className={`table-responsive ${styles.myTableResponsive}`}>
           <table className="table table-lg table-striped table-bordered">
             <thead>
@@ -130,14 +146,16 @@ const SingleReport = () => {
               </tr>
             </thead>
             <tbody>
-              {report.files?.length > 0 ? (
-                report.files.map((file, index) => (
-                  <tr key={index}>
-                    <td>
-                      <button onClick={() => displayFile(file.id)}>Display File {index + 1}</button>
-                    </td>
-                  </tr>
-                ))
+              {fileUrl ? (
+                <tr>
+                  <td>
+                    <img src={fileUrl} 
+                      alt="Report File" 
+                      style={{ cursor: "pointer", maxWidth: '40%', height: 'auto' }} 
+                      onClick={() => setShowFile(true)}
+                      />
+                  </td>
+                </tr>
               ) : (
                 <tr>
                   <td>No files attached</td>
@@ -146,12 +164,12 @@ const SingleReport = () => {
             </tbody>
           </table>
         </div>
-        {/* Display the file */}
-        {report.fileUrl && (
-          <div className={`fileDisplay ${styles.fileDisplay}`}>
-            <img src={report.fileUrl} alt="Report File" style={{ maxWidth: '40%', height: 'auto' }}/>
-          </div>
-        )}
+        <SingleReportImages
+          show={showFile}
+          handleClose={handleFileClose}
+          fileUrl={fileUrl}
+        />
+             
       </Container>
     </div>
   );
