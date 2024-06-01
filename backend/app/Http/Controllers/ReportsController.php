@@ -9,6 +9,7 @@ use App\Models\Answer;
 use App\Models\File;
 use App\Models\User;
 use App\Models\Response;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -21,6 +22,28 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ReportsController extends Controller
 {
+
+    /**
+     * Tries to send a mail to notify reporter, if asked for.
+     * @return boolean boolean value denoting if the email was sent without errors.
+     */
+    protected function sendMail($report, $oldStatus) {
+        if($report->notify_submitter && $oldStatus != $report->status) {
+            try {
+                Log::channel('abuse')->info('sending email', [
+                    'destination email' => $report->submitter_email,
+                    'old status' => $oldStatus,
+                    'new status' => $report->status
+                ]);
+                Mail::to($report->submitter_email)->send(new StatusChanged($report, $oldStatus));
+                return true;
+            } catch(Exception $e) {
+                return false;
+            };
+            
+        }
+    }
+
     /**
      * Gets all reports in the database with various filters.
      */
@@ -155,15 +178,6 @@ class ReportsController extends Controller
         $report->priority = $request->priority;
         $report->save();
 
-        if(env('MAILING_ENABLED', false) && $report->notify_submitter && $oldStatus != $report->status) {
-            Log::channel('abuse')->info('sending email', [
-                'destination email' => $report->submitter_email,
-                'old status' => $oldStatus,
-                'new status' => $report->status
-            ]);
-            Mail::to($report->submitter_email)->send(new StatusChanged($report, $oldStatus));
-        }
-
         if ($request->user_id != null){
             // Error handling
             if(!User::where("id", $request->user_id)->exists()) {
@@ -174,8 +188,14 @@ class ReportsController extends Controller
             $user->save();
         }
 
-
-        return response()->json(["Report updated succesfully.", $report], 200);
+        if($this->sendMail($report, $oldStatus)) {
+            $response = response()->json(["Report updated succesfully. Update mail succesfully send.", $report], 200);
+        } else if($report->notify_submitter){
+            $response = response()->json(["Report updated succesfully. However, update mail did not send.", $report], 200);
+        } else {
+            $response = response()->json(["Report updated succesfully.", $report], 200);
+        }
+        return $response;
     }
 
 }
