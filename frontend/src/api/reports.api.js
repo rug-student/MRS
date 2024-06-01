@@ -36,8 +36,10 @@ export async function submitReport(malfunctionDescription, email, questionAnswer
       // Handle successful response
       console.log('Report submitted successfully');
       const report = (await response.json())[1];
-      console.log("trying to set file: report: ", report, " file: ", uploadFile);
-      const file = await uploadFile(uploadedFile, report);
+      if (uploadedFile) {
+        console.log("trying to set file: report: ", report, " file: ", uploadFile);
+        const file = await uploadFile(uploadedFile, report);
+      }
       return(true);
     } else {
       // Handle error response
@@ -130,12 +132,10 @@ export async function uploadFile(uploadedFile, report) {
       throw new Error('Failed to upload file');
     }
   } catch (error) {
-    console.error('Error occurred while uploading file2:', error);
+    console.error('Error occurred while uploading file:', error);
     throw error; // Rethrow the error to be handled by the caller
   }
 }
-
-
 
 
 
@@ -208,4 +208,33 @@ export const updateReport = async (id, status, priority, user_id) => {
   } catch(error) {
       console.error('Error occurred while updated report:', error);
   };
+}
+
+
+/**
+ * Downloads a file with the specified ID.
+ * @param {string} fileId The ID of the file to be downloaded.
+ * @returns {Promise<Blob>} A promise containing the file blob.
+ */
+export async function downloadFile(fileId) {
+  try {
+    const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/files/${fileId}/download`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/octet-stream', // Specify the content type
+      },
+    });
+
+    if (response.ok) {
+      // Convert the response to a blob
+      const blob = await response.blob();
+      return blob;
+    } else {
+      console.error('Failed to download file');
+      return null;
+    }
+  } catch (error) {
+    console.error('Error occurred while downloading file:', error);
+    return null;
+  }
 }

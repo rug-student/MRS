@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getReport } from "../api/reports.api";
+import { getReport, downloadFile } from "../api/reports.api";
 import { getPriorityText, getStatusText } from "../helpers/mapReports";
 import moment from "moment";
 import { Container } from "react-bootstrap";
@@ -37,6 +37,24 @@ const SingleReport = () => {
     }
 
   }, [ReportId]);
+
+  // Function to handle file display
+  const displayFile = async (fileId) => {
+    try {
+      const fileBlob = await downloadFile(fileId);
+      // Create a URL for the blob
+      const fileUrl = URL.createObjectURL(fileBlob);
+      // Set the file URL in the report state
+      setReport(prevState => ({
+        ...prevState,
+        fileUrl
+      }));
+    } catch (error) {
+      console.error('Error displaying file:', error);
+    }
+  };
+
+
   return (
     <div>
       <Header />
@@ -102,6 +120,38 @@ const SingleReport = () => {
           </tbody>
         </table>
         </div>
+
+      {/* Display files */}
+      <div className={`table-responsive ${styles.myTableResponsive}`}>
+          <table className="table table-lg table-striped table-bordered">
+            <thead>
+              <tr>
+                <th>FILES</th>
+              </tr>
+            </thead>
+            <tbody>
+              {report.files?.length > 0 ? (
+                report.files.map((file, index) => (
+                  <tr key={index}>
+                    <td>
+                      <button onClick={() => displayFile(file.id)}>Display File {index + 1}</button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td>No files attached</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+        {/* Display the file */}
+        {report.fileUrl && (
+          <div className={`fileDisplay ${styles.fileDisplay}`}>
+            <img src={report.fileUrl} alt="Report File" style={{ maxWidth: '40%', height: 'auto' }}/>
+          </div>
+        )}
       </Container>
     </div>
   );
