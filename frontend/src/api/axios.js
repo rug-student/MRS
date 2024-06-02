@@ -9,4 +9,11 @@ const api = axios.create({
 	},
 });
 
+
+export const file = axios.create({
+	baseURL: process.env.REACT_APP_API_BASE_URL,
+	withCredentials: true,
+	responseType: "blob",
+});
+
 export default api;

@@ -8,6 +8,7 @@ For the backend, you need:
   - php8.1-xml
   - php8.1-mysql
   - php8.1-mbstring
+  - [php-gd](https://www.php.net/manual/en/book.image.php)
 - [composer](https://getcomposer.org/download/)
 - [Docker desktop](https://www.docker.com/products/docker-desktop/)
 

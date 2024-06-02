@@ -33,13 +33,15 @@ Route::middleware('auth:sanctum')->group(function () {
     // Routes for authenticated question endpoints
     Route::post("/questions", [QuestionsController::class, "createQuestion"]);
     Route::patch("/questions/{id}", [QuestionsController::class, "updateQuestion"]);
+
+    // Routes for authenticated file endpoints.
+    Route::get('/files/{file}/download', [FileController::class, 'download'])->name('files.download');
 });
 // Routes for reports endpoints.
 Route::post("/reports", [ReportsController::class, "createReport"]);
 
 // Routes for file endpoints.
 Route::post('/files/upload', [FileController::class, 'upload'])->name('files.upload');
-Route::get('/files/{file}/download', [FileController::class, 'download'])->name('files.download');
 
 // Routes for questions endpoints.
 Route::get("/questions", [QuestionsController::class, "getAllQuestions"]);

@@ -160,7 +160,7 @@ function CreateReport() {
             onChange={handleEmailChange}
           />
           <div className="notify-btn">
-            <input type='checkbox' onClick={handleNotifyBoxChange} checked={notifyMe}/>
+            <input type='checkbox' onChange={handleNotifyBoxChange} checked={notifyMe}/>
             Notify me on status updates
           </div>
         </div>

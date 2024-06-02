@@ -18,7 +18,12 @@ class FileController extends Controller
         $request->validate([
             'file' => 'required|image',
         ]);
-        
+
+        // ensures valid report id for foreign key constrain
+        if(!Report::where("id", $request->get('report_id'))->exists()) {
+            return response()->json("ERROR: passed non-existing report id", 400);
+        }
+
         Log::channel('abuse')->info('upload file: report_id, ',
         [ 'report_id' => $request->get('report_id')]);
 
@@ -33,12 +38,13 @@ class FileController extends Controller
 
         $newFile->save();
 
+
         $report = Report::find($request->get('report_id'));
         $report->files()->save($newFile);
-        
+
         return response()->json([
             'message' => 'File uploaded successfully',
-            'file' => $newFile, 
+            'file' => $newFile,
         ]);
     }
 

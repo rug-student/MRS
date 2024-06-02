@@ -1,4 +1,4 @@
-import api from "../api/axios";
+import api, {file} from "../api/axios";
 import useAuthContext from '../context/AuthContext';
 
 /**
@@ -219,16 +219,12 @@ export const updateReport = async (id, status, priority, user_id) => {
  */
 export async function downloadFile(fileId) {
   try {
-    const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/files/${fileId}/download`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/octet-stream', // Specify the content type
-      },
-    });
+    const response = await file.get(`${process.env.REACT_APP_API_BASE_URL}/api/files/${fileId}/download`);
 
-    if (response.ok) {
+    console.log(response);
+    if (response.status === 200) {
       // Convert the response to a blob
-      const blob = await response.blob();
+      const blob = await response.data;
       return blob;
     } else {
       console.error('Failed to download file');
