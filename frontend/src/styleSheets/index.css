@@ -1,0 +1,44 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+html {
+  overflow-x: hidden;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+
+
+/******************Single Report****************/
+
+.dashboard-table tbody tr > td:last-child{
+ display: flex;
+ gap: 6px;
+ align-items: center;
+}
+
+
+.back_report_icon:hover{
+cursor: pointer;
+}
+
+.css-wjh20t-MuiPagination-ul{
+justify-content: center;
+}
+
+/****************Dashboard*********************/
+button.MuiButtonBase-root{
+  width: 40px;
+  height: 40px;
+  border-radius: 100%; 
+}

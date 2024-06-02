@@ -1,0 +1,24 @@
+.reportTitle{
+  margin-bottom: 40px;
+}
+
+.myTableResponsive{
+  width: 100%;
+}
+
+.css-w05zow-MuiButtonBase-root-MuiPaginationItem-root{
+  width: 40px;
+  height: 40px;
+  border-radius: 100%;
+}
+
+.modal-fullscreen {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+.modal-content {
+  height: 100%;
+}

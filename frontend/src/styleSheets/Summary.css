@@ -1,0 +1,106 @@
+
+
+.App2 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.subtitle2 {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-weight: bolder;
+    color: white;
+    background-color: #1aa9ec;
+    width: 360px;
+    text-align: center;
+    padding: 20px;
+    font-size: 30px;
+    border-radius: 10px;
+    position: relative;
+    z-index: 9;
+  }
+  
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  li {
+    margin-bottom: 10px;
+  }
+
+  #head1{
+    margin-left: 623px;
+    margin-top: 50px;
+    
+ 
+  }
+    
+  .form-container2{
+    text-align: center;
+    width: 400px;
+    height: 170px;
+    background: #f7f7f7;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    z-index: 1;
+    position: absolute;
+    margin-top: -345px;
+    margin-left: -510px;
+   
+  }
+  .form-container3{
+    text-align: center;
+    width: 400px;
+    height: 500px;
+    background: #f7f7f7;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    z-index: 1;
+    position: relative;
+    margin-top: -190px;
+    margin-left: -510px;
+    
+
+   
+  }
+  .submit-button {
+    background-color:#1aa9ec;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-left: px;
+    margin-top: 340px;
+    position: relative;
+    margin-right: 20px;
+    
+   
+  }
+#q{
+    margin-left: px;
+    margin-top: 0px;
+    position: absolute;
+  }
+
+#op{
+  margin-top: 25px;
+
+  position: absolute;
+}
+
+ul {
+  list-style-type: disc;
+  padding-left: 20px; 
+  list-style-position: inside;
+}
+
+li {
+  margin-bottom: 10px; 
+  padding-left: 5px; 
+}

@@ -3,21 +3,40 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\File;
 
+/**
+ * Model representing a Report.
+ *
+*/
 class Report extends Model
 {
     use HasFactory;
 
+    public function response(): HasMany {
+        return $this->hasMany(Response::class);
+    }
+
+    public function files(): HasMany{
+        return $this->hasMany(File::class);
+    }
+
+    /**
+     * Get the user of the report.
+     */
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
+
     protected $fillable = [
-            "inventory_number",
-            "alt_category_object_name",
-            "location_desc",
             "description",
-            "picture",
             "priority",
-            "creation_time",
             "status",
-            "submitter_email"
+            "submitter_email",
+            "notify_submitter",
+            'user_id',
     ];
+    // Created_at & updated_at get automatically handled by the ORM.
 }

@@ -1,8 +1,12 @@
 <?php
 
+use App\Http\Controllers\AnswersController;
+use App\Http\Controllers\QuestionsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ReportsController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\FileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,8 +19,33 @@ use App\Http\Controllers\ReportsController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::post('/login', [AuthController::class, 'login']);
 
-Route::get("/reports", [ReportsController::class, "getReport"]);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/user', [AuthController::class, 'user']);
+
+    // Routes for authenticated reports endpoints
+    Route::get("/reports", [ReportsController::class, "getAllReports"]);
+    Route::get("/reports/{id}", [ReportsController::class, "getReport"]);
+    Route::patch("/reports/{id}", [ReportsController::class, "updateReport"]);
+
+    // Routes for authenticated question endpoints
+    Route::post("/questions", [QuestionsController::class, "createQuestion"]);
+    Route::patch("/questions/{id}", [QuestionsController::class, "updateQuestion"]);
+
+    // Routes for authenticated file endpoints.
+    Route::get('/files/{file}/download', [FileController::class, 'download'])->name('files.download');
+});
+// Routes for reports endpoints.
+Route::post("/reports", [ReportsController::class, "createReport"]);
+
+// Routes for file endpoints.
+Route::post('/files/upload', [FileController::class, 'upload'])->name('files.upload');
+
+// Routes for questions endpoints.
+Route::get("/questions", [QuestionsController::class, "getAllQuestions"]);
+
+// Routes for answers endpoints.
+Route::post("/answers", [AnswersController::class, "createAnswer"]);
+
