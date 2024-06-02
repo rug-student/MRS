@@ -6,6 +6,7 @@ import useAuthContext from '../context/AuthContext';
  * 
  * @param {string} malfunctionDescription The description of the malfunction.
  * @param {string} email The email of the report submitter.
+ * @param {Boolean} notify_submitter Boolean value corresponding to if reporter wants to be notified on report status.
  * @param {Object} questionAnswers Key-value pairs of question IDs and their answers.
  * @param {Array} questions List of questions.
  * @param {Object} showOtherTextInput Key-value pairs of question IDs and whether "Other" text input is shown.
@@ -107,7 +108,8 @@ export async function createAnswers(questions, questionAnswers, showOtherTextInp
 /**
  * Uploads a file to the server.
  * 
- * @param {File} file The file to be uploaded.
+ * @param {File} uploadedFile The file to be uploaded.
+ * @param {Report} report The report that contains the uploadedFile. 
  * @returns {Object} The response data containing the file path or an error message.
  */
 export async function uploadFile(uploadedFile, report) {
