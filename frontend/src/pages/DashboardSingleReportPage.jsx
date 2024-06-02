@@ -58,14 +58,12 @@ const SingleReport = () => {
     };
 
     loadFile();
-    // Clean up function to revoke the object URL
     return () => {
       if (fileUrl) {
         URL.revokeObjectURL(fileUrl);
       }
     };
-  }, [report.files]); // Run effect when report.files changes
-
+  }, [report.files]); 
   const handleFileClose = () => {
     setShowFile(false);
   };
@@ -136,7 +134,6 @@ const SingleReport = () => {
         </table>
         </div>
 
-      {/* Display files */}
       {/* Display files */}
       <div className={`table-responsive ${styles.myTableResponsive}`}>
           <table className="table table-lg table-striped table-bordered">

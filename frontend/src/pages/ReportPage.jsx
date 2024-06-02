@@ -22,8 +22,7 @@ function CreateReport() {
   const [popupContent, setPopupContent] = useState('');
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [notifyMe, setNotifyMe] = useState(false);
-
-  let questionNumber = 1; // Initialize the question number
+  let questionNumber = 1;
 
   const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -187,8 +186,8 @@ function CreateReport() {
                 required 
                 type="text" 
                 className={`answer ${formSubmitted ? 'submitted' : 'notSubmitted'}`} 
-                id={`question-${question.id}`} // Add unique ID
-                value={question.answer.id } // Set value from state
+                id={`question-${question.id}`} 
+                value={question.answer.id }
                 onChange={e => handleQuestionResponseChange(e, question.id)}
               />
               ) : (
@@ -197,12 +196,11 @@ function CreateReport() {
               <select 
                 required 
                 className={`answer ${formSubmitted ? 'submitted' : 'notSubmitted'}`} 
-                id={`question-${question.id}`} // Add unique ID
-                value={question.answer.answer} // Set value from state
+                id={`question-${question.id}`} 
+                value={question.answer.answer} 
                 onChange={e => handleSelectChange(e, question.id)}
               >
                 <option disabled selected value="">-- Select Answer --</option>
-                {/* Map through question answers to populate the dropdown */}
                 {question.answer.map(answer => (
                   <option key={answer.id} value={answer.answer}>{answer.answer}</option>
                 ))}
@@ -214,8 +212,8 @@ function CreateReport() {
                   required 
                   type="text" 
                   className={`answer ${formSubmitted ? 'submitted' : 'notSubmitted'}`} 
-                  id={`question-${question.id}`} // Add unique ID
-                  value={question.answer.id } // Set value from state
+                  id={`question-${question.id}`} 
+                  value={question.answer.id }
                   onChange={e => handleQuestionResponseChange(e, question.id)}
                 />
               )}
