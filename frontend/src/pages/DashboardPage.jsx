@@ -138,7 +138,7 @@ const Dashboard = () => {
                   <td>{element.description}</td>
                   <td>{getPriorityText(element.priority)} </td>
                   <td>{getStatusText(element.status)}</td>
-                  <td>{moment.utc(element.created_at).fromNow()}</td>
+                  <td>{moment(element.created_at).fromNow()}</td>
                   <td>{element.user_id}</td>
                   <td>
                     <FaRegEdit
