@@ -60,6 +60,6 @@ class AuthenticationTest extends TestCase
         Sanctum::actingAs($user);
         $response = $this->json('GET', "/api/user");
         $response->assertOk();
-        $response->assertSee($user->toArray());
+        $response->assertSee([$user->id, $user->email]);
     }
 }

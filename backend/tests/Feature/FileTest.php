@@ -13,7 +13,7 @@ use Illuminate\Http\UploadedFile;
 use App\Models\User;
 use Tests\TestCase;
 
-class FileUploadTest extends TestCase
+class FileTest extends TestCase
 {
 
     use RefreshDatabase;

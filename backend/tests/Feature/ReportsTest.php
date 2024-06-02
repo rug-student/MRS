@@ -203,116 +203,9 @@ class ReportsTest extends TestCase
         ];
         $this->assertDatabaseHas('responses', $response_body);
     }
-    // /**
-    //  * FT-RE10
-    //  * Test POST /reports endpoint with files
-    //  */
-    // public function test_create_report_with_files(): void {
-    //     $file_path1 = "file/path1";
-    //     $file_path2 = "file/path2";
-
-    //     $report_payload = [
-    //         'description'=>"This is a test report",
-    //         'submitter_email'=>"test@testing.nl",
-    //         'notify_submitter'=>false,
-    //         'files' => [
-    //             'a'=> [
-    //                 "file_path"=> $file_path1
-    //             ],
-    //             'b'=> [
-    //                 "file_path"=> $file_path2
-    //             ]
-    //         ]
-    //     ];
-
-    //     $request = $this->json('post', '/api/reports', $report_payload);
-    //     $request->assertStatus(200);
-    //     $this->assertDatabaseCount('reports', 1);
-    //     $this->assertDatabaseCount('files', 2);
-
-    //     $file_body = [
-    //         "file_path"=> $file_path1,
-    //         "report_id"=>json_decode($request->getContent())[1]->id
-    //     ];
-    //     $this->assertDatabaseHas('files', $file_body);
-
-    //     $file_body = [
-    //         "file_path"=> $file_path2,
-    //         "report_id"=>json_decode($request->getContent())[1]->id
-    //     ];
-    //     $this->assertDatabaseHas('files', $file_body);
-    // }
-
-    // /**
-    //  * FT-RE11
-    //  * Test POST /reports endpoint with report responses and files
-    //  */
-    // public function test_create_report_with_responses_and_files(): void {
-
-    //     $question = Question::create([
-    //         'question_description'=>"This is a question",
-    //         'is_open'=>false,
-    //         'is_active'=>false,
-    //     ]);
-    //     $answer = Answer::create([
-    //         'answer'=>"this is an answer",
-    //         'question_id'=>$question->id
-    //     ]);
-
-    //     $file_path1 = "file/path1";
-    //     $file_path2 = "file/path2";
-
-    //     $report_payload = [
-    //         'description'=>"This is a test report",
-    //         'submitter_email'=>"test@testing.nl",
-    //         'notify_submitter'=>false,
-    //         'responses' => [
-    //             '1'=>[
-    //                 "question_id"=> $question->id,
-    //                 "answer_id"=> $answer->id
-    //             ],
-    //         ],
-    //         'files' => [
-    //             'a'=> [
-    //                 "file_path"=> $file_path1
-    //             ],
-    //             'b'=> [
-    //                 "file_path"=> $file_path2
-    //             ],
-    //         ]
-    //     ];
-
-
-
-    //     $request = $this->json('post', '/api/reports', $report_payload);
-    //     // $this->assertEquals(1,2, json_decode($request->getContent()));
-    //     $request->assertStatus(200);
-    //     $this->assertDatabaseCount('reports', 1);
-    //     $this->assertDatabaseCount('responses', 1);
-    //     $this->assertDatabaseCount('files', 2);
-
-    //     $response_body = [
-    //         "question_id"=> $question->id,
-    //         "answer_id"=> $answer->id,
-    //         "report_id"=>json_decode($request->getContent())[1]->id
-    //     ];
-    //     $this->assertDatabaseHas('responses', $response_body);
-
-    //     $file_body = [
-    //         "file_path"=> $file_path1,
-    //         "report_id"=>json_decode($request->getContent())[1]->id
-    //     ];
-    //     $this->assertDatabaseHas('files', $file_body);
-
-    //     $file_body = [
-    //         "file_path"=> $file_path2,
-    //         "report_id"=>json_decode($request->getContent())[1]->id
-    //     ];
-    //     $this->assertDatabaseHas('files', $file_body);
-    // }
 
     /**
-     * FT-RE12
+     * FT-RE10
      * Tests the retrieval of a single report with responses.
      */
     public function test_get_report_with_responses(): void {
@@ -364,7 +257,7 @@ class ReportsTest extends TestCase
     }
 
     /**
-     * FT-RE13
+     * FT-RE11
      * Test if updating a report status and priority with invalid payload give expected error.
      */
     public function test_patch_report_invalid_request(): void {
@@ -380,7 +273,7 @@ class ReportsTest extends TestCase
     }
 
     /**
-     * FT-RE14
+     * FT-RE12
      * Test if updating a report status and priority with valid payload give expected result.
      */
     public function test_patch_report_valid_request(): void {
@@ -398,7 +291,8 @@ class ReportsTest extends TestCase
             'description'=>"This is a test report",
             'priority'=>1,
             'status'=>0,
-            'submitter_email'=>"test@testing.nl"
+            'submitter_email'=>"test@testing.nl",
+            'notify_submitter' => true,
         ];
         $report = Report::create($report_body);
         $this->assertDatabaseCount('reports', 1);
@@ -413,7 +307,7 @@ class ReportsTest extends TestCase
     }
 
     /**
-     * FT-RE15
+     * FT-RE13
      * Test GET /api/reports request on populated database with status filter.
      */
     public function test_get_reports_with_status_filter(): void {
@@ -456,7 +350,7 @@ class ReportsTest extends TestCase
     }
 
     /**
-     * FT-RE16
+     * FT-RE14
      * Test GET /api/reports request on populated database with priority filter.
      */
     public function test_get_reports_with_priority_filter(): void {
@@ -498,7 +392,7 @@ class ReportsTest extends TestCase
     }
 
     /**
-     * FT-RE17
+     * FT-RE15
      * Test GET /api/reports request with insufficient authorization.
      */
     public function test_get_reports_with_insufficient_authorization(): void {
@@ -507,7 +401,7 @@ class ReportsTest extends TestCase
     }
 
     /**
-     * FT-RE18
+     * FT-RE16
      * Test GET /api/reports/{id} request with insufficient authorization
      */
     public function test_get_report_with_insufficient_authorization(): void {
@@ -516,7 +410,7 @@ class ReportsTest extends TestCase
     }
 
     /**
-     * FT-RE19
+     * FT-RE17
      * Test PATCH /api/reports/{id} request with insufficient authorization
      */
     public function test_patch_report_with_insufficient_authorization(): void {
@@ -525,7 +419,7 @@ class ReportsTest extends TestCase
     }
 
     /**
-     * FT-RE20
+     * FT-RE18
      * Test if updating a report's maintainer (user_id) returns error if user_id not a user..
      */
     public function test_patch_report_invalid_user_id_request(): void {
