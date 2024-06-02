@@ -23,17 +23,19 @@ const ModalForm = ({ show, onHide, data, onUpdate }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formAssigned) {
-      updateReport(id, formStatus, formPriority, user.user.id);
-    }
-    updateReport(id, formStatus, formPriority, 0);
-    onUpdate();
     onHide();
+    if (formAssigned) {
+      await updateReport(id, formStatus, formPriority, user.user.id);
+    } else {
+      await updateReport(id, formStatus, formPriority, 0);
+    }
+    onUpdate();
   };
 
 
   const handleFormAssigned = () => {
     setFormAssigned(!formAssigned);
+    console.log("Updated assignment flag");
   };
 
   return (
