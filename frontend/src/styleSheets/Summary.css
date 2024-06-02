@@ -95,12 +95,12 @@
 }
 
 ul {
-  list-style-type: disc; /* Garantisce che la lista sia puntata */
-  padding-left: 20px; /* Aggiunge un'indentazione a sinistra per i punti */
-  list-style-position: inside; /* Punti all'interno dell'elemento della lista */
+  list-style-type: disc;
+  padding-left: 20px; 
+  list-style-position: inside;
 }
 
 li {
-  margin-bottom: 10px; /* Spazio tra gli elementi della lista */
-  padding-left: 5px; /* Riduce lo spazio tra il punto e l'elemento della lista */
+  margin-bottom: 10px; 
+  padding-left: 5px; 
 }

@@ -29,8 +29,8 @@ button:hover {
 
 .navbar {
   margin-top: 10px;
-  background-color: #109cdc; /* Colore di sfondo azzurro */
-  color: #ffffff; /* Testo bianco */
+  background-color: #109cdc; 
+  color: #ffffff;
   font-size: 20px;
   font-weight: bolder;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
@@ -55,7 +55,7 @@ button:hover {
 
 a {
   text-decoration: none;
-  color: inherit; /* Eredità del colore del testo */
+  color: inherit; 
   transition: font-size 0.3s ease, color 0.3s ease;
 }
 
@@ -138,10 +138,10 @@ a:hover{
 
 
 .table-container {
-  max-height: 400px; /* Fixed height for the container */
-  overflow-y: auto; /* Enable vertical scrolling */
-  width:360px; /* Adjust width as needed */
-  margin-top: 0px; /* Space between subtitle and table */
+  max-height: 400px; 
+  overflow-y: auto; 
+  width:360px; 
+  margin-top: 0px; 
   position: relative;
 }
 
