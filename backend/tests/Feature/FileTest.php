@@ -2,10 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Models\Answer;
-use App\Models\Question;
 use App\Models\Report;
-use App\Models\Response;
 use App\Models\File;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
@@ -92,6 +89,8 @@ class FileTest extends TestCase
      * Test download endpoint with invalid file id.
      */
     public function test_download_invalid_file_name(): void {
+        Sanctum::actingAs(User::factory()->create());
+
         $report = Report::factory()->create();
 
         $file = UploadedFile::fake()->image("testImage.png");
@@ -111,6 +110,8 @@ class FileTest extends TestCase
      * Test download endpoint with valid file id.
      */
     public function test_download_valid_file_name(): void {
+        Sanctum::actingAs(User::factory()->create());
+
         $report = Report::factory()->create();
 
         $file = UploadedFile::fake()->image("testImage.png");
@@ -123,5 +124,25 @@ class FileTest extends TestCase
         $fileID = json_decode($response->getContent())->file->id;
         $response = $this->json('get', '/api/files/'.$fileID.'/download');
         $response->assertOk();
+    }
+
+    /**
+     * FT-FE8
+     * Test download endpoint with invalid authentication.
+     */
+    public function test_download_with_invalid_authentication(): void {
+
+        $report = Report::factory()->create();
+
+        $file = UploadedFile::fake()->image("testImage.png");
+        $response = $this->json('post', '/api/files/upload', [
+            'file' => $file,
+            'report_id' => $report->id,
+        ]);
+        $response->assertOk();
+
+        $fileID = json_decode($response->getContent())->file->id;
+        $response = $this->json('get', '/api/files/'.$fileID.'/download');
+        $response->assertUnauthorized();
     }
 }

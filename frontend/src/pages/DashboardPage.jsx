@@ -116,7 +116,7 @@ const Dashboard = () => {
             </Form.Select>
           </div>
         </div>
-        <div class={`table-responsive ${styles.myTableResponsive}`}>
+        <div className={`table-responsive ${styles.myTableResponsive}`}>
           <table className="table table-lg table-striped table-bordered dashboard-table">
             <thead>
               <tr>

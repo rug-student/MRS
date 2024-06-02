@@ -82,7 +82,7 @@ const SingleReport = () => {
           />
         </div>
         <h1 className={styles.reportTitle}>Single Report</h1>
-        <div class={`table-responsive ${styles.myTableResponsive}`}>
+        <div className={`table-responsive ${styles.myTableResponsive}`}>
         <table className="table table-lg table-striped table-bordered">
           <thead>
             <tr>
@@ -106,7 +106,7 @@ const SingleReport = () => {
           </tbody>
         </table>
         </div>
-        <div class={`table-responsive ${styles.myTableResponsive}`}>
+        <div className={`table-responsive ${styles.myTableResponsive}`}>
         <table className="table table-lg table-striped table-bordered">
           <thead>
             <tr>
