@@ -73,7 +73,7 @@
 }
 
 .next-button:hover, #sesto:hover {
-  background-color: #0056b3; /* Colore di sfondo quando viene passato sopra */
+  background-color: #0056b3; 
 }
 
 .options-list {
