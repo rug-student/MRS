@@ -57,19 +57,6 @@ components:
         updated_at: 
           type: string
           format: date-time
-        
-
-    AuthRegister:
-      type: object
-      properties:
-        name:
-          type: string
-        email:
-          type: string
-        password:
-          type: string
-        password_confirmation:
-          type: string
 
     Report:
       type: object
@@ -314,23 +301,43 @@ paths:
       responses:
           '200':
             description: "OK"
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/User"
+          '401':
+            description: "Unautherized"
           '422':
             description: "Unprocessable Content"
-  /register:
+  /logout:
     post: 
       tags:
         - Authentication
-      description: Tries to register a new user (maintainer) from given credentials. (name is optional)
-      summary: register a new user
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/AuthRegister"
+      description: Logs out the  user from given access token in cookies.
+      summary: logs out a logged in user.
       responses:
         '200':
           description: "OK"
+        '401':
+          description: "Unautherized"
+        '422':
+          description: "Unprocessable Content"
+
+  /user:
+    post: 
+      tags:
+        - Authentication
+      description: Gets user information for the given access token in cookies.
+      summary: Gets user information
+      responses:
+        '200':
+          description: "OK"
+          content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/User"
+        '401':
+          description: "Unautherized"
         '422':
           description: "Unprocessable Content"
 
@@ -465,20 +472,6 @@ paths:
         description: The ID of the question
         schema:
           type: integer
-    get:
-      tags:
-        - Questions
-      description: Retrieves a single question for given ID.
-      summary: Retrieve a question.
-      responses:
-        '200':
-          description: "OK"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Question"
-        '404':
-          $ref: "#/components/responses/NotFound"
     patch:
       tags:
         - Questions
