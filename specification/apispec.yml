@@ -18,8 +18,13 @@ components:
         id:
           type: integer
           readOnly: true
-        file_path:
+        original_name:
           type: string
+        generated_name:
+          type: string
+        report_id:
+          type: integer
+          readOnly: true
         created_at: 
           type: string
           format: date-time
@@ -28,6 +33,7 @@ components:
           type: string
           format: date-time
           readOnly: true
+        
 
     AuthLogin:
       type: object
@@ -506,3 +512,56 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Answer"
+
+
+  /api/files/upload:
+    post:
+      tags:
+        - Files
+      description: Uploads a file to the backend server storage and saves the file path to the database.
+      summary: Uploads a file
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                report_id:
+                  type: integer
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/File"
+
+
+  /api/files/{id}/download:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: The ID of the file
+        schema:
+          type: integer
+    get:
+      tags:
+        - Files
+      description: Downloads a file from the backend server.
+      summary: Downloads a file if specified id.
+      
+      responses:
+        '200':
+          description: "OK"
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+        '404':
+          $ref: "#/components/responses/NotFound"
